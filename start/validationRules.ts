@@ -7,16 +7,44 @@
 | boot.
 |
 */
-import { validator } from '@ioc:Adonis/Core/Validator'
-import User from 'App/Models/User'
+import { ValidationRuntimeOptions, validator } from '@ioc:Adonis/Core/Validator'
+import School from 'App/Models/School'
 
-validator.rule('school', async (value, _, { pointer, arrayExpressionPointer, errorReporter }) => {
-  const user = await User.all()
-  // on récupère toutes les schools et on vérifie avec une régex si la valeur proposé est bien dedans)
-  // si c'est le cas, alors on peut continuer
-  // sinon on rejet la proposition
-  console.info(user)
-  console.log(value)
+async function validate(
+  value: string,
+  _,
+  { pointer, arrayExpressionPointer, errorReporter }: ValidationRuntimeOptions
+) {
+  /*
+   * value is a valid email using another validator
+   */
 
+  /**
+   * Skip validation when value is not a string. The string
+   * schema rule will handle it
+   */
+  if (typeof value !== 'string') {
+    return
+  }
+
+  const schools = await School.all()
+  for (const school of schools) {
+    const schoolRegExp = new RegExp(`@${school.host}$`, 'i')
+
+    /*
+     * Host of value is in the database
+     */
+    if (schoolRegExp.test(value)) return
+  }
+
+  errorReporter.report(pointer, 'school', 'Invalid school', arrayExpressionPointer)
   return
-})
+}
+
+function compile() {
+  return {
+    async: true,
+  }
+}
+
+validator.rule('school', validate, compile)

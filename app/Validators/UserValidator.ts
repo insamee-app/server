@@ -45,5 +45,6 @@ export default class UserValidator {
     'email.required': 'Une adresse électronique est nécessaire',
     'password.required': 'Un mot de passe est nécessaire',
     'password_confirmation.confirmed': 'Le mot de passe de validation est incorrect',
+    'school': "La plateforme n'est pas disponible pour votre école",
   }
 }

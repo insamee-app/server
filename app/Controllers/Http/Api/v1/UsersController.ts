@@ -24,8 +24,18 @@ export default class UsersController {
 
     const data = await request.validate(UserValidator)
 
-    // const updatedUser = await user.save()
-    return data
+    /*
+     * Update user
+     */
+    for (const key in data) {
+      if (Object.prototype.hasOwnProperty.call(data, key)) {
+        const element = data[key]
+        user[key] = element
+      }
+    }
+
+    const updatedUser = await user.save()
+    return updatedUser
   }
 
   public async destroy({ params }: HttpContextContract) {

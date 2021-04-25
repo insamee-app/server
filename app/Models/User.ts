@@ -2,6 +2,13 @@ import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 
+type socialNetworks = {
+  facebook: string
+  instagram: string
+  twitter: string
+  snapchat: string
+}
+
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -14,6 +21,30 @@ export default class User extends BaseModel {
 
   @column()
   public rememberMeToken?: string
+
+  @column()
+  public lastName?: string
+
+  @column()
+  public firstName?: string
+
+  @column()
+  public text?: string
+
+  @column()
+  public mobile?: string
+
+  @column()
+  public skills?: Array<string>
+
+  @column()
+  public focusInterest?: Array<string>
+
+  @column()
+  public graduationYear?: number
+
+  @column()
+  public socialNetworks?: Partial<socialNetworks>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

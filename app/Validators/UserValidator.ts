@@ -35,6 +35,12 @@ export default class UserValidator {
      * We prevent user to provide random year
      */
     graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
+    socialNetworks: schema.object.optional().members({
+      facebook: schema.string.optional({ trim: true }, [rules.url()]),
+      instagram: schema.string.optional({ trim: true }, [rules.url()]),
+      twitter: schema.string.optional({ trim: true }, [rules.url()]),
+      snapchat: schema.string.optional({ trim: true }, [rules.url()]),
+    }),
   })
 
   /**
@@ -55,5 +61,16 @@ export default class UserValidator {
     'skills.*.string': 'Les données doivent être des chaînes de caractères',
     'focusInterest.array': "Le type n'est pas le bon",
     'focusInterest.*.string': 'Les données doivent être des chaînes de caractères',
+    /*
+     * Wildcard is not working
+     */
+    'socialNetworks.facebook.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.facebook.url': 'Le réseau doit être une url valide',
+    'socialNetworks.instagram.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.instagram.url': 'Le réseau doit être une url valide',
+    'socialNetworks.twitter.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.twitter.url': 'Le réseau doit être une url valide',
+    'socialNetworks.snapchat.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.snapchat.url': 'Le réseau doit être une url valide',
   }
 }

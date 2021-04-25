@@ -19,7 +19,7 @@ export default class AuthController {
     try {
       await user.save()
     } catch (error) {
-      throw new BadRequestException('Cet utilisateur existe déjà')
+      throw new BadRequestException(`L'utilisateur ${user.email} existe déjà`)
     }
 
     /**

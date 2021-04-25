@@ -32,7 +32,14 @@ Route.group(() => {
 })
   .prefix('auth')
   .namespace('App/Controllers/Http/Auth')
-// .as('auth')
+
+Route.group(() => {
+  Route.resource('users', 'UsersController').only(['index', 'show', 'update', 'destroy'])
+})
+  .middleware('auth')
+  .prefix('api/v1')
+  .namespace('App/Controllers/Http/Api/v1')
+  .as('api.v1')
 
 // Route.get('health', async ({ response, auth }) => {
 //   const user = await auth.authenticate()
@@ -43,10 +50,3 @@ Route.group(() => {
 
 //   return report.healthy ? response.ok(report) : response.badRequest(report)
 // }).middleware('auth')
-
-// Route.group(() => {
-//   Route.resource('users', 'UsersController').apiOnly()
-// })
-//   .prefix('api/v1')
-//   .namespace('App/Controllers/Http/Api/v1')
-//   .as('api.v1')

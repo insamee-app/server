@@ -1,7 +1,8 @@
-import { schema } from '@ioc:Adonis/Core/Validator'
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import User from 'App/Models/User'
 
-export default class UserValidator {
+export default class AuthValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,9 +25,18 @@ export default class UserValidator {
    *    ```
    */
   public schema = schema.create({
-    lastName: schema.string.optional({ trim: true }),
-    firstName: schema.string.optional({ trim: true }),
+    email: schema.string({ trim: true }, [
+      rules.email(),
+      rules.unique({
+        table: User.table,
+        column: 'email',
+      }),
+      rules.school(),
+    ]),
+    password: schema.string({ trim: true }, [rules.confirmed()]),
   })
+
+  public cacheKey = this.ctx.routeKey
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -39,5 +49,10 @@ export default class UserValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'email.required': 'Une adresse électronique est nécessaire',
+    'password.required': 'Un mot de passe est nécessaire',
+    'password_confirmation.confirmed': 'Le mot de passe de validation est incorrect',
+    'school': "La plateforme n'est pas disponible pour votre école",
+  }
 }

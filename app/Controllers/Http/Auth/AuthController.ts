@@ -2,6 +2,9 @@ import User from 'App/Models/User'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import AuthValidator from 'App/Validators/AuthValidator'
 import BadRequestException from 'App/Exceptions/BadRequestException'
+import School from 'App/Models/School'
+import ExceptionHandler from 'App/Exceptions/Handler'
+import InternalServerError from 'App/Exceptions/InternalServerErrorException'
 
 export default class AuthController {
   public async register({ request, auth }: HttpContextContract) {
@@ -10,12 +13,26 @@ export default class AuthController {
      */
     const userDetails = await request.validate(AuthValidator)
 
+    /*
+     * Get the corresponding school
+     */
+    const hostRegExp = new RegExp(/@(?<host>.*)$/, 'i')
+    const host = hostRegExp.exec(userDetails.email)!.groups!.host
+
+    const school = await School.findBy('host', host)
+    if (!school)
+      throw new InternalServerError(`Impossible de trouver l'école correspondante à ${host}`)
+
+    // const school = await School
+
     /**
      * Create a new user
      */
     const user = new User()
     user.email = userDetails.email
     user.password = userDetails.password
+    user.schoolId = school.id
+
     try {
       await user.save()
     } catch (error) {
@@ -26,6 +43,8 @@ export default class AuthController {
      * Login the user
      */
     await auth.login(user)
+
+    await user.preload('school')
 
     return user
   }

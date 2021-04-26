@@ -17,6 +17,7 @@ export default class UsersSchema extends BaseSchema {
       table.specificType('focus_interest', 'text ARRAY').nullable()
       table.integer('graduation_year').nullable()
       table.json('social_networks').nullable()
+      table.integer('school_id').unsigned().notNullable().references('id').inTable('schools')
       table.timestamps(true)
     })
   }

@@ -19,6 +19,7 @@ export default class UserSeeder extends BaseSeeder {
         focusInterest: ['Extruding', 'forming', 'pressing', 'compacting machine setter'],
         graduationYear: 2015,
         socialNetworks: {},
+        schoolId: 1,
       },
       {
         email: 'EdwardMTaber@insa-cvl.fr',
@@ -33,6 +34,7 @@ export default class UserSeeder extends BaseSeeder {
         socialNetworks: {
           facebook: 'https://facebook.com/edwardtaber',
         },
+        schoolId: 1,
       },
     ])
   }

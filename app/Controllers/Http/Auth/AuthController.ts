@@ -3,7 +3,6 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import AuthValidator from 'App/Validators/AuthValidator'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import School from 'App/Models/School'
-import ExceptionHandler from 'App/Exceptions/Handler'
 import InternalServerError from 'App/Exceptions/InternalServerErrorException'
 
 export default class AuthController {
@@ -22,8 +21,6 @@ export default class AuthController {
     const school = await School.findBy('host', host)
     if (!school)
       throw new InternalServerError(`Impossible de trouver l'école correspondante à ${host}`)
-
-    // const school = await School
 
     /**
      * Create a new user

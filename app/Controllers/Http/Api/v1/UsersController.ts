@@ -1,6 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import School from 'App/Models/School'
-
 import User from 'App/Models/User'
 import { getUser } from 'App/Services/UserService'
 import UserValidator from 'App/Validators/UserValidator'

@@ -4,6 +4,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
 
+  public date = new Date()
   /*
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
    *
@@ -24,11 +25,23 @@ export default class UserValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({ trim: true }, [rules.email(), rules.school()]),
-    password: schema.string({ trim: true }, [rules.confirmed()]),
+    lastName: schema.string.optional({ trim: true }),
+    firstName: schema.string.optional({ trim: true }),
+    text: schema.string.optional({ trim: true }),
+    mobile: schema.string.optional({ trim: true }, [rules.mobile({ locales: ['fr-FR'] })]),
+    skills: schema.array.optional().members(schema.string({ trim: true })),
+    focusInterest: schema.array.optional().members(schema.string({ trim: true })),
+    /*
+     * We prevent user to provide random year
+     */
+    graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
+    socialNetworks: schema.object.optional().members({
+      facebook: schema.string.optional({ trim: true }, [rules.url()]),
+      instagram: schema.string.optional({ trim: true }, [rules.url()]),
+      twitter: schema.string.optional({ trim: true }, [rules.url()]),
+      snapchat: schema.string.optional({ trim: true }, [rules.url()]),
+    }),
   })
-
-  public cacheKey = this.ctx.routeKey
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -42,9 +55,22 @@ export default class UserValidator {
    *
    */
   public messages = {
-    'email.required': 'Une adresse électronique est nécessaire',
-    'password.required': 'Un mot de passe est nécessaire',
-    'password_confirmation.confirmed': 'Le mot de passe de validation est incorrect',
-    'school': "La plateforme n'est pas disponible pour votre école",
+    'graduationYear.range': "Cette année de diplomation n'est pas acceptée",
+    'mobile.mobile': "Ce numéro de téléphone n'est pas valide",
+    'skills.array': "Le type n'est pas le bon",
+    'skills.*.string': 'Les données doivent être des chaînes de caractères',
+    'focusInterest.array': "Le type n'est pas le bon",
+    'focusInterest.*.string': 'Les données doivent être des chaînes de caractères',
+    /*
+     * Wildcard is not working
+     */
+    'socialNetworks.facebook.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.facebook.url': 'Le réseau doit être une url valide',
+    'socialNetworks.instagram.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.instagram.url': 'Le réseau doit être une url valide',
+    'socialNetworks.twitter.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.twitter.url': 'Le réseau doit être une url valide',
+    'socialNetworks.snapchat.string': 'Le réseau doit être une chaîne de caractères',
+    'socialNetworks.snapchat.url': 'Le réseau doit être une url valide',
   }
 }

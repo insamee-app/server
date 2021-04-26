@@ -1,6 +1,6 @@
 import User from 'App/Models/User'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import UserValidator from 'App/Validators/UserValidator'
+import AuthValidator from 'App/Validators/AuthValidator'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 
 export default class AuthController {
@@ -8,7 +8,7 @@ export default class AuthController {
     /**
      * Validate user details
      */
-    const userDetails = await request.validate(UserValidator)
+    const userDetails = await request.validate(AuthValidator)
 
     /**
      * Create a new user

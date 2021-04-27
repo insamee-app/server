@@ -43,6 +43,8 @@ export default class UsersController {
     const id = params.id as number
 
     const user = await getUser(id)
+
+    user.related('associations').detach()
     await user.delete()
 
     return user

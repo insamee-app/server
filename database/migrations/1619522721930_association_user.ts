@@ -1,7 +1,7 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
-export default class AssociationUsers extends BaseSchema {
-  protected tableName = 'association_users'
+export default class AssociationUser extends BaseSchema {
+  protected tableName = 'association_user'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {

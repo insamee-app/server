@@ -5,7 +5,7 @@ import UserValidator from 'App/Validators/UserValidator'
 
 export default class UsersController {
   public async index() {
-    const users = await User.query().preload('school')
+    const users = await User.query().preload('school').preload('associations')
     return users
   }
 
@@ -13,7 +13,8 @@ export default class UsersController {
     const id = params.id as number
 
     const user = await getUser(id)
-
+    await user.preload('school')
+    await user.preload('associations')
     return user
   }
 
@@ -21,7 +22,7 @@ export default class UsersController {
     const id = params.id as number
     const user = await getUser(id)
 
-    const data = await request.validate(UserValidator)
+    const { associations, ...data } = await request.validate(UserValidator)
 
     /*
      * Update user
@@ -33,6 +34,7 @@ export default class UsersController {
       }
     }
 
+    if (associations) await user.related('associations').sync(associations)
     const updatedUser = await user.save()
     return updatedUser
   }
@@ -41,6 +43,8 @@ export default class UsersController {
     const id = params.id as number
 
     const user = await getUser(id)
+
+    user.related('associations').detach()
     await user.delete()
 
     return user

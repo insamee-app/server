@@ -1,7 +1,16 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, belongsTo, BelongsTo } from '@ioc:Adonis/Lucid/Orm'
+import {
+  column,
+  beforeSave,
+  BaseModel,
+  belongsTo,
+  BelongsTo,
+  manyToMany,
+  ManyToMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import School from './School'
+import Association from './Association'
 
 type socialNetworks = {
   facebook: string
@@ -54,6 +63,14 @@ export default class User extends BaseModel {
     foreignKey: 'schoolId',
   })
   public school: BelongsTo<typeof School>
+
+  @manyToMany(() => Association, {
+    localKey: 'id',
+    pivotForeignKey: 'user_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'association_id',
+  })
+  public associations: ManyToMany<typeof Association>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

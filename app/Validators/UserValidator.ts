@@ -1,5 +1,6 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Association from 'App/Models/Association'
 
 export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -31,6 +32,9 @@ export default class UserValidator {
     mobile: schema.string.optional({ trim: true }, [rules.mobile({ locales: ['fr-FR'] })]),
     skills: schema.array.optional().members(schema.string({ trim: true })),
     focusInterest: schema.array.optional().members(schema.string({ trim: true })),
+    associations: schema.array
+      .optional()
+      .members(schema.number([rules.exists({ table: Association.table, column: 'id' })])),
     /*
      * We prevent user to provide random year
      */
@@ -61,6 +65,8 @@ export default class UserValidator {
     'skills.*.string': 'Les données doivent être des chaînes de caractères',
     'focusInterest.array': "Le type n'est pas le bon",
     'focusInterest.*.string': 'Les données doivent être des chaînes de caractères',
+    'associations.array': "Le type n'est pas le bon",
+    'associations.*.number': 'Les données doivent être des nombres',
     /*
      * Wildcard is not working
      */

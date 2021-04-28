@@ -37,7 +37,7 @@ export default class UserValidator {
     skills: schema.array
       .optional()
       .members(schema.number([rules.exists({ table: Skill.table, column: 'id' })])),
-    focusInterest: schema.array
+    focusInterests: schema.array
       .optional()
       .members(schema.number([rules.exists({ table: FocusInterest.table, column: 'id' })])),
     associations: schema.array
@@ -74,8 +74,8 @@ export default class UserValidator {
     'associations.*.number': 'Les données doivent être des nombres',
     'skills.array': "Le type n'est pas le bon",
     'skills.*.number': 'Les données doivent être des nombres',
-    'focusInterest.array': "Le type n'est pas le bon",
-    'focusInterest.*.number': 'Les données doivent être des nombres',
+    'focusInterests.array': "Le type n'est pas le bon",
+    'focusInterests.*.number': 'Les données doivent être des nombres',
     /*
      * Wildcard is not working
      */

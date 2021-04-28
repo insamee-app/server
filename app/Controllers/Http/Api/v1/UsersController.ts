@@ -5,7 +5,7 @@ import UserValidator from 'App/Validators/UserValidator'
 
 export default class UsersController {
   public async index() {
-    const users = await User.query().preload('school').preload('associations')
+    const users = await User.query().preload('school').preload('associations').preload('skills')
     return users
   }
 
@@ -15,6 +15,7 @@ export default class UsersController {
     const user = await getUser(id)
     await user.preload('school')
     await user.preload('associations')
+    await user.preload('skills')
     return user
   }
 

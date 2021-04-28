@@ -58,6 +58,8 @@ export default class AuthController {
      */
     const user = await auth.attempt(email, password)
 
+    await user.preload('school')
+
     return user
   }
 

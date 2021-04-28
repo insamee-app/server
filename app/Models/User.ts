@@ -11,6 +11,7 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import School from './School'
 import Association from './Association'
+import Skill from './Skill'
 
 type socialNetworks = {
   facebook: string
@@ -53,9 +54,6 @@ export default class User extends BaseModel {
   public mobile?: string
 
   @column()
-  public skills?: Array<string>
-
-  @column()
   public focusInterest?: Array<string>
 
   @column()
@@ -79,6 +77,14 @@ export default class User extends BaseModel {
     pivotRelatedForeignKey: 'association_id',
   })
   public associations: ManyToMany<typeof Association>
+
+  @manyToMany(() => Skill, {
+    localKey: 'id',
+    pivotForeignKey: 'user_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'skill_id',
+  })
+  public skills: ManyToMany<typeof Skill>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

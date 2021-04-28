@@ -14,7 +14,6 @@ export default class UsersSchema extends BaseSchema {
       table.enu('current_role', ['étudiant', 'personnel']).nullable()
       table.string('text').nullable()
       table.string('mobile').nullable()
-      table.specificType('skills', 'text ARRAY').nullable()
       table.specificType('focus_interest', 'text ARRAY').nullable()
       table.integer('graduation_year').nullable()
       table.json('social_networks').nullable()

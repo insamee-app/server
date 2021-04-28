@@ -1,6 +1,7 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
+import { currentRole } from 'App/Models/User'
 
 export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -28,6 +29,7 @@ export default class UserValidator {
   public schema = schema.create({
     lastName: schema.string.optional({ trim: true }),
     firstName: schema.string.optional({ trim: true }),
+    currentRole: schema.enum(Object.values(currentRole)),
     text: schema.string.optional({ trim: true }),
     mobile: schema.string.optional({ trim: true }, [rules.mobile({ locales: ['fr-FR'] })]),
     skills: schema.array.optional().members(schema.string({ trim: true })),
@@ -59,6 +61,7 @@ export default class UserValidator {
    *
    */
   public messages = {
+    'currentRole.enum': "Cette valeur n'est pas acceptée",
     'graduationYear.range': "Cette année de diplomation n'est pas acceptée",
     'mobile.mobile': "Ce numéro de téléphone n'est pas valide",
     'skills.array': "Le type n'est pas le bon",

@@ -12,6 +12,7 @@ import {
 import School from './School'
 import Association from './Association'
 import Skill from './Skill'
+import FocusInterest from './FocusInterest'
 
 type socialNetworks = {
   facebook: string
@@ -54,9 +55,6 @@ export default class User extends BaseModel {
   public mobile?: string
 
   @column()
-  public focusInterest?: Array<string>
-
-  @column()
   public graduationYear?: number
 
   @column()
@@ -85,6 +83,14 @@ export default class User extends BaseModel {
     pivotRelatedForeignKey: 'skill_id',
   })
   public skills: ManyToMany<typeof Skill>
+
+  @manyToMany(() => Skill, {
+    localKey: 'id',
+    pivotForeignKey: 'user_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'focus_interest_id',
+  })
+  public focusInterest: ManyToMany<typeof FocusInterest>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

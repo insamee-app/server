@@ -29,7 +29,7 @@ export default class UserValidator {
   public schema = schema.create({
     lastName: schema.string.optional({ trim: true }),
     firstName: schema.string.optional({ trim: true }),
-    currentRole: schema.enum(Object.values(currentRole)),
+    currentRole: schema.enum.optional(Object.values(currentRole)),
     text: schema.string.optional({ trim: true }),
     mobile: schema.string.optional({ trim: true }, [rules.mobile({ locales: ['fr-FR'] })]),
     skills: schema.array.optional().members(schema.string({ trim: true })),

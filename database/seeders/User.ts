@@ -21,7 +21,6 @@ export default class UserSeeder extends BaseSeeder {
         currentRole: currentRole.STUDENT,
         text: "Hello, I'm just a seed",
         mobile: '3305471703',
-        focusInterest: ['Extruding', 'forming', 'pressing', 'compacting machine setter'],
         graduationYear: 2015,
         socialNetworks: {},
         schoolId: school.id,
@@ -34,7 +33,6 @@ export default class UserSeeder extends BaseSeeder {
         currentRole: currentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
-        focusInterest: ['Head cook'],
         graduationYear: 2020,
         socialNetworks: {
           facebook: 'https://facebook.com/edwardtaber',

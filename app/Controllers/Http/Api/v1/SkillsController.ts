@@ -4,7 +4,7 @@ import Skill from 'App/Models/Skill'
 
 export default class SkillsController {
   public async index() {
-    const schools = await Skill.query()
-    return schools
+    const skills = await Skill.query()
+    return skills
   }
 }

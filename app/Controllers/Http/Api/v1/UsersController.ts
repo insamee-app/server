@@ -4,12 +4,17 @@ import { getUser } from 'App/Services/UserService'
 import UserValidator from 'App/Validators/UserValidator'
 
 export default class UsersController {
-  public async index() {
+  public async index({ request }: HttpContextContract) {
+    const page = request.input('page', 1)
+    const limit = request.input('limit', 5)
+
     const users = await User.query()
       .preload('school')
       .preload('associations')
       .preload('skills')
       .preload('focusInterests')
+      .paginate(page, limit)
+
     return users
   }
 

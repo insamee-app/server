@@ -90,7 +90,7 @@ export default class User extends BaseModel {
     relatedKey: 'id',
     pivotRelatedForeignKey: 'focus_interest_id',
   })
-  public focusInterest: ManyToMany<typeof FocusInterest>
+  public focusInterests: ManyToMany<typeof FocusInterest>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -37,6 +37,7 @@ Route.group(() => {
   Route.resource('users', 'UsersController').only(['index', 'show', 'update', 'destroy'])
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('schools', 'SchoolsController.index').as('schools.index')
+  Route.get('skills', 'SkillsController.index').as('skills.index')
 })
   .middleware('auth')
   .prefix('api/v1')

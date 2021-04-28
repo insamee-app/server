@@ -23,7 +23,7 @@ export default class UsersController {
     const id = params.id as number
     const user = await getUser(id)
 
-    const { associations, ...data } = await request.validate(UserValidator)
+    const { associations, skills, ...data } = await request.validate(UserValidator)
 
     /*
      * Update user
@@ -36,7 +36,11 @@ export default class UsersController {
     }
 
     if (associations) await user.related('associations').sync(associations)
+    if (skills) await user.related('skills').sync(skills)
     const updatedUser = await user.save()
+    await updatedUser.preload('school')
+    await updatedUser.preload('associations')
+    await updatedUser.preload('skills')
     return updatedUser
   }
 

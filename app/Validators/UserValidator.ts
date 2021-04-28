@@ -3,6 +3,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
 import { currentRole } from 'App/Models/User'
 import Skill from 'App/Models/Skill'
+import FocusInterest from 'App/Models/FocusInterest'
 
 export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -36,7 +37,9 @@ export default class UserValidator {
     skills: schema.array
       .optional()
       .members(schema.number([rules.exists({ table: Skill.table, column: 'id' })])),
-    focusInterest: schema.array.optional().members(schema.string({ trim: true })),
+    focusInterest: schema.array
+      .optional()
+      .members(schema.number([rules.exists({ table: FocusInterest.table, column: 'id' })])),
     associations: schema.array
       .optional()
       .members(schema.number([rules.exists({ table: Association.table, column: 'id' })])),
@@ -67,12 +70,12 @@ export default class UserValidator {
     'currentRole.enum': "Cette valeur n'est pas acceptée",
     'graduationYear.range': "Cette année de diplomation n'est pas acceptée",
     'mobile.mobile': "Ce numéro de téléphone n'est pas valide",
-    'focusInterest.array': "Le type n'est pas le bon",
-    'focusInterest.*.string': 'Les données doivent être des chaînes de caractères',
     'associations.array': "Le type n'est pas le bon",
     'associations.*.number': 'Les données doivent être des nombres',
     'skills.array': "Le type n'est pas le bon",
     'skills.*.number': 'Les données doivent être des nombres',
+    'focusInterest.array': "Le type n'est pas le bon",
+    'focusInterest.*.number': 'Les données doivent être des nombres',
     /*
      * Wildcard is not working
      */

@@ -29,6 +29,10 @@ export default class UserValidator {
    *    ```
    */
   public schema = schema.create({
+    avatar: schema.file.optional({
+      size: '100kb',
+      extnames: ['jpg', 'png', 'jpeg'],
+    }),
     lastName: schema.string.optional({ trim: true }),
     firstName: schema.string.optional({ trim: true }),
     currentRole: schema.enum.optional(Object.values(currentRole)),

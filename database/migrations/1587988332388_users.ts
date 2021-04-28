@@ -11,6 +11,7 @@ export default class UsersSchema extends BaseSchema {
       table.string('remember_me_token').nullable()
       table.string('last_name').nullable()
       table.string('first_name').nullable()
+      table.enu('current_role', ['étudiant', 'personnel']).nullable()
       table.string('text').nullable()
       table.string('mobile').nullable()
       table.specificType('skills', 'text ARRAY').nullable()

@@ -19,6 +19,11 @@ type socialNetworks = {
   snapchat: string
 }
 
+export enum currentRole {
+  STUDENT = 'étudiant',
+  EMPLOYEE = 'personnel',
+}
+
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -37,6 +42,9 @@ export default class User extends BaseModel {
 
   @column()
   public firstName?: string
+
+  @column()
+  public currentRole?: currentRole
 
   @column()
   public text?: string

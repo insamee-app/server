@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { filterUsers, getUser, preloadUser } from 'App/Services/UserService'
 import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
+import Application from '@ioc:Adonis/Core/Application'
 
 export default class UsersController {
   public async me({ auth }: HttpContextContract) {
@@ -29,7 +30,12 @@ export default class UsersController {
     const id = params.id as number
     const user = await getUser(id)
 
-    const { associations, skills, focusInterests, ...data } = await request.validate(UserValidator)
+    const { associations, skills, focusInterests, avatar, ...data } = await request.validate(
+      UserValidator
+    )
+
+    avatar?.move(Application.tmpPath('uploads'))
+    console.log(avatar)
 
     /*
      * Update user

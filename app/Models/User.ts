@@ -84,7 +84,7 @@ export default class User extends BaseModel {
   })
   public skills: ManyToMany<typeof Skill>
 
-  @manyToMany(() => Skill, {
+  @manyToMany(() => FocusInterest, {
     localKey: 'id',
     pivotForeignKey: 'user_id',
     relatedKey: 'id',

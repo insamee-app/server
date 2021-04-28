@@ -38,6 +38,7 @@ Route.group(() => {
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
+  Route.get('focus_interest', 'FocusInterestsController.index').as('focus_interests.index')
 })
   .middleware('auth')
   .prefix('api/v1')

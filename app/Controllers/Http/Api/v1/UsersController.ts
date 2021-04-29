@@ -1,20 +1,11 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import User from 'App/Models/User'
-import { getUser } from 'App/Services/UserService'
+import { filterUsers, getUser } from 'App/Services/UserService'
+import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
 
 export default class UsersController {
   public async index({ request }: HttpContextContract) {
-    const page = request.input('page', 1)
-    const limit = request.input('limit', 5)
-
-    const users = await User.query()
-      .preload('school')
-      .preload('associations')
-      .preload('skills')
-      .preload('focusInterests')
-      .paginate(page, limit)
-
+    const users = await filterUsers(request, QueryUsersValidator)
     return users
   }
 

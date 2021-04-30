@@ -52,13 +52,17 @@ export default class AuthController {
      */
     const email = request.input('email')
     const password = request.input('password')
+    const rememberUser = !!request.input('remember_me')
 
     /*
      * Try to login the user
      */
-    const user = await auth.attempt(email, password)
+    const user = await auth.attempt(email, password, rememberUser)
 
     await user.preload('school')
+    await user.preload('skills')
+    await user.preload('focusInterests')
+    await user.preload('associations')
 
     return user
   }

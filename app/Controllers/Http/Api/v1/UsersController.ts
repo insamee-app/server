@@ -52,6 +52,8 @@ export default class UsersController {
     const user = await getUser(id)
 
     user.related('associations').detach()
+    user.related('skills').detach()
+    user.related('focusInterests').detach()
     await user.delete()
 
     return user

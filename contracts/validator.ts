@@ -3,5 +3,7 @@ declare module '@ioc:Adonis/Core/Validator' {
 
   export interface Rules {
     school(): Rule
+    isUserVerified(options: { verified: boolean }): Rule
+    isPasswordValid(): Rule
   }
 }

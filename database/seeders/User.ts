@@ -82,20 +82,6 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'EdwardMTaber@insa-cvl.fr',
-        password: 'Si2yuiPh',
-        lastName: 'Taber',
-        firstName: 'Edward',
-        currentRole: currentRole.EMPLOYEE,
-        text: "Hello, I'm just another seed",
-        mobile: '6188675386',
-        graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
-        schoolId: school.id,
-      },
-      {
         email: 'TeresaDClark@insa-cvl.fr',
         password: 'Si2yuiPh',
         lastName: 'Clark',

@@ -9,12 +9,12 @@ import { Exception } from '@poppinss/utils'
 | a status code and error code for every exception.
 |
 | @example
-| new NotFoundException('message', 500, 'E_RUNTIME_EXCEPTION')
+| new UnauthorizedException('message', 500, 'E_RUNTIME_EXCEPTION')
 |
 */
-export default class InternalServerErrorException extends Exception {
+export default class UnauthorizedException extends Exception {
   constructor(message: string) {
-    super(message, 500)
+    super(message, 401)
   }
 
   public async handle(error: this) {

@@ -1,8 +1,8 @@
-import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 
-export default class AuthValidator {
+export default class LoginValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -27,16 +27,15 @@ export default class AuthValidator {
   public schema = schema.create({
     email: schema.string({ trim: true }, [
       rules.email(),
-      rules.unique({
+      rules.exists({
         table: User.table,
         column: 'email',
       }),
-      rules.school(),
+      rules.isUserVerified({ verified: true }),
     ]),
-    password: schema.string({ trim: true }, [rules.confirmed()]),
+    password: schema.string({ trim: true }),
+    rememberMe: schema.boolean.optional(),
   })
-
-  public cacheKey = this.ctx.routeKey
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`
@@ -50,9 +49,10 @@ export default class AuthValidator {
    *
    */
   public messages = {
-    'email.required': 'Une adresse électronique est nécessaire',
-    'password.required': 'Un mot de passe est nécessaire',
-    'password_confirmation.confirmed': 'Le mot de passe de validation est incorrect',
-    'school': "La plateforme n'est pas disponible pour votre école",
+    'email.required': 'Vous devez fournir un email',
+    'email.email': 'Vous devez fournir un mail valide',
+    'email.isUserVerified': 'Vous devez vérifier votre compte',
+    'email.exists': "Ce compte n'existe pas",
+    'password.required': 'Vous devez fournir un mot de passe',
   }
 }

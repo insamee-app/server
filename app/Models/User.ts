@@ -40,6 +40,9 @@ export default class User extends BaseModel {
   public rememberMeToken?: string
 
   @column()
+  public isVerified: boolean
+
+  @column()
   public lastName?: string
 
   @column()

@@ -1,17 +1,24 @@
 import User from 'App/Models/User'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import AuthValidator from 'App/Validators/AuthValidator'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import School from 'App/Models/School'
-import InternalServerError from 'App/Exceptions/InternalServerErrorException'
+import InternalServerErrorException from 'App/Exceptions/InternalServerErrorException'
 import { preloadUser } from 'App/Services/UserService'
+import VerifyEmail from 'App/Mailers/VerifyEmail'
+import SendVerifyEmailValidator from 'App/Validators/SendVerifyEmailValidator'
+import SendResetPasswordValidator from 'App/Validators/SendResetPasswordValidator'
+import ResetPassword from 'App/Mailers/ResetPassword'
+import ResetPasswordValidator from 'App/Validators/ResetPasswordValidator'
+import RegisterValidator from 'App/Validators/RegisterValidator'
+import LoginValidator from 'App/Validators/LoginValidator'
 
 export default class AuthController {
-  public async register({ request, auth }: HttpContextContract) {
+  public async register({ request }: HttpContextContract) {
     /**
      * Validate user details
      */
-    const userDetails = await request.validate(AuthValidator)
+    // TODO: mettre en place une regex pour les mots de passe (attention, pas pour le login, uniquement le register
+    const userDetails = await request.validate(RegisterValidator)
 
     /*
      * Get the corresponding school
@@ -21,7 +28,9 @@ export default class AuthController {
 
     const school = await School.findBy('host', host)
     if (!school)
-      throw new InternalServerError(`Impossible de trouver l'école correspondante à ${host}`)
+      throw new InternalServerErrorException(
+        `Impossible de trouver l'école correspondante à ${host}`
+      )
 
     /**
      * Create a new user
@@ -37,10 +46,7 @@ export default class AuthController {
       throw new BadRequestException(`L'utilisateur ${user.email} existe déjà`)
     }
 
-    /**
-     * Login the user
-     */
-    await auth.login(user)
+    await new VerifyEmail(user.email).sendLater()
 
     await user.preload('school')
 
@@ -51,14 +57,12 @@ export default class AuthController {
     /*
      * Get email and password
      */
-    const email = request.input('email')
-    const password = request.input('password')
-    const rememberUser = !!request.input('remember_me')
+    const { email, password, rememberMe } = await request.validate(LoginValidator)
 
     /*
      * Try to login the user
      */
-    const user = await auth.attempt(email, password, rememberUser)
+    const user = await auth.attempt(email, password, rememberMe ?? false)
 
     await preloadUser(user)
 
@@ -68,6 +72,63 @@ export default class AuthController {
   public async logout({ auth }: HttpContextContract) {
     await auth.logout()
 
-    return
+    return {
+      logout: true,
+    }
+  }
+
+  public async verifyEmail({ request, params }: HttpContextContract) {
+    if (request.hasValidSignature()) {
+      const { email } = params
+      const user = (await User.findBy('email', email)) as User
+
+      if (!user.isVerified) {
+        user.isVerified = true
+        await user.save()
+      }
+
+      await preloadUser(user)
+      return user
+    }
+
+    throw new BadRequestException("L'url n'a pas pu être validée")
+  }
+
+  public async resetPassword({ request, params }: HttpContextContract) {
+    if (request.hasValidSignature()) {
+      // TODO: mettre en place une regex pour les mots de passe (attention, pas pour le login, uniquement le register
+      const { password } = await request.validate(ResetPasswordValidator)
+
+      const { email } = params
+      const user = (await User.findBy('email', email)) as User
+
+      user.password = password
+      await user.save()
+
+      await preloadUser(user)
+      return user
+    }
+
+    throw new BadRequestException("L'url n'a pas pu être validée")
+  }
+
+  public async sendResetPassword({ request }: HttpContextContract) {
+    const { email } = await request.validate(SendResetPasswordValidator)
+
+    await new ResetPassword(email).sendLater()
+
+    return {
+      sended: true,
+    }
+  }
+
+  public async sendVerifyEmail({ request }: HttpContextContract) {
+    const { email } = await request.validate(SendVerifyEmailValidator)
+
+    await new VerifyEmail(email).sendLater()
+
+    return {
+      sended: true,
+    }
   }
 }

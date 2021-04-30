@@ -29,6 +29,14 @@ Route.group(() => {
   Route.post('register', 'AuthController.register')
   Route.post('login', 'AuthController.login')
   Route.post('logout', 'AuthController.logout')
+
+  Route.post('verify/:email', 'AuthController.verifyEmail').as('verifyEmail')
+  Route.post('resetPassword/:email', 'AuthController.resetPassword').as('resetPassword')
+
+  Route.group(() => {
+    Route.post('verifyEmail', 'AuthController.sendVerifyEmail').as('sendVerifyEmail')
+    Route.post('resetPassword', 'AuthController.sendResetPassword').as('sendResetPassword')
+  }).prefix('send')
 })
   .prefix('auth')
   .namespace('App/Controllers/Http/Auth')

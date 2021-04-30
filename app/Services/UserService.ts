@@ -9,6 +9,10 @@ import {
 import { RequestContract } from '@ioc:Adonis/Core/Request'
 import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Model'
 
+/**
+ * Get a user by id
+ * @throws {NotFoundException} Will throw an error if a user is not found
+ */
 export async function getUser(id: number): Promise<User> {
   const user = await User.find(id)
 
@@ -68,6 +72,9 @@ export async function filterUsers(
   return result
 }
 
+/**
+ *  Preload data on a user or a query builder
+ */
 export async function preloadUser(
   user: User | ModelQueryBuilderContract<typeof User, User>
 ): Promise<void> {

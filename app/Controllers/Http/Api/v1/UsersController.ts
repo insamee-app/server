@@ -1,5 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { filterUsers, getUser } from 'App/Services/UserService'
+import { filterUsers, getUser, preloadUser } from 'App/Services/UserService'
 import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
 
@@ -14,10 +14,7 @@ export default class UsersController {
 
     const user = await getUser(id)
 
-    await user.preload('school')
-    await user.preload('associations')
-    await user.preload('skills')
-    await user.preload('focusInterests')
+    await preloadUser(user)
 
     return user
   }
@@ -44,10 +41,7 @@ export default class UsersController {
 
     const updatedUser = await user.save()
 
-    await updatedUser.preload('school')
-    await updatedUser.preload('associations')
-    await updatedUser.preload('skills')
-    await updatedUser.preload('focusInterests')
+    await preloadUser(user)
 
     return updatedUser
   }

@@ -4,6 +4,7 @@ import AuthValidator from 'App/Validators/AuthValidator'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import School from 'App/Models/School'
 import InternalServerError from 'App/Exceptions/InternalServerErrorException'
+import { preloadUser } from 'App/Services/UserService'
 
 export default class AuthController {
   public async register({ request, auth }: HttpContextContract) {
@@ -59,10 +60,7 @@ export default class AuthController {
      */
     const user = await auth.attempt(email, password, rememberUser)
 
-    await user.preload('school')
-    await user.preload('skills')
-    await user.preload('focusInterests')
-    await user.preload('associations')
+    await preloadUser(user)
 
     return user
   }

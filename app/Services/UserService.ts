@@ -7,6 +7,7 @@ import {
   SimplePaginatorContract,
 } from '@ioc:Adonis/Lucid/DatabaseQueryBuilder'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
+import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Model'
 
 export async function getUser(id: number): Promise<User> {
   const user = await User.find(id)
@@ -40,11 +41,7 @@ export async function filterUsers(
 
   const queryUsers = User.query()
 
-  await queryUsers
-    .preload('school')
-    .preload('associations')
-    .preload('skills')
-    .preload('focusInterests')
+  await preloadUser(queryUsers)
 
   if (skill) {
     const skillQuery = queryInPivot('skill', skill)
@@ -69,4 +66,13 @@ export async function filterUsers(
       : queryUsers.exec()
 
   return result
+}
+
+export async function preloadUser(
+  user: User | ModelQueryBuilderContract<typeof User, User>
+): Promise<void> {
+  await user.preload('school')
+  await user.preload('skills')
+  await user.preload('focusInterests')
+  await user.preload('associations')
 }

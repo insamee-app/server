@@ -104,7 +104,7 @@ async function validateIsPasswordValid(
     return
   }
 
-  const passwordRegExp = new RegExp('^(?=.*d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$')
+  const passwordRegExp = new RegExp(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/, 'g')
   if (passwordRegExp.test(value)) return
 
   errorReporter.report(pointer, 'isPasswordValid', 'Invalid password', arrayExpressionPointer)

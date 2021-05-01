@@ -14,7 +14,7 @@ export default class UserSeeder extends BaseSeeder {
 
     await User.updateOrCreateMany(uniqueKey, [
       {
-        email: 'VirginiaBMarker@insa-cvl.fr',
+        email: 'VirginiaBMarker@insa-cvl.fr'.toLowerCase(),
         password: 'ronaeT2Iu',
         lastName: 'Marker',
         firstName: 'Virginia',
@@ -26,7 +26,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'EdwardMTaber@insa-cvl.fr',
+        email: 'EdwardMTaber@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Taber',
         firstName: 'Edward',
@@ -40,7 +40,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'MyrtleDGlover@insa-cvl.fr',
+        email: 'MyrtleDGlover@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Glover',
         firstName: 'Myrtle ',
@@ -54,7 +54,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'BillyRRogers@insa-cvl.fr',
+        email: 'BillyRRogers@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Rogers',
         firstName: 'Billy',
@@ -68,7 +68,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'AnnaKSanchez@insa-cvl.fr',
+        email: 'AnnaKSanchez@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Sanchez',
         firstName: 'Anna',
@@ -82,7 +82,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'TeresaDClark@insa-cvl.fr',
+        email: 'TeresaDClark@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Clark',
         firstName: 'Teresa',
@@ -96,7 +96,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'PaulLCook@insa-cvl.fr',
+        email: 'PaulLCook@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Cook',
         firstName: 'Paul',
@@ -110,7 +110,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'ShawnJMartin@insa-cvl.fr',
+        email: 'ShawnJMartin@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Martin',
         firstName: 'Shawn',
@@ -124,7 +124,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'PaulDSullivan@insa-cvl.fr',
+        email: 'PaulDSullivan@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Sullivan',
         firstName: 'Paul',
@@ -138,7 +138,7 @@ export default class UserSeeder extends BaseSeeder {
         schoolId: school.id,
       },
       {
-        email: 'CarrollCButler@insa-cvl.fr',
+        email: 'CarrollCButler@insa-cvl.fr'.toLowerCase(),
         password: 'Si2yuiPh',
         lastName: 'Butler',
         firstName: 'Carroll',

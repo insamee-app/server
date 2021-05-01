@@ -26,7 +26,7 @@ export default class LoginValidator {
    */
   public schema = schema.create({
     email: schema.string({ trim: true }, [
-      rules.email(),
+      rules.email({ sanitize: true }),
       rules.exists({
         table: User.table,
         column: 'email',

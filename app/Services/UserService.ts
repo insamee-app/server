@@ -14,9 +14,9 @@ import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Model'
  * @throws {NotFoundException} Will throw an error if a user is not found
  */
 export async function getUser(id: number): Promise<User> {
-  const user = await User.find(id)
+  const user = await User.findOrFail(id)
 
-  if (!user) throw new NotFoundException(`Utilisateur ${id} introuvable`)
+  if (!user.isVerified) throw new NotFoundException(`Utilisateur ${id} introuvable`)
 
   return user
 }
@@ -43,7 +43,7 @@ export async function filterUsers(
     validator
   )
 
-  const queryUsers = User.query()
+  const queryUsers = User.query().where('is_verified', true)
 
   await preloadUser(queryUsers)
 

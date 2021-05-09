@@ -4,6 +4,11 @@ import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
 
 export default class UsersController {
+  public async me({ auth }: HttpContextContract) {
+    const { user } = auth
+    return user
+  }
+
   public async index({ request }: HttpContextContract) {
     const users = await filterUsers(request, QueryUsersValidator)
     return users

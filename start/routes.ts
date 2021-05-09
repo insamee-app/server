@@ -42,9 +42,11 @@ Route.group(() => {
   .namespace('App/Controllers/Http/Auth')
 
 Route.group(() => {
+  Route.get('users/me', 'UsersController.me').as('users.me')
   Route.resource('users', 'UsersController')
     .only(['index', 'show', 'update', 'destroy'])
     .middleware({ update: 'checkPermission', destroy: 'checkPermission' })
+
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')

@@ -20,6 +20,7 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
+import Application from '@ioc:Adonis/Core/Application'
 
 Route.get('/', async () => {
   return { message: 'API from INSAMEE' }
@@ -51,6 +52,11 @@ Route.group(() => {
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
   Route.get('focus_interests', 'FocusInterestsController.index').as('focus_interests.index')
+
+  if (process.env.NODE_ENV === 'development')
+    Route.get('uploads/:filename', async ({ response, params }) => {
+      response.download(Application.makePath('../storage/uploads', params.filename))
+    }).as('getFile')
 })
   .middleware('auth')
   .prefix('api/v1')

@@ -28,9 +28,9 @@ export default class QueryUsersValidator {
     limit: schema.number.optional(),
     page: schema.number.optional(),
     currentRole: schema.enum.optional(Object.values(currentRole)),
-    skill: schema.string.optional({ trim: true }),
-    focusInterest: schema.string.optional({ trim: true }),
-    association: schema.string.optional({ trim: true }),
+    skill: schema.number.optional(),
+    focusInterest: schema.number.optional(),
+    association: schema.number.optional(),
   })
 
   /**
@@ -48,8 +48,5 @@ export default class QueryUsersValidator {
     'page.number': 'La page souhaitée doit être un nombre',
     'limit.number': 'La limite souhaitée doit être un nombre',
     'currentRole.enum': "La valeur n'est pas la bonne",
-    'skill.string': 'La valeur doit être une chaîne de caractère',
-    'focusInterest.string': 'La valeur doit être une chaîne de caractère',
-    'association.string': 'La valeur doit être une chaîne de caractère',
   }
 }

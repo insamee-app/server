@@ -15,6 +15,7 @@ export default class UserSeeder extends BaseSeeder {
     await User.updateOrCreateMany(uniqueKey, [
       {
         email: 'VirginiaBMarker@insa-cvl.fr'.toLowerCase(),
+        isVerified: true,
         password: 'ronaeT2Iu',
         lastName: 'Marker',
         firstName: 'Virginia',
@@ -27,6 +28,7 @@ export default class UserSeeder extends BaseSeeder {
       },
       {
         email: 'EdwardMTaber@insa-cvl.fr'.toLowerCase(),
+        isVerified: true,
         password: 'Si2yuiPh',
         lastName: 'Taber',
         firstName: 'Edward',
@@ -41,6 +43,7 @@ export default class UserSeeder extends BaseSeeder {
       },
       {
         email: 'MyrtleDGlover@insa-cvl.fr'.toLowerCase(),
+        isVerified: true,
         password: 'Si2yuiPh',
         lastName: 'Glover',
         firstName: 'Myrtle ',
@@ -55,6 +58,7 @@ export default class UserSeeder extends BaseSeeder {
       },
       {
         email: 'BillyRRogers@insa-cvl.fr'.toLowerCase(),
+        isVerified: true,
         password: 'Si2yuiPh',
         lastName: 'Rogers',
         firstName: 'Billy',
@@ -125,6 +129,7 @@ export default class UserSeeder extends BaseSeeder {
       },
       {
         email: 'PaulDSullivan@insa-cvl.fr'.toLowerCase(),
+        isVerified: true,
         password: 'Si2yuiPh',
         lastName: 'Sullivan',
         firstName: 'Paul',

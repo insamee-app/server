@@ -34,8 +34,8 @@ export default class UsersController {
       UserValidator
     )
 
-    avatar?.move(Application.tmpPath('uploads'))
-    console.log(avatar)
+    // TODO: il faut trouver comment on gère ça !
+    avatar?.move(Application.makePath('../storage/uploads'))
 
     /*
      * Update user

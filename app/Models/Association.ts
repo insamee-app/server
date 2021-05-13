@@ -10,6 +10,9 @@ export default class Association extends BaseModel {
   public name: string
 
   @column()
+  public imageId: string
+
+  @column()
   public schoolId: number
 
   @belongsTo(() => School, {

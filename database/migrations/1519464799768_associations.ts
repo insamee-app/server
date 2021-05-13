@@ -6,6 +6,7 @@ export default class Associations extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
+      table.string('image_id').notNullable()
       table.string('name', 255).notNullable()
       table.integer('school_id').unsigned().notNullable().references('id').inTable('schools')
       table.timestamps(true)

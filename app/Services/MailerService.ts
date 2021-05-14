@@ -1,17 +1,19 @@
 import Route from '@ioc:Adonis/Core/Route'
 import Env from '@ioc:Adonis/Core/Env'
+import { URL, URLSearchParams } from 'url'
 
 /**
  * Create a signed url
  */
 export function makeSignedUrl(
   routeIdentifier: string,
-  params: object,
+  params: { email: string },
   expiresIn: string | undefined = undefined
 ): string {
-  const signedPath = Route.makeSignedUrl(routeIdentifier, { params, expiresIn })
+  const signedPath = Route.makeSignedUrl(routeIdentifier, { params, expiresIn }) as string
+  const signedUrl = new URL(signedPath, Env.get('FRONT_HOST'))
 
-  const signedUrl = `https://${Env.get('FRONT_HOST')}${signedPath}`
+  signedUrl.pathname = '/verifyEmail/' + params.email
 
-  return signedUrl
+  return signedUrl.href
 }

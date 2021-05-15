@@ -96,7 +96,7 @@ export default class AuthController {
 
   public async resetPassword({ request, params }: HttpContextContract) {
     if (request.hasValidSignature()) {
-      // TODO: mettre en place une regex pour les mots de passe (attention, pas pour le login, uniquement le register
+      // TODO: mettre en place une regex pour les mots de passe (attention, pas pour le login, uniquement le register => ça semble être fait mais il faut vérifier quand même sur cette route
       const { password } = await request.validate(ResetPasswordValidator)
 
       const { email } = params
@@ -114,7 +114,6 @@ export default class AuthController {
 
   public async sendResetPassword({ request }: HttpContextContract) {
     const { email } = await request.validate(SendResetPasswordValidator)
-
     await new ResetPassword(email).sendLater()
 
     return {

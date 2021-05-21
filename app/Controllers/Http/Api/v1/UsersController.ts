@@ -6,6 +6,7 @@ import UserValidator from 'App/Validators/UserValidator'
 export default class UsersController {
   public async me({ auth }: HttpContextContract) {
     const { user } = auth
+    await preloadUser(user!)
     return user
   }
 

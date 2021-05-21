@@ -48,17 +48,17 @@ export async function filterUsers(
   await preloadUser(queryUsers)
 
   if (skill) {
-    const skillQuery = queryInPivot('skill', skill)
+    const skillQuery = queryInPivot('skill', String(skill))
     queryUsers.whereIn('id', skillQuery)
   }
 
   if (focusInterest) {
-    const focusInterestsQuery = queryInPivot('focus_interest', focusInterest)
+    const focusInterestsQuery = queryInPivot('focus_interest', String(focusInterest))
     queryUsers.whereIn('id', focusInterestsQuery)
   }
 
   if (association) {
-    const associationsQuery = queryInPivot('association', association)
+    const associationsQuery = queryInPivot('association', String(association))
     queryUsers.whereIn('id', associationsQuery)
   }
 

@@ -11,6 +11,7 @@ import ResetPassword from 'App/Mailers/ResetPassword'
 import ResetPasswordValidator from 'App/Validators/ResetPasswordValidator'
 import RegisterValidator from 'App/Validators/RegisterValidator'
 import LoginValidator from 'App/Validators/LoginValidator'
+import ForbiddenException from 'App/Exceptions/ForbiddenException'
 
 export default class AuthController {
   public async register({ request }: HttpContextContract) {
@@ -77,7 +78,7 @@ export default class AuthController {
     }
   }
 
-  public async verifyEmail({ request, params }: HttpContextContract) {
+  public async verifyEmail({ request, params, auth }: HttpContextContract) {
     if (request.hasValidSignature()) {
       const { email } = params
       const user = (await User.findBy('email', email)) as User
@@ -85,10 +86,12 @@ export default class AuthController {
       if (!user.isVerified) {
         user.isVerified = true
         await user.save()
+        await preloadUser(user)
+        await auth.loginViaId(user.id)
+        return user
       }
 
-      await preloadUser(user)
-      return user
+      throw new ForbiddenException("L'utilisateur est déjà vérifié")
     }
 
     throw new BadRequestException("L'url n'a pas pu être validée")

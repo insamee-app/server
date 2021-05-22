@@ -13,6 +13,7 @@ export default class AssociationUser extends BaseSchema {
         .notNullable()
         .references('id')
         .inTable('associations')
+      table.timestamps(true)
     })
   }
 

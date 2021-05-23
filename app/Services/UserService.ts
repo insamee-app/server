@@ -81,5 +81,7 @@ export async function preloadUser(
   await user.preload('school')
   await user.preload('skills')
   await user.preload('focusInterests')
-  await user.preload('associations')
+  await user.preload('associations', (association) => {
+    association.preload('school')
+  })
 }

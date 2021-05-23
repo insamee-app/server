@@ -3,6 +3,7 @@ import { filterUsers, getUser, preloadUser } from 'App/Services/UserService'
 import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
 import Application from '@ioc:Adonis/Core/Application'
+import { v4 as uuid } from 'uuid'
 
 export default class UsersController {
   public async me({ auth }: HttpContextContract) {
@@ -34,8 +35,15 @@ export default class UsersController {
       UserValidator
     )
 
-    // TODO: il faut trouver comment on gère ça !
-    avatar?.move(Application.makePath('../storage/uploads'))
+    if (avatar) {
+      avatar.clientName = uuid() + '.' + avatar.extname
+      // TODO: Add to avatar_id
+      if (process.env.NODE_ENV === 'production') {
+        // TODO: send to s3
+      } else {
+        avatar.move(Application.makePath('../storage/uploads'))
+      }
+    }
 
     /*
      * Update user

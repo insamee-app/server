@@ -37,7 +37,8 @@ export default class UsersController {
 
     if (avatar) {
       avatar.clientName = uuid() + '.' + avatar.extname
-      // TODO: Add to avatar_id
+      user.avatarId = avatar.clientName
+      // TODO: voir si on remove les files lors d'un changement de fichiers
       if (process.env.NODE_ENV === 'production') {
         // TODO: send to s3
       } else {

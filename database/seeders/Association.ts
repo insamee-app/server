@@ -8,7 +8,7 @@ export default class AssociationSeeder extends BaseSeeder {
     await Association.updateOrCreateMany(uniqueKey, [
       {
         name: 'BDE',
-        imageId: 'bca827c0-b3c6-11eb-8529-0242ac130003',
+        imageId: 'bca827c0-b3c6-11eb-8529-0242ac130003.png',
         schoolId: 1,
       },
     ])

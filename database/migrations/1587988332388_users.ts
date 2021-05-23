@@ -10,6 +10,7 @@ export default class UsersSchema extends BaseSchema {
       table.string('password', 180).notNullable()
       table.string('remember_me_token').nullable()
       table.boolean('is_verified').defaultTo(false)
+      table.string('avatar_id').nullable()
       table.string('last_name').nullable()
       table.string('first_name').nullable()
       table.enu('current_role', ['étudiant', 'personnel']).nullable()

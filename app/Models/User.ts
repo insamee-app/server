@@ -43,6 +43,9 @@ export default class User extends BaseModel {
   public isVerified: boolean
 
   @column()
+  public avatarId?: string
+
+  @column()
   public lastName?: string
 
   @column()

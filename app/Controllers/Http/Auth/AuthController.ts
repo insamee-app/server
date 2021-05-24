@@ -3,7 +3,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import School from 'App/Models/School'
 import InternalServerErrorException from 'App/Exceptions/InternalServerErrorException'
-import { preloadUser } from 'App/Services/UserService'
+import { loadUser } from 'App/Services/UserService'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
 import SendVerifyEmailValidator from 'App/Validators/SendVerifyEmailValidator'
 import SendResetPasswordValidator from 'App/Validators/SendResetPasswordValidator'
@@ -18,7 +18,6 @@ export default class AuthController {
     /**
      * Validate user details
      */
-    // TODO: mettre en place une regex pour les mots de passe (attention, pas pour le login, uniquement le register
     const userDetails = await request.validate(RegisterValidator)
 
     /*
@@ -49,7 +48,7 @@ export default class AuthController {
 
     await new VerifyEmail(user.email).sendLater()
 
-    await user.preload('school')
+    await user.load('school')
 
     return user
   }
@@ -65,7 +64,7 @@ export default class AuthController {
      */
     const user = await auth.attempt(email, password, rememberMe ?? false)
 
-    await preloadUser(user)
+    await loadUser(user)
 
     return user
   }
@@ -83,11 +82,17 @@ export default class AuthController {
       const { email } = params
       const user = (await User.findBy('email', email)) as User
 
+      /**
+       * Do if the user is not already verify
+       */
       if (!user.isVerified) {
         user.isVerified = true
         await user.save()
-        await preloadUser(user)
+
         await auth.loginViaId(user.id)
+
+        await loadUser(user)
+
         return user
       }
 
@@ -99,7 +104,6 @@ export default class AuthController {
 
   public async resetPassword({ request, params }: HttpContextContract) {
     if (request.hasValidSignature()) {
-      // TODO: mettre en place une regex pour les mots de passe (attention, pas pour le login, uniquement le register => ça semble être fait mais il faut vérifier quand même sur cette route
       const { password } = await request.validate(ResetPasswordValidator)
 
       const { email } = params
@@ -108,7 +112,7 @@ export default class AuthController {
       user.password = password
       await user.save()
 
-      await preloadUser(user)
+      await loadUser(user)
       return user
     }
 

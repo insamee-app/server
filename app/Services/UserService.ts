@@ -7,7 +7,7 @@ import {
   SimplePaginatorContract,
 } from '@ioc:Adonis/Lucid/DatabaseQueryBuilder'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
-import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Model'
+import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Model'
 
 /**
  * Get a user by id
@@ -33,7 +33,7 @@ type UserValidator = typeof QueryUsersValidator
 export async function filterUsers(
   request: RequestContract,
   validator: UserValidator
-): Promise<User[] | SimplePaginatorContract<User>> {
+): Promise<User[] | ModelPaginatorContract<User>> {
   const defaultQuery = {
     page: 1,
     limit: 5,

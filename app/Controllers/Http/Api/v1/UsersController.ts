@@ -3,7 +3,8 @@ import { filterUsers, getUser, preloadUser } from 'App/Services/UserService'
 import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
 import Application from '@ioc:Adonis/Core/Application'
-import { v4 as uuid } from 'uuid'
+import { cuid } from '@ioc:Adonis/Core/Helpers'
+import { schema } from '@ioc:Adonis/Core/Validator'
 
 export default class UsersController {
   public async me({ auth }: HttpContextContract) {
@@ -27,22 +28,38 @@ export default class UsersController {
     return user
   }
 
-  public async update({ request, params }: HttpContextContract) {
+  public async update({ request, response, params }: HttpContextContract) {
     const id = params.id as number
     const user = await getUser(id)
 
-    const { associations, skills, focusInterests, avatar, ...data } = await request.validate(
-      UserValidator
-    )
+    const { associations, skills, focusInterests, ...data } = await request.validate(UserValidator)
+
+    const avatarSchema = schema.create({
+      avatar: schema.file.optional({
+        size: '150kb',
+        extnames: ['jpg', 'png', 'jpeg'],
+      }),
+    })
+
+    let avatar
+    try {
+      const data = await request.validate({ schema: avatarSchema })
+      avatar = data.avatar
+    } catch (error) {
+      response.badRequest(error)
+    }
 
     if (avatar) {
-      avatar.clientName = uuid() + '.' + avatar.extname
-      user.avatarId = avatar.clientName
-      // TODO: voir si on remove les files lors d'un changement de fichiers
+      let filename = user.avatarId
+      console.log(filename)
+      if (!user.avatarId) {
+        filename = `${cuid()}.${avatar.extname}`
+        user.avatarId = filename
+      }
       if (process.env.NODE_ENV === 'production') {
         // TODO: send to s3
       } else {
-        avatar.move(Application.makePath('../storage/uploads'))
+        avatar.move(Application.makePath('../storage/uploads'), { name: filename, overwrite: true })
       }
     }
 

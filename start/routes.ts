@@ -19,7 +19,6 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
 import Application from '@ioc:Adonis/Core/Application'
 
 Route.get('/', async () => {
@@ -46,7 +45,7 @@ Route.group(() => {
   Route.get('users/me', 'UsersController.me').as('users.me')
   Route.resource('users', 'UsersController')
     .only(['index', 'show', 'update', 'destroy'])
-    .middleware({ update: 'checkPermission', destroy: 'checkPermission' })
+    .middleware({ update: ['checkPermission'], destroy: ['checkPermission'] })
 
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('schools', 'SchoolsController.index').as('schools.index')
@@ -62,13 +61,3 @@ Route.group(() => {
   .prefix('api/v1')
   .namespace('App/Controllers/Http/Api/v1')
   .as('api.v1')
-
-// Route.get('health', async ({ response, auth }) => {
-//   const user = await auth.authenticate()
-
-//   console.log(user)
-
-//   const report = await HealthCheck.getReport()
-
-//   return report.healthy ? response.ok(report) : response.badRequest(report)
-// }).middleware('auth')

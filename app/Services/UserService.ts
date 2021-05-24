@@ -2,10 +2,7 @@ import NotFoundException from 'App/Exceptions/NotFoundException'
 import User from 'App/Models/User'
 import Database from '@ioc:Adonis/Lucid/Database'
 import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
-import {
-  DatabaseQueryBuilderContract,
-  SimplePaginatorContract,
-} from '@ioc:Adonis/Lucid/DatabaseQueryBuilder'
+import { DatabaseQueryBuilderContract } from '@ioc:Adonis/Lucid/DatabaseQueryBuilder'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
 import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Model'
 

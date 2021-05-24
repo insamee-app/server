@@ -1,12 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { filterUsers, getUser, preloadUser } from 'App/Services/UserService'
+import { filterUsers, getUser, loadUser } from 'App/Services/UserService'
 import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
+import Application from '@ioc:Adonis/Core/Application'
+import { cuid } from '@ioc:Adonis/Core/Helpers'
 
 export default class UsersController {
   public async me({ auth }: HttpContextContract) {
     const { user } = auth
-    await preloadUser(user!)
+    await loadUser(user!)
     return user
   }
 
@@ -20,7 +22,7 @@ export default class UsersController {
 
     const user = await getUser(id)
 
-    await preloadUser(user)
+    await loadUser(user)
 
     return user
   }
@@ -29,7 +31,23 @@ export default class UsersController {
     const id = params.id as number
     const user = await getUser(id)
 
-    const { associations, skills, focusInterests, ...data } = await request.validate(UserValidator)
+    const { associations, skills, focusInterests, avatar, ...data } = await request.validate(
+      UserValidator
+    )
+
+    if (avatar) {
+      let filename = user.avatarId
+      console.log(filename)
+      if (!user.avatarId) {
+        filename = `${cuid()}.${avatar.extname}`
+        user.avatarId = filename
+      }
+      if (process.env.NODE_ENV === 'production') {
+        // TODO: send to s3
+      } else {
+        avatar.move(Application.makePath('../storage/uploads'), { name: filename, overwrite: true })
+      }
+    }
 
     /*
      * Update user
@@ -47,7 +65,7 @@ export default class UsersController {
 
     const updatedUser = await user.save()
 
-    await preloadUser(user)
+    await loadUser(updatedUser)
 
     return updatedUser
   }

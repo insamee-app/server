@@ -73,10 +73,22 @@ export async function filterUsers(
 }
 
 /**
- *  Preload data on a user or a query builder
+ *  Load data on a user instance
+ */
+export async function loadUser(user: User): Promise<void> {
+  await user.load('school')
+  await user.load('skills')
+  await user.load('focusInterests')
+  await user.load('associations', (association) => {
+    association.preload('school')
+  })
+}
+
+/**
+ * Preload data on query model
  */
 export async function preloadUser(
-  user: User | ModelQueryBuilderContract<typeof User, User>
+  user: ModelQueryBuilderContract<typeof User, User>
 ): Promise<void> {
   await user.preload('school')
   await user.preload('skills')

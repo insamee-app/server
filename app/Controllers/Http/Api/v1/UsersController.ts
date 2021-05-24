@@ -1,15 +1,14 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { filterUsers, getUser, preloadUser } from 'App/Services/UserService'
+import { filterUsers, getUser, loadUser } from 'App/Services/UserService'
 import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
 import UserValidator from 'App/Validators/UserValidator'
 import Application from '@ioc:Adonis/Core/Application'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
-import { schema } from '@ioc:Adonis/Core/Validator'
 
 export default class UsersController {
   public async me({ auth }: HttpContextContract) {
     const { user } = auth
-    await preloadUser(user!)
+    await loadUser(user!)
     return user
   }
 
@@ -23,31 +22,18 @@ export default class UsersController {
 
     const user = await getUser(id)
 
-    await preloadUser(user)
+    await loadUser(user)
 
     return user
   }
 
-  public async update({ request, response, params }: HttpContextContract) {
+  public async update({ request, params }: HttpContextContract) {
     const id = params.id as number
     const user = await getUser(id)
 
-    const { associations, skills, focusInterests, ...data } = await request.validate(UserValidator)
-
-    const avatarSchema = schema.create({
-      avatar: schema.file.optional({
-        size: '150kb',
-        extnames: ['jpg', 'png', 'jpeg'],
-      }),
-    })
-
-    let avatar
-    try {
-      const data = await request.validate({ schema: avatarSchema })
-      avatar = data.avatar
-    } catch (error) {
-      response.badRequest(error)
-    }
+    const { associations, skills, focusInterests, avatar, ...data } = await request.validate(
+      UserValidator
+    )
 
     if (avatar) {
       let filename = user.avatarId
@@ -79,7 +65,7 @@ export default class UsersController {
 
     const updatedUser = await user.save()
 
-    await preloadUser(user)
+    await loadUser(updatedUser)
 
     return updatedUser
   }

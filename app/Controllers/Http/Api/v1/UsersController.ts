@@ -36,15 +36,12 @@ export default class UsersController {
     )
 
     if (avatar) {
-      let filename = user.avatarId
-      console.log(filename)
-      if (!user.avatarId) {
-        filename = `${cuid()}.${avatar.extname}`
-        user.avatarId = filename
-      }
+      const filename = `${cuid()}.${avatar.extname}`
+      user.avatarId = filename
       if (process.env.NODE_ENV === 'production') {
-        // TODO: send to s3
+        // TODO: send to s3 and remove the previous file
       } else {
+        // in dev, not need to remove a file
         avatar.move(Application.makePath('../storage/uploads'), { name: filename, overwrite: true })
       }
     }

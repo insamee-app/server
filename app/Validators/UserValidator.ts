@@ -33,10 +33,10 @@ export default class UserValidator {
       size: '100kb',
       extnames: ['jpg', 'png', 'jpeg'],
     }),
-    lastName: schema.string.optional({ trim: true }),
-    firstName: schema.string.optional({ trim: true }),
+    lastName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
+    firstName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
     currentRole: schema.enum.optional(Object.values(currentRole)),
-    text: schema.string.optional({ trim: true }),
+    text: schema.string.optional({ trim: true }, [rules.maxLength(2048)]),
     mobile: schema.string.optional({ trim: true }, [rules.mobile({ locales: ['fr-FR'] })]),
     skills: schema.array
       .optional()

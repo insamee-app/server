@@ -24,7 +24,11 @@ export default class ResetPasswordValidator {
    *    ```
    */
   public schema = schema.create({
-    password: schema.string({ trim: true }, [rules.confirmed(), rules.isPasswordValid()]),
+    password: schema.string({ trim: true }, [
+      rules.maxLength(30),
+      rules.confirmed(),
+      rules.isPasswordValid(),
+    ]),
   })
 
   /**

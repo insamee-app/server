@@ -28,7 +28,10 @@ export default class UserValidator {
    *     ])
    *    ```
    */
+  public existsStrict = true
+
   public schema = schema.create({
+    // Not able to remove data from the database
     avatar: schema.file.optional({
       size: '60kb',
       extnames: ['jpg', 'png', 'jpeg'],
@@ -37,7 +40,7 @@ export default class UserValidator {
     firstName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
     currentRole: schema.enum.optional(Object.values(CurrentRole)),
     text: schema.string.optional({ trim: true }, [rules.maxLength(2048)]),
-    mobile: schema.string.optional({ trim: true }, [rules.mobile({ locales: ['fr-FR'] })]),
+    mobile: schema.string.optional({ trim: true }, [rules.nullableMobile()]),
     skills: schema.array
       .optional()
       .members(schema.number([rules.exists({ table: Skill.table, column: 'id' })])),
@@ -51,9 +54,9 @@ export default class UserValidator {
      * We prevent user to provide random year
      */
     graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
-    urlFacebook: schema.string.optional({ trim: true }, [rules.url()]),
-    urlInstagram: schema.string.optional({ trim: true }, [rules.url()]),
-    urlTwitter: schema.string.optional({ trim: true }, [rules.url()]),
+    urlFacebook: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
+    urlInstagram: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
+    urlTwitter: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
   })
 
   /**
@@ -78,16 +81,5 @@ export default class UserValidator {
     'skills.*.number': 'Les données doivent être des nombres',
     'focusInterests.array': "Le type n'est pas le bon",
     'focusInterests.*.number': 'Les données doivent être des nombres',
-    /*
-     * Wildcard is not working
-     */
-    'socialNetworks.facebook.string': 'Le réseau doit être une chaîne de caractères',
-    'socialNetworks.facebook.url': 'Le réseau doit être une url valide',
-    'socialNetworks.instagram.string': 'Le réseau doit être une chaîne de caractères',
-    'socialNetworks.instagram.url': 'Le réseau doit être une url valide',
-    'socialNetworks.twitter.string': 'Le réseau doit être une chaîne de caractères',
-    'socialNetworks.twitter.url': 'Le réseau doit être une url valide',
-    'socialNetworks.snapchat.string': 'Le réseau doit être une chaîne de caractères',
-    'socialNetworks.snapchat.url': 'Le réseau doit être une url valide',
   }
 }

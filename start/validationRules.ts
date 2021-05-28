@@ -8,6 +8,8 @@
 |
 */
 import { ValidationRuntimeOptions, validator } from '@ioc:Adonis/Core/Validator'
+import isUrl from 'validator/lib/isUrl'
+import isMobilePhone from 'validator/lib/isMobilePhone'
 import School from 'App/Models/School'
 import User from 'App/Models/User'
 
@@ -118,3 +120,75 @@ function compileIsPasswordValid() {
 }
 
 validator.rule('isPasswordValid', validateIsPasswordValid, compileIsPasswordValid)
+
+async function validateNullableUrl(
+  value: string,
+  _,
+  { pointer, arrayExpressionPointer, errorReporter }: ValidationRuntimeOptions
+) {
+  /**
+   * Ignore non-string values. The user must apply string rule
+   * to validate string.
+   */
+  if (typeof value !== 'string') {
+    return
+  }
+
+  /**
+   * Allow value to be empty
+   */
+  if (value.length === 0) {
+    return
+  }
+
+  /**
+   * Invalid url
+   */
+  if (!isUrl(value)) {
+    errorReporter.report(
+      pointer,
+      'nullableUrl',
+      "Cette url n'est pas valide",
+      arrayExpressionPointer
+    )
+    return
+  }
+}
+
+validator.rule('nullableUrl', validateNullableUrl)
+
+async function validateNullableMobile(
+  value: string,
+  compiledOptions,
+  { pointer, arrayExpressionPointer, errorReporter }: ValidationRuntimeOptions
+) {
+  /**
+   * Ignore non-string values. The user must apply string rule
+   * to validate string.
+   */
+  if (typeof value !== 'string') {
+    return
+  }
+
+  /**
+   * Allow value to be empty
+   */
+  if (value.length === 0) {
+    return
+  }
+
+  /**
+   * Invalid mobile
+   */
+  if (!isMobilePhone(value, 'fr-FR')) {
+    errorReporter.report(
+      pointer,
+      'nullableMobile',
+      "Ce numéro n'est pas valide",
+      arrayExpressionPointer
+    )
+    return
+  }
+}
+
+validator.rule('nullableMobile', validateNullableMobile)

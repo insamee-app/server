@@ -38,7 +38,7 @@ export default class UsersController {
     if (avatar) {
       const filename = `${cuid()}.${avatar.extname}`
       user.avatarId = filename
-      if (process.env.NODE_ENV === 'production') {
+      if (Application.inProduction) {
         // TODO: send to s3 and remove the previous file
       } else {
         // in dev, not need to remove a file
@@ -52,7 +52,7 @@ export default class UsersController {
     for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         const element = data[key]
-        user[key] = element
+        user[key] = element || null
       }
     }
 

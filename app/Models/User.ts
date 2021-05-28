@@ -13,15 +13,7 @@ import School from './School'
 import Association from './Association'
 import Skill from './Skill'
 import FocusInterest from './FocusInterest'
-
-type socialNetworks = {
-  facebook: string
-  instagram: string
-  twitter: string
-  snapchat: string
-}
-
-export enum currentRole {
+export enum CurrentRole {
   STUDENT = 'étudiant',
   EMPLOYEE = 'personnel',
 }
@@ -52,7 +44,7 @@ export default class User extends BaseModel {
   public firstName?: string
 
   @column()
-  public currentRole?: currentRole
+  public currentRole?: CurrentRole
 
   @column()
   public text?: string
@@ -64,7 +56,13 @@ export default class User extends BaseModel {
   public graduationYear?: number
 
   @column()
-  public socialNetworks?: Partial<socialNetworks>
+  public urlFacebook?: string
+
+  @column()
+  public urlInstagram?: string
+
+  @column()
+  public urlTwitter?: string
 
   @column()
   public schoolId: number

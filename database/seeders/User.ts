@@ -1,6 +1,6 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import School from 'App/Models/School'
-import User, { currentRole } from 'App/Models/User'
+import User, { CurrentRole } from 'App/Models/User'
 
 export default class UserSeeder extends BaseSeeder {
   public static developmentOnly = true
@@ -19,11 +19,11 @@ export default class UserSeeder extends BaseSeeder {
         password: 'ronaeT2Iu',
         lastName: 'Marker',
         firstName: 'Virginia',
-        currentRole: currentRole.STUDENT,
+        currentRole: CurrentRole.STUDENT,
         text: "Hello, I'm just a seed",
         mobile: '3305471703',
         graduationYear: 2015,
-        socialNetworks: {},
+        urlFacebook: 'https://facebook.com',
         schoolId: school.id,
       },
       {
@@ -32,13 +32,12 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Taber',
         firstName: 'Edward',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
+        urlFacebook: 'https://facebook.com',
+        urlInstagram: 'https://instagram.com',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -47,13 +46,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Glover',
         firstName: 'Myrtle ',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -62,13 +58,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Rogers',
         firstName: 'Billy',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -76,13 +69,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Sanchez',
         firstName: 'Anna',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -90,13 +80,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Clark',
         firstName: 'Teresa',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -104,13 +91,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Cook',
         firstName: 'Paul',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -118,13 +102,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Martin',
         firstName: 'Shawn',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -133,13 +114,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Sullivan',
         firstName: 'Paul',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
       {
@@ -147,13 +125,10 @@ export default class UserSeeder extends BaseSeeder {
         password: 'Si2yuiPh',
         lastName: 'Butler',
         firstName: 'Carroll',
-        currentRole: currentRole.EMPLOYEE,
+        currentRole: CurrentRole.EMPLOYEE,
         text: "Hello, I'm just another seed",
         mobile: '6188675386',
         graduationYear: 2020,
-        socialNetworks: {
-          facebook: 'https://facebook.com/edwardtaber',
-        },
         schoolId: school.id,
       },
     ])

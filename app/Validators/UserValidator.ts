@@ -1,7 +1,7 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
-import { currentRole } from 'App/Models/User'
+import { CurrentRole } from 'App/Models/User'
 import Skill from 'App/Models/Skill'
 import FocusInterest from 'App/Models/FocusInterest'
 
@@ -30,12 +30,12 @@ export default class UserValidator {
    */
   public schema = schema.create({
     avatar: schema.file.optional({
-      size: '100kb',
+      size: '60kb',
       extnames: ['jpg', 'png', 'jpeg'],
     }),
     lastName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
     firstName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
-    currentRole: schema.enum.optional(Object.values(currentRole)),
+    currentRole: schema.enum.optional(Object.values(CurrentRole)),
     text: schema.string.optional({ trim: true }, [rules.maxLength(2048)]),
     mobile: schema.string.optional({ trim: true }, [rules.mobile({ locales: ['fr-FR'] })]),
     skills: schema.array
@@ -51,12 +51,9 @@ export default class UserValidator {
      * We prevent user to provide random year
      */
     graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
-    socialNetworks: schema.object.optional().members({
-      facebook: schema.string.optional({ trim: true }, [rules.url()]),
-      instagram: schema.string.optional({ trim: true }, [rules.url()]),
-      twitter: schema.string.optional({ trim: true }, [rules.url()]),
-      snapchat: schema.string.optional({ trim: true }, [rules.url()]),
-    }),
+    urlFacebook: schema.string.optional({ trim: true }, [rules.url()]),
+    urlInstagram: schema.string.optional({ trim: true }, [rules.url()]),
+    urlTwitter: schema.string.optional({ trim: true }, [rules.url()]),
   })
 
   /**

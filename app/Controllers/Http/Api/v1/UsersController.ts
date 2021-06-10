@@ -4,11 +4,18 @@ import { cuid } from '@ioc:Adonis/Core/Helpers'
 import { getUser } from 'App/Services/UserService'
 import UserValidator from 'App/Validators/UserValidator'
 import { getInsameeProfile } from 'App/Services/ProfileService'
+import ForbiddenException from 'App/Exceptions/ForbiddenException'
 
 export default class UsersController {
-  public async update({ request, params }: HttpContextContract) {
+  public async update({ request, params, bouncer }: HttpContextContract) {
     const id = params.id as number
     const user = await getUser(id)
+
+    try {
+      await bouncer.with('UserPolicy').authorize('update', user)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
 
     const { avatar } = await request.validate(UserValidator)
 
@@ -28,10 +35,17 @@ export default class UsersController {
     return updatedUser
   }
 
-  public async destroy({ params }: HttpContextContract) {
+  public async destroy({ params, bouncer }: HttpContextContract) {
     const id = params.id as number
 
     const user = await getUser(id)
+
+    try {
+      await bouncer.with('UserPolicy').authorize('update', user)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
     const insameeProfile = await getInsameeProfile(id)
 
     insameeProfile.related('associations').detach()

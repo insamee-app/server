@@ -7,6 +7,7 @@ import {
 } from 'App/Services/ProfileService'
 import InsameeProfile from 'App/Models/InsameeProfile'
 import InsameeProfileValidator from 'App/Validators/InsameeProfileValidator'
+import ForbiddenException from 'App/Exceptions/ForbiddenException'
 
 export default class ProfilesController {
   public async me({ auth }: HttpContextContract) {
@@ -19,16 +20,28 @@ export default class ProfilesController {
     return profile
   }
 
-  public async index({ request }: HttpContextContract) {
+  public async index({ request, bouncer }: HttpContextContract) {
+    try {
+      await bouncer.with('ProfilePolicy').authorize('viewList')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
     const profiles = await filterInsameeProfiles(request, QueryInsameeProfilesValidator)
 
     return profiles
   }
 
-  public async show({ params }: HttpContextContract) {
+  public async show({ params, bouncer }: HttpContextContract) {
     const id = params.id as number
 
     const profile = await getInsameeProfile(id)
+
+    try {
+      await bouncer.with('ProfilePolicy').authorize('view', profile)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
 
     await loadInsameeProfile(profile)
 
@@ -38,6 +51,12 @@ export default class ProfilesController {
   public async update({ request, params }: HttpContextContract) {
     const id = params.id as number
     const profile = await getInsameeProfile(id)
+
+    try {
+      await bouncer.with('ProfilePolicy').authorize('update', profiles)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
 
     const { associations, skills, focusInterests, ...data } = await request.validate(
       InsameeProfileValidator

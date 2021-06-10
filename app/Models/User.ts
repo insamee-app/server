@@ -1,26 +1,15 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import {
-  column,
-  beforeSave,
-  BaseModel,
-  belongsTo,
-  BelongsTo,
-  manyToMany,
-  ManyToMany,
-} from '@ioc:Adonis/Lucid/Orm'
-import School from './School'
-import Association from './Association'
-import Skill from './Skill'
-import FocusInterest from './FocusInterest'
-export enum CurrentRole {
-  STUDENT = 'étudiant',
-  EMPLOYEE = 'personnel',
-}
-
+import { column, beforeSave, BaseModel, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+import InsameeProfile from 'App/Models/InsameeProfile'
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
+
+  @hasOne(() => InsameeProfile, {
+    foreignKey: 'userId',
+  })
+  public insameeProfile: HasOne<typeof InsameeProfile>
 
   @column()
   public email: string
@@ -36,65 +25,6 @@ export default class User extends BaseModel {
 
   @column()
   public avatarId?: string
-
-  @column()
-  public lastName?: string
-
-  @column()
-  public firstName?: string
-
-  @column()
-  public currentRole?: CurrentRole
-
-  @column()
-  public text?: string
-
-  @column()
-  public mobile?: string
-
-  @column()
-  public graduationYear?: number
-
-  @column()
-  public urlFacebook?: string
-
-  @column()
-  public urlInstagram?: string
-
-  @column()
-  public urlTwitter?: string
-
-  @column()
-  public schoolId: number
-
-  @belongsTo(() => School, {
-    foreignKey: 'schoolId',
-  })
-  public school: BelongsTo<typeof School>
-
-  @manyToMany(() => Association, {
-    localKey: 'id',
-    pivotForeignKey: 'user_id',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'association_id',
-  })
-  public associations: ManyToMany<typeof Association>
-
-  @manyToMany(() => Skill, {
-    localKey: 'id',
-    pivotForeignKey: 'user_id',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'skill_id',
-  })
-  public skills: ManyToMany<typeof Skill>
-
-  @manyToMany(() => FocusInterest, {
-    localKey: 'id',
-    pivotForeignKey: 'user_id',
-    relatedKey: 'id',
-    pivotRelatedForeignKey: 'focus_interest_id',
-  })
-  public focusInterests: ManyToMany<typeof FocusInterest>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

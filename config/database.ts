@@ -34,6 +34,9 @@ const databaseConfig: DatabaseConfig = {
     |
     */
     pg: {
+      seeders: {
+        paths: ['./database/seeders/MainSeeder'],
+      },
       client: 'pg',
       connection: {
         host: Env.get('PG_HOST'),

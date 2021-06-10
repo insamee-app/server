@@ -11,18 +11,9 @@ export default class UsersSchema extends BaseSchema {
       table.string('remember_me_token').nullable()
       table.boolean('is_verified').defaultTo(false)
       table.string('avatar_id', 40).nullable()
-      table.string('last_name', 30).nullable()
-      table.string('first_name', 30).nullable()
-      table.enu('current_role', ['étudiant', 'personnel']).nullable()
-      table.string('text', 2048).nullable()
-      table.string('mobile').nullable()
-      table.specificType('focus_interest', 'text ARRAY').nullable()
-      table.integer('graduation_year').nullable()
-      table.string('url_facebook').nullable()
-      table.string('url_instagram').nullable()
-      table.string('url_twitter').nullable()
-      table.integer('school_id').unsigned().notNullable().references('id').inTable('schools')
-      table.timestamps(true)
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 

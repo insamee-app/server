@@ -1,6 +1,6 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { currentRole } from 'App/Models/User'
+import { CurrentRole } from 'App/Models/User'
 
 export default class QueryUsersValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -27,7 +27,7 @@ export default class QueryUsersValidator {
   public schema = schema.create({
     limit: schema.number.optional(),
     page: schema.number.optional(),
-    currentRole: schema.enum.optional(Object.values(currentRole)),
+    currentRole: schema.enum.optional(Object.values(CurrentRole)),
     skill: schema.number.optional(),
     focusInterest: schema.number.optional(),
     association: schema.number.optional(),

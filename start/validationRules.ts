@@ -159,7 +159,6 @@ validator.rule('nullableUrl', validateNullableUrl)
 
 async function validateNullableMobile(
   value: string,
-  compiledOptions,
   { pointer, arrayExpressionPointer, errorReporter }: ValidationRuntimeOptions
 ) {
   /**

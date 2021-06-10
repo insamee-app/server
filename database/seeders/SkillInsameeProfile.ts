@@ -2,7 +2,7 @@ import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Skill from 'App/Models/Skill'
 import ProfileInsamee from 'App/Models/InsameeProfile'
 
-export default class SkillUserSeeder extends BaseSeeder {
+export default class SkillInsameeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {

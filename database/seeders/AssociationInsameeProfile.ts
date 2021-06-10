@@ -2,7 +2,7 @@ import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Association from 'App/Models/Association'
 import ProfileInsamee from 'App/Models/InsameeProfile'
 
-export default class AssociationUserSeeder extends BaseSeeder {
+export default class AssociationInsameeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {

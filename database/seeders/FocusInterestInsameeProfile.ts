@@ -2,7 +2,7 @@ import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import FocusInterest from 'App/Models/FocusInterest'
 import ProfileInsamee from 'App/Models/InsameeProfile'
 
-export default class FocusInterestUserSeeder extends BaseSeeder {
+export default class FocusInterestInsameeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {

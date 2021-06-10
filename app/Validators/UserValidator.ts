@@ -1,9 +1,5 @@
-import { schema, rules } from '@ioc:Adonis/Core/Validator'
+import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Association from 'App/Models/Association'
-import { CurrentRole } from 'App/Models/User'
-import Skill from 'App/Models/Skill'
-import FocusInterest from 'App/Models/FocusInterest'
 
 export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -31,32 +27,10 @@ export default class UserValidator {
   public existsStrict = true
 
   public schema = schema.create({
-    // Not able to remove data from the database
     avatar: schema.file.optional({
       size: '60kb',
       extnames: ['jpg', 'png', 'jpeg'],
     }),
-    lastName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
-    firstName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
-    currentRole: schema.enum.optional(Object.values(CurrentRole)),
-    text: schema.string.optional({ trim: true }, [rules.maxLength(2048)]),
-    mobile: schema.string.optional({ trim: true }, [rules.nullableMobile()]),
-    skills: schema.array
-      .optional()
-      .members(schema.number([rules.exists({ table: Skill.table, column: 'id' })])),
-    focusInterests: schema.array
-      .optional()
-      .members(schema.number([rules.exists({ table: FocusInterest.table, column: 'id' })])),
-    associations: schema.array
-      .optional()
-      .members(schema.number([rules.exists({ table: Association.table, column: 'id' })])),
-    /*
-     * We prevent user to provide random year
-     */
-    graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
-    urlFacebook: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
-    urlInstagram: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
-    urlTwitter: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
   })
 
   /**
@@ -71,15 +45,6 @@ export default class UserValidator {
    *
    */
   public messages = {
-    'currentRole.enum': "Cette valeur n'est pas acceptée",
-    'graduationYear.range': "Cette année de diplomation n'est pas acceptée",
-    'mobile.mobile': "Ce numéro de téléphone n'est pas valide",
-    'associations.array': "Le type n'est pas le bon",
     'file.size': 'Ce fichier est trop volumineux',
-    'associations.*.number': 'Les données doivent être des nombres',
-    'skills.array': "Le type n'est pas le bon",
-    'skills.*.number': 'Les données doivent être des nombres',
-    'focusInterests.array': "Le type n'est pas le bon",
-    'focusInterests.*.number': 'Les données doivent être des nombres',
   }
 }

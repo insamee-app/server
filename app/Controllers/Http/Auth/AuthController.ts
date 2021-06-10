@@ -38,7 +38,6 @@ export default class AuthController {
     const user = new User()
     user.email = userDetails.email
     user.password = userDetails.password
-    user.schoolId = school.id
 
     try {
       await user.save()
@@ -46,11 +45,13 @@ export default class AuthController {
       throw new BadRequestException(`L'utilisateur ${user.email} existe déjà`)
     }
 
+    await user.related('insameeProfile').create({ schoolId: school.id })
+
     await new VerifyEmail(user.email).sendLater()
 
-    await user.load('school')
-
-    return user
+    return {
+      register: 'ok',
+    }
   }
 
   public async login({ auth, request }: HttpContextContract) {
@@ -62,18 +63,20 @@ export default class AuthController {
     /*
      * Try to login the user
      */
-    const user = await auth.attempt(email, password, rememberMe ?? false)
+    await auth.attempt(email, password, rememberMe ?? false)
 
-    await loadUser(user)
+    // await loadUser(user)
 
-    return user
+    return {
+      login: 'ok',
+    }
   }
 
   public async logout({ auth }: HttpContextContract) {
     await auth.logout()
 
     return {
-      logout: true,
+      logout: 'ok',
     }
   }
 
@@ -90,7 +93,7 @@ export default class AuthController {
         await user.save()
 
         await auth.loginViaId(user.id)
-
+        // TODO: Il faut faire une vérification du workflow pour s'assurer si c'est utile (faire un doc des workflows
         await loadUser(user)
 
         return user
@@ -112,7 +115,9 @@ export default class AuthController {
       user.password = password
       await user.save()
 
+      // TODO: Il faut faire une vérification du workflow pour s'assurer si c'est utile (faire un doc des workflows
       await loadUser(user)
+
       return user
     }
 
@@ -124,7 +129,7 @@ export default class AuthController {
     await new ResetPassword(email).sendLater()
 
     return {
-      sended: true,
+      sended: 'ok',
     }
   }
 
@@ -134,7 +139,7 @@ export default class AuthController {
     await new VerifyEmail(email).sendLater()
 
     return {
-      sended: true,
+      sended: 'ok',
     }
   }
 }

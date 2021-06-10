@@ -2,7 +2,7 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { CurrentRole } from 'App/Models/InsameeProfile'
 
-export default class QueryUsersValidator {
+export default class QueryInsameeProfilesValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*

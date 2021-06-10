@@ -1,39 +1,16 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { filterUsers, getUser, loadUser } from 'App/Services/UserService'
-import QueryUsersValidator from 'App/Validators/QueryUsersValidator'
-import UserValidator from 'App/Validators/UserValidator'
 import Application from '@ioc:Adonis/Core/Application'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
+import { getUser } from 'App/Services/UserService'
+import UserValidator from 'App/Validators/UserValidator'
+import { getInsameeProfile } from 'App/Services/ProfileService'
 
 export default class UsersController {
-  public async me({ auth }: HttpContextContract) {
-    const { user } = auth
-    await loadUser(user!)
-    return user
-  }
-
-  public async index({ request }: HttpContextContract) {
-    const users = await filterUsers(request, QueryUsersValidator)
-    return users
-  }
-
-  public async show({ params }: HttpContextContract) {
-    const id = params.id as number
-
-    const user = await getUser(id)
-
-    await loadUser(user)
-
-    return user
-  }
-
   public async update({ request, params }: HttpContextContract) {
     const id = params.id as number
     const user = await getUser(id)
 
-    const { associations, skills, focusInterests, avatar, ...data } = await request.validate(
-      UserValidator
-    )
+    const { avatar } = await request.validate(UserValidator)
 
     if (avatar) {
       const filename = `${cuid()}.${avatar.extname}`
@@ -46,23 +23,7 @@ export default class UsersController {
       }
     }
 
-    /*
-     * Update user
-     */
-    for (const key in data) {
-      if (Object.prototype.hasOwnProperty.call(data, key)) {
-        const element = data[key]
-        user[key] = element || null
-      }
-    }
-
-    if (associations) await user.related('associations').sync(associations)
-    if (skills) await user.related('skills').sync(skills)
-    if (focusInterests) await user.related('focusInterests').sync(focusInterests)
-
     const updatedUser = await user.save()
-
-    await loadUser(updatedUser)
 
     return updatedUser
   }
@@ -71,12 +32,17 @@ export default class UsersController {
     const id = params.id as number
 
     const user = await getUser(id)
+    const insameeProfile = await getInsameeProfile(id)
 
-    user.related('associations').detach()
-    user.related('skills').detach()
-    user.related('focusInterests').detach()
+    insameeProfile.related('associations').detach()
+    insameeProfile.related('skills').detach()
+    insameeProfile.related('focusInterests').detach()
+
+    await insameeProfile.delete()
     await user.delete()
 
-    return user
+    return {
+      delete: 'ok',
+    }
   }
 }

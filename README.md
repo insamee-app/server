@@ -1,16 +1,16 @@
-# INSAMEE
+# Server
 
-> Meet some mee !
+This projet is the server for all websites of **insamee-app**.
 
-Depuis plus d'un an, les étudiants sont bloqués chez eux. Ils sortent peu. La notion de sociabilité et de découverte des autres ont complètement été perdues. Les étudiants ne se connaissent pas. Les rencontres, au travers les différents évènements ou manifestations n'est pas pu avoir lieu. Cela ne fait qu'amplifier la sensation d'isolement des étudiants parfaits déjà très présente. Ce manque de découverte de l'autre ne permet pas alors à des personnes ayant les mêmes affinités et volontés que d'autres de se mettre en commun et de créer, de partager des moments.
+## Tech Stack
 
-Afin de recréer des liens, INSAMEE se place comme une plateforme de mise en relation des étudiants leur permettant de découvrir des profils, des personnes pour leurs projets, leur associations, leur club, de créer des groupes ayant les mêmes intérêt.
+**Server:** Adonisjs, Postgresql
 
-## Technique
+## Installation
 
-Ce projet est le serveur de INSAMEE. Il utilise [Adonisjs](https://adonisjs.com/) avec une base de données [Postgresql](https://www.postgresql.org/).
+This project uses `npm`.
 
-```sh
+```bash
 # install dependencies
 npm i
 
@@ -24,4 +24,20 @@ npm run build
 npm run start
 ```
 
-Lors du remplissage de la base de données avec les seeders, il est possible qu'une erreur survienne. Il suffit alors de relancer la commande pour que tout ce passe bien !
+Before to start, you must create tables in your database:
+
+```bash
+node ace migration:run
+```
+
+Then, you can populate your database:
+
+```bash
+node ace db:seed
+```
+
+In order to be used this server with any of the front-end, you must create a `.evn` file using the `.env.example` template.
+
+## Authors
+
+- [@barbapapazes](https://www.github.com/barbapapazes)

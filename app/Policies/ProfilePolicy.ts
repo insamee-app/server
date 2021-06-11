@@ -10,6 +10,6 @@ export default class ProfilePolicy extends BasePolicy {
     return true
   }
   public async update(user: User, profile: Profile) {
-    return user.id === profile.user_id
+    return user.id === profile.userId
   }
 }

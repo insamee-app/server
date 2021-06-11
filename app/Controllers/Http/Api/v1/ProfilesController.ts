@@ -48,12 +48,14 @@ export default class ProfilesController {
     return profile
   }
 
-  public async update({ request, params }: HttpContextContract) {
+  public async update({ request, params, bouncer, auth }: HttpContextContract) {
     const id = params.id as number
     const profile = await getInsameeProfile(id)
 
+    console.log(profile, auth.user)
+
     try {
-      await bouncer.with('ProfilePolicy').authorize('update', profiles)
+      await bouncer.with('ProfilePolicy').authorize('update', profile)
     } catch (error) {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }

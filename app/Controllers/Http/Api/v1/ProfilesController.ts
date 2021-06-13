@@ -52,8 +52,6 @@ export default class ProfilesController {
     const id = params.id as number
     const profile = await getInsameeProfile(id)
 
-    console.log(profile, auth.user)
-
     try {
       await bouncer.with('ProfilePolicy').authorize('update', profile)
     } catch (error) {

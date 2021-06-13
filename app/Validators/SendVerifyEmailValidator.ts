@@ -1,6 +1,7 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
+import { email } from './messages'
 
 export default class SendVerifyEmailValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -44,9 +45,10 @@ export default class SendVerifyEmailValidator {
    *
    */
   public messages = {
-    'email.string': "L'email doit être une string",
-    'email.email': "L'email n'est pas valide",
-    'email.exists': "Le compte n'existe pas en base de données",
-    'email.isUserVerified': "L'email ne doit pas être validée",
+    'email.required': email.required,
+    'email.string': email.string,
+    'email.email': email.email,
+    'email.exists': email.exists,
+    'email.isUserVerified': email.isUserVerified.unverified,
   }
 }

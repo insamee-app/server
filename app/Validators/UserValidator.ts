@@ -1,5 +1,6 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { file } from './messages'
 
 export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -45,6 +46,6 @@ export default class UserValidator {
    *
    */
   public messages = {
-    'file.size': 'Ce fichier est trop volumineux',
+    'file.size': file.size,
   }
 }

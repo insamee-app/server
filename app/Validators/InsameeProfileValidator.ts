@@ -4,6 +4,7 @@ import Association from 'App/Models/Association'
 import { CurrentRole } from 'App/Models/InsameeProfile'
 import Skill from 'App/Models/Skill'
 import FocusInterest from 'App/Models/FocusInterest'
+import { insameeProfile } from './messages'
 
 export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -66,14 +67,31 @@ export default class UserValidator {
    *
    */
   public messages = {
-    'currentRole.enum': "Cette valeur n'est pas acceptée",
-    'graduationYear.range': "Cette année de diplomation n'est pas acceptée",
-    'mobile.mobile': "Ce numéro de téléphone n'est pas valide",
-    'associations.array': "Le type n'est pas le bon",
-    'associations.*.number': 'Les données doivent être des nombres',
-    'skills.array': "Le type n'est pas le bon",
-    'skills.*.number': 'Les données doivent être des nombres',
-    'focusInterests.array': "Le type n'est pas le bon",
-    'focusInterests.*.number': 'Les données doivent être des nombres',
+    'lastName.string': insameeProfile.lastName.string,
+    'lastName.maxLength': insameeProfile.lastName.maxLength,
+    'firstName.string': insameeProfile.firstName.string,
+    'firstName.maxLength': insameeProfile,
+    'currentRole.enum': insameeProfile.currentRole.enum,
+    'text.string': insameeProfile.text.string,
+    'text.maxLength': insameeProfile.text.maxLength,
+    'mobile.string': insameeProfile.mobile.string,
+    'mobile.nullableMobile': insameeProfile.mobile.nullableMobile,
+    'skills.array': insameeProfile.skills.array,
+    'skills.*.number': insameeProfile.skills.number,
+    'skills.*.exists': insameeProfile.skills.exists,
+    'focusInterests.array': insameeProfile.focusInterests.array,
+    'focusInterests.*.number': insameeProfile.focusInterests.number,
+    'focusInterests.*.exists': insameeProfile.focusInterests.exists,
+    'associations.array': insameeProfile.associations.array,
+    'associations.*.number': insameeProfile.associations.number,
+    'associations.*.exists': insameeProfile.associations.exists,
+    'graduationYear.number': insameeProfile.graduationYear.number,
+    'graduationYear.range': insameeProfile.graduationYear.range,
+    'urlFacebook.string': insameeProfile.urlFacebook.string,
+    'urlFacebook.nullableUrl': insameeProfile.urlFacebook.nullableUrl,
+    'urlInstagram.string': insameeProfile.urlInstagram.string,
+    'urlInstagram.nullableUrl': insameeProfile.urlInstagram.nullableUrl,
+    'urlTwitter.string': insameeProfile.urlTwitter.string,
+    'urlTwitter.nullableUrl': insameeProfile.urlTwitter.nullableUrl,
   }
 }

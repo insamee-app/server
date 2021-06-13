@@ -1,6 +1,7 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { CurrentRole } from 'App/Models/InsameeProfile'
+import { insameeQuery } from './messages'
 
 export default class QueryInsameeProfilesValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -45,8 +46,11 @@ export default class QueryInsameeProfilesValidator {
    *
    */
   public messages = {
-    'page.number': 'La page souhaitée doit être un nombre',
-    'limit.number': 'La limite souhaitée doit être un nombre',
-    'currentRole.enum': "La valeur n'est pas la bonne",
+    'limit.number': insameeQuery.limit.number,
+    'page.number': insameeQuery.page.number,
+    'currentRole.enum': insameeQuery.currentRole.enum,
+    'skill.number': insameeQuery.skill.number,
+    'focusInterest.number': insameeQuery.focusInterest.number,
+    'association.number': insameeQuery.association.number,
   }
 }

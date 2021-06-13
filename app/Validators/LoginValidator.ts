@@ -1,6 +1,7 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
+import { email, password, rememberMe } from './messages'
 
 export default class LoginValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -49,13 +50,13 @@ export default class LoginValidator {
    *
    */
   public messages = {
-    'email.required': 'Vous devez fournir un email',
-    'email.string': 'Vous devez fournir un email',
-    'email.email': 'Vous devez fournir un mail valide',
-    'email.isUserVerified': 'Vous devez vérifier votre compte',
-    'email.exists': "Ce compte n'existe pas",
-    'password.required': 'Vous devez fournir un mot de passe',
-    'password.string': "Votre mot de passe n'est pas valide",
-    'rememberMe.boolean': "Se souvenir de moi n'est pas valide",
+    'email.required': email.required,
+    'email.string': email.string,
+    'email.email': email.email,
+    'email.isUserVerified': email.isUserVerified.verified,
+    'email.exists': email.exists,
+    'password.required': password.required,
+    'password.string': password.string,
+    'rememberMe.boolean': rememberMe.boolean,
   }
 }

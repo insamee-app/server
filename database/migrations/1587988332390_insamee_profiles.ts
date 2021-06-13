@@ -12,7 +12,6 @@ export default class InsameeProfiles extends BaseSchema {
       table.enu('current_role', Object.values(CurrentRole)).nullable()
       table.string('text', 2048).nullable()
       table.string('mobile').nullable()
-      table.specificType('focus_interest', 'text ARRAY').nullable()
       table.integer('graduation_year').nullable()
       table.string('url_facebook').nullable()
       table.string('url_instagram').nullable()

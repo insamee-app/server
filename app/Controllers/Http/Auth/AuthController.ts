@@ -93,6 +93,7 @@ export default class AuthController {
 
         await auth.loginViaId(user.id)
         // TODO: Il faut faire une vérification du workflow pour s'assurer si c'est utile (faire un doc des workflows
+        // La réponse est non. ON fait une second requête sur le client pour récupérer le profile puisque il le login
         // await loadUser(user)
 
         return user
@@ -115,6 +116,7 @@ export default class AuthController {
       await user.save()
 
       // TODO: Il faut faire une vérification du workflow pour s'assurer si c'est utile (faire un doc des workflows
+      // Le user n'est pas forcément login et si c'est le cas, bah on s'en fou
       // await loadUser(user)
 
       return user

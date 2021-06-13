@@ -50,9 +50,12 @@ export default class LoginValidator {
    */
   public messages = {
     'email.required': 'Vous devez fournir un email',
+    'email.string': 'Vous devez fournir un email',
     'email.email': 'Vous devez fournir un mail valide',
     'email.isUserVerified': 'Vous devez vérifier votre compte',
     'email.exists': "Ce compte n'existe pas",
     'password.required': 'Vous devez fournir un mot de passe',
+    'password.string': "Votre mot de passe n'est pas valide",
+    'rememberMe.boolean': "Se souvenir de moi n'est pas valide",
   }
 }

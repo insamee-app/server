@@ -36,6 +36,8 @@
     "@adonisjs/repl": "^3.1.2",
     "@adonisjs/session": "^6.0.3",
     "@adonisjs/view": "^6.0.2",
+    "@commitlint/cli": "^12.1.4",
+    "@commitlint/config-conventional": "^12.1.4",
     "@poppinss/utils": "^3.1.2",
     "luxon": "^1.27.0",
     "pg": "^8.6.0",
@@ -49,16 +51,9 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "node scripts/verify-commit-msg.js"
-    }
-  },
   "lint-staged": {
     "*.ts": [
-      "npm run format",
-      "git add"
+      "prettier --write"
     ]
   }
 }

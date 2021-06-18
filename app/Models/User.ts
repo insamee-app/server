@@ -1,15 +1,15 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import { column, beforeSave, BaseModel, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
-import InsameeProfile from 'App/Models/InsameeProfile'
+import Profile from 'App/Models/Profile'
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @hasOne(() => InsameeProfile, {
+  @hasOne(() => Profile, {
     foreignKey: 'userId',
   })
-  public insameeProfile: HasOne<typeof InsameeProfile>
+  public profile: HasOne<typeof Profile>
 
   @column()
   public email: string
@@ -22,9 +22,6 @@ export default class User extends BaseModel {
 
   @column()
   public isVerified: boolean
-
-  @column()
-  public avatarId?: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -10,7 +10,6 @@ export default class UsersSchema extends BaseSchema {
       table.string('password', 255).notNullable()
       table.string('remember_me_token').nullable()
       table.boolean('is_verified').defaultTo(false)
-      table.string('avatar_id', 40).nullable()
 
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

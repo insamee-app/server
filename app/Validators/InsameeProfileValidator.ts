@@ -1,7 +1,7 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
-import { CurrentRole } from 'App/Models/InsameeProfile'
+import { CurrentRole } from 'App/Models/Profile'
 import Skill from 'App/Models/Skill'
 import FocusInterest from 'App/Models/FocusInterest'
 import { insameeProfile } from './messages'

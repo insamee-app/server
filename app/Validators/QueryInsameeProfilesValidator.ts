@@ -1,6 +1,6 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { CurrentRole } from 'App/Models/InsameeProfile'
+import { CurrentRole } from 'App/Models/Profile'
 import { insameeQuery } from './messages'
 
 export default class QueryInsameeProfilesValidator {

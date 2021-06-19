@@ -1,15 +1,13 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
-import { CurrentRole } from 'App/Models/Profile'
 import Skill from 'App/Models/Skill'
 import FocusInterest from 'App/Models/FocusInterest'
 import { insameeProfile } from './messages'
 
-export default class UserValidator {
+export default class InsameeProfileValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  public date = new Date()
   /*
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
    *
@@ -29,14 +27,8 @@ export default class UserValidator {
    *     ])
    *    ```
    */
-  public existsStrict = true
-
   public schema = schema.create({
-    lastName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
-    firstName: schema.string.optional({ trim: true }, [rules.maxLength(30)]),
-    currentRole: schema.enum.optional(Object.values(CurrentRole)),
     text: schema.string.optional({ trim: true }, [rules.maxLength(2048)]),
-    mobile: schema.string.optional({ trim: true }, [rules.nullableMobile()]),
     skills: schema.array
       .optional()
       .members(schema.number([rules.exists({ table: Skill.table, column: 'id' })])),
@@ -46,13 +38,6 @@ export default class UserValidator {
     associations: schema.array
       .optional()
       .members(schema.number([rules.exists({ table: Association.table, column: 'id' })])),
-    /*
-     * We prevent user to provide random year
-     */
-    graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
-    urlFacebook: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
-    urlInstagram: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
-    urlTwitter: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
   })
 
   /**
@@ -67,15 +52,8 @@ export default class UserValidator {
    *
    */
   public messages = {
-    'lastName.string': insameeProfile.lastName.string,
-    'lastName.maxLength': insameeProfile.lastName.maxLength,
-    'firstName.string': insameeProfile.firstName.string,
-    'firstName.maxLength': insameeProfile,
-    'currentRole.enum': insameeProfile.currentRole.enum,
     'text.string': insameeProfile.text.string,
     'text.maxLength': insameeProfile.text.maxLength,
-    'mobile.string': insameeProfile.mobile.string,
-    'mobile.nullableMobile': insameeProfile.mobile.nullableMobile,
     'skills.array': insameeProfile.skills.array,
     'skills.*.number': insameeProfile.skills.number,
     'skills.*.exists': insameeProfile.skills.exists,
@@ -85,13 +63,5 @@ export default class UserValidator {
     'associations.array': insameeProfile.associations.array,
     'associations.*.number': insameeProfile.associations.number,
     'associations.*.exists': insameeProfile.associations.exists,
-    'graduationYear.number': insameeProfile.graduationYear.number,
-    'graduationYear.range': insameeProfile.graduationYear.range,
-    'urlFacebook.string': insameeProfile.urlFacebook.string,
-    'urlFacebook.nullableUrl': insameeProfile.urlFacebook.nullableUrl,
-    'urlInstagram.string': insameeProfile.urlInstagram.string,
-    'urlInstagram.nullableUrl': insameeProfile.urlInstagram.nullableUrl,
-    'urlTwitter.string': insameeProfile.urlTwitter.string,
-    'urlTwitter.nullableUrl': insameeProfile.urlTwitter.nullableUrl,
   }
 }

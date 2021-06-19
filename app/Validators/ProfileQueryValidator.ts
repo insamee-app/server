@@ -1,9 +1,9 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { CurrentRole } from 'App/Models/Profile'
-import { insameeQuery } from './messages'
+import { profileQuery } from './messages'
+import { Populate } from 'App/Models/Profile'
 
-export default class QueryInsameeProfilesValidator {
+export default class ProfileQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -28,10 +28,7 @@ export default class QueryInsameeProfilesValidator {
   public schema = schema.create({
     limit: schema.number.optional(),
     page: schema.number.optional(),
-    currentRole: schema.enum.optional(Object.values(CurrentRole)),
-    skill: schema.number.optional(),
-    focusInterest: schema.number.optional(),
-    association: schema.number.optional(),
+    populate: schema.enum.optional(Object.values(Populate)),
   })
 
   /**
@@ -46,11 +43,8 @@ export default class QueryInsameeProfilesValidator {
    *
    */
   public messages = {
-    'limit.number': insameeQuery.limit.number,
-    'page.number': insameeQuery.page.number,
-    'currentRole.enum': insameeQuery.currentRole.enum,
-    'skill.number': insameeQuery.skill.number,
-    'focusInterest.number': insameeQuery.focusInterest.number,
-    'association.number': insameeQuery.association.number,
+    'limit.number': profileQuery.limit.number,
+    'page.number': profileQuery.page.number,
+    'populate': profileQuery.populate.enum,
   }
 }

@@ -1,12 +1,27 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, belongsTo, BelongsTo, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  column,
+  belongsTo,
+  BelongsTo,
+  hasOne,
+  HasOne,
+  hasManyThrough,
+  HasManyThrough,
+} from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 import InsameeProfile from './InsameeProfile'
 import School from './School'
+import Skill from './Skill'
 
 export enum CurrentRole {
   STUDENT = 'étudiant',
   EMPLOYEE = 'personnel',
+}
+
+export enum Populate {
+  INSAMEE = 'insamee',
+  TUTORAT = 'tutorat',
 }
 
 export default class Profile extends BaseModel {
@@ -60,6 +75,13 @@ export default class Profile extends BaseModel {
     foreignKey: 'schoolId',
   })
   public school: BelongsTo<typeof School>
+
+  // @hasManyThrough([() => Skill, () => InsameeProfile], {
+  //   localKey: 'userId',
+  //   foreignKey: 'userId',
+  //   throughForeignKey: 'id',
+  // })
+  // public skills: HasManyThrough<typeof Skill>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

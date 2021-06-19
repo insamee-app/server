@@ -1,21 +1,28 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import QueryInsameeProfilesValidator from 'App/Validators/QueryInsameeProfilesValidator'
+import InsameeProfilesQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
+import { cuid } from '@ioc:Adonis/Core/Helpers'
+import Application from '@ioc:Adonis/Core/Application'
 import {
-  filterInsameeProfiles,
+  filterProfiles,
   getInsameeProfile,
-  loadInsameeProfile,
+  getProfile,
+  populateProfile,
 } from 'App/Services/ProfileService'
-import InsameeProfile from 'App/Models/InsameeProfile'
-import InsameeProfileValidator from 'App/Validators/InsameeProfileValidator'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
+import Profile, { Populate } from 'App/Models/Profile'
+import InsameeProfileValidator from 'App/Validators/InsameeProfileValidator'
+import ProfileValidator from 'App/Validators/ProfileValidator'
+import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
 
 export default class ProfilesController {
-  public async me({ auth }: HttpContextContract) {
+  public async me({ auth, request }: HttpContextContract) {
     const { user } = auth
 
-    const profile = await InsameeProfile.findOrFail(user!.id)
+    const profile = await Profile.findOrFail(user!.id)
 
-    await loadInsameeProfile(profile)
+    const { populate } = await request.validate(ProfileQueryValidator)
+
+    await populateProfile(profile, populate)
 
     return profile
   }
@@ -27,15 +34,19 @@ export default class ProfilesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const profiles = await filterInsameeProfiles(request, QueryInsameeProfilesValidator)
+    const profiles = await filterProfiles(
+      request,
+      ProfileQueryValidator,
+      InsameeProfilesQueryValidator
+    )
 
     return profiles
   }
 
-  public async show({ params, bouncer }: HttpContextContract) {
+  public async show({ params, bouncer, request }: HttpContextContract) {
     const id = params.id as number
 
-    const profile = await getInsameeProfile(id)
+    const profile = await getProfile(id)
 
     try {
       await bouncer.with('ProfilePolicy').authorize('view', profile)
@@ -43,14 +54,16 @@ export default class ProfilesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    await loadInsameeProfile(profile)
+    const { populate } = await request.validate(ProfileQueryValidator)
+
+    await populateProfile(profile, populate)
 
     return profile
   }
 
-  public async update({ request, params, bouncer, auth }: HttpContextContract) {
+  public async update({ request, params, bouncer }: HttpContextContract) {
     const id = params.id as number
-    const profile = await getInsameeProfile(id)
+    const profile = await getProfile(id)
 
     try {
       await bouncer.with('ProfilePolicy').authorize('update', profile)
@@ -58,12 +71,28 @@ export default class ProfilesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { associations, skills, focusInterests, ...data } = await request.validate(
+    const { populate } = await request.validate(ProfileQueryValidator)
+    const { avatar, ...data } = await request.validate(ProfileValidator)
+    const { text, skills, focusInterests, associations } = await request.validate(
       InsameeProfileValidator
     )
 
+    if (avatar) {
+      const filename = `${cuid()}.${avatar.extname}`
+      profile.avatar = filename
+      if (Application.inProduction) {
+        // TODO: send to s3 and remove the previous file
+      } else {
+        // in dev, not need to remove a file
+        avatar.move(Application.makePath('../storage/uploads'), {
+          name: filename,
+          overwrite: true,
+        })
+      }
+    }
+
     /*
-     * Update Profile
+     * Update profile
      */
     for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
@@ -72,13 +101,21 @@ export default class ProfilesController {
       }
     }
 
-    if (associations) await profile.related('associations').sync(associations)
-    if (skills) await profile.related('skills').sync(skills)
-    if (focusInterests) await profile.related('focusInterests').sync(focusInterests)
+    /**
+     * Update insamee profile
+     */
+    if (populate === Populate.INSAMEE) {
+      const insameeProfile = await getInsameeProfile(id)
+      insameeProfile.text = text || (null as unknown as undefined)
+      await insameeProfile.save()
+      if (associations) await insameeProfile.related('associations').sync(associations)
+      if (skills) await insameeProfile.related('skills').sync(skills)
+      if (focusInterests) await insameeProfile.related('focusInterests').sync(focusInterests)
+    }
 
     const updatedProfile = await profile.save()
 
-    await loadInsameeProfile(updatedProfile)
+    await populateProfile(updatedProfile, populate)
 
     return updatedProfile
   }

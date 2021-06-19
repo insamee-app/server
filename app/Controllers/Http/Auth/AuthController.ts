@@ -11,6 +11,7 @@ import ResetPasswordValidator from 'App/Validators/ResetPasswordValidator'
 import RegisterValidator from 'App/Validators/RegisterValidator'
 import LoginValidator from 'App/Validators/LoginValidator'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
+import InsameeProfile from 'App/Models/InsameeProfile'
 
 export default class AuthController {
   public async register({ request }: HttpContextContract) {
@@ -44,7 +45,8 @@ export default class AuthController {
       throw new BadRequestException(`L'utilisateur ${user.email} existe déjà`)
     }
 
-    await user.related('insameeProfile').create({ schoolId: school.id })
+    await user.related('profile').create({ schoolId: school.id, userId: user.id })
+    await InsameeProfile.create({ userId: user.id })
 
     await new VerifyEmail(user.email).sendLater()
 
@@ -92,11 +94,10 @@ export default class AuthController {
         await user.save()
 
         await auth.loginViaId(user.id)
-        // TODO: Il faut faire une vérification du workflow pour s'assurer si c'est utile (faire un doc des workflows
-        // La réponse est non. ON fait une second requête sur le client pour récupérer le profile puisque il le login
-        // await loadUser(user)
 
-        return user
+        return {
+          verifyEmail: 'ok',
+        }
       }
 
       throw new ForbiddenException("L'utilisateur est déjà vérifié")
@@ -115,11 +116,9 @@ export default class AuthController {
       user.password = password
       await user.save()
 
-      // TODO: Il faut faire une vérification du workflow pour s'assurer si c'est utile (faire un doc des workflows
-      // Le user n'est pas forcément login et si c'est le cas, bah on s'en fou
-      // await loadUser(user)
-
-      return user
+      return {
+        resetPassword: 'ok',
+      }
     }
 
     throw new BadRequestException("L'url n'a pas pu être validée")
@@ -130,7 +129,7 @@ export default class AuthController {
     await new ResetPassword(email).sendLater()
 
     return {
-      sended: 'ok',
+      sendResetPassword: 'ok',
     }
   }
 
@@ -140,7 +139,7 @@ export default class AuthController {
     await new VerifyEmail(email).sendLater()
 
     return {
-      sended: 'ok',
+      sendVerifyEmail: 'ok',
     }
   }
 }

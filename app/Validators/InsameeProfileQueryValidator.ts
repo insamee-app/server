@@ -1,11 +1,11 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { file } from './messages'
+import { CurrentRole } from 'App/Models/Profile'
+import { insameeQuery } from './messages'
 
-export default class UserValidator {
+export default class InsameeProfileQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
 
-  public date = new Date()
   /*
    * Define schema to validate the "shape", "type", "formatting" and "integrity" of data.
    *
@@ -25,13 +25,11 @@ export default class UserValidator {
    *     ])
    *    ```
    */
-  public existsStrict = true
-
   public schema = schema.create({
-    avatar: schema.file.optional({
-      size: '60kb',
-      extnames: ['jpg', 'png', 'jpeg'],
-    }),
+    currentRole: schema.enum.optional(Object.values(CurrentRole)),
+    skill: schema.number.optional(),
+    focusInterest: schema.number.optional(),
+    association: schema.number.optional(),
   })
 
   /**
@@ -46,6 +44,9 @@ export default class UserValidator {
    *
    */
   public messages = {
-    'file.size': file.size,
+    'currentRole.enum': insameeQuery.currentRole.enum,
+    'skill.number': insameeQuery.skill.number,
+    'focusInterest.number': insameeQuery.focusInterest.number,
+    'association.number': insameeQuery.association.number,
   }
 }

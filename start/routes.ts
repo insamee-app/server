@@ -42,8 +42,7 @@ Route.group(() => {
   .namespace('App/Controllers/Http/Auth')
 
 Route.group(() => {
-  Route.resource('users', 'UsersController').only(['update', 'destroy'])
-  // .middleware({ update: ['checkPermission'], destroy: ['checkPermission'] })
+  Route.resource('users', 'UsersController').only(['destroy'])
   Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
 

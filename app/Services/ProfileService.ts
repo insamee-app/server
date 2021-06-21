@@ -107,6 +107,7 @@ export async function filterProfiles(
       await preloadInsameeProfile(queryProfiles)
       break
     case Populate.TUTORAT:
+      await preloadTutoratProfile(queryProfiles)
       break
     default:
       break
@@ -138,7 +139,7 @@ export async function filterProfiles(
 }
 
 /**
- * Preload data on query model
+ * Preload data on insamee profile model
  */
 export async function preloadInsameeProfile(
   profiles: ModelQueryBuilderContract<typeof Profile, Profile>
@@ -150,6 +151,21 @@ export async function preloadInsameeProfile(
       insameeProfilesQuery.preload('associations', (association) => {
         association.preload('school')
       })
+    })
+    .preload('user')
+    .preload('school')
+}
+
+/**
+ * Preload data on tutorat profile model
+ */
+export async function preloadTutoratProfile(
+  profiles: ModelQueryBuilderContract<typeof Profile, Profile>
+): Promise<void> {
+  await profiles
+    .preload('tutoratProfile', (tutoratProfileQuery) => {
+      tutoratProfileQuery.preload('preferredSubjects')
+      tutoratProfileQuery.preload('difficultiesSubjects')
     })
     .preload('user')
     .preload('school')

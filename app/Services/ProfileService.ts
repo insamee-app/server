@@ -92,7 +92,6 @@ export async function filterProfiles(
     limit: 5,
   }
 
-  // pour l'ajout de tutorat, il va falloir découper en fonction
   const { limit, page, populate } = await request.validate(profileValidator)
   const { currentRole, skill, focusInterest, association } = await request.validate(
     insameeValidator

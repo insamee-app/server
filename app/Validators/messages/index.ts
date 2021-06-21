@@ -5,6 +5,7 @@ export { default as rememberMe } from './rememberMe'
 export { default as file } from './file'
 export { default as profile } from './profile'
 export { default as profileQuery } from './profileQuery'
+export { default as tutorat } from './tutorat'
 
 // insamee
 export { default as insameeQuery } from './insamee/query'

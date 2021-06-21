@@ -10,6 +10,7 @@ import FocusInterest from 'App/Models/FocusInterest'
 import Association from 'App/Models/Association'
 import Profile, { Populate } from 'App/Models/Profile'
 import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
+import TutoratProfile from 'App/Models/TutoratProfile'
 
 /**
  * Get a profile by id
@@ -32,7 +33,7 @@ export async function getProfile(id: number): Promise<Profile> {
 }
 
 /**
- * Get a profile by id
+ * Get an insamee profile by id
  * @throws {NotFoundException} Will throw an error if a profile is not found
  */
 export async function getInsameeProfile(id: number): Promise<InsameeProfile> {
@@ -49,6 +50,26 @@ export async function getInsameeProfile(id: number): Promise<InsameeProfile> {
   if (!insameeProfile[0]) throw new NotFoundException(`Utilisateur introuvable`)
 
   return insameeProfile[0]
+}
+
+/**
+ * Get a tutorat profile by id
+ * @throws {NotFoundException} Will throw an error if a profile is not found
+ */
+export async function getTutoratProfile(id: number): Promise<TutoratProfile> {
+  const tutoratProfile = await TutoratProfile.query()
+    .whereExists((query) => {
+      query
+        .from('users')
+        .whereColumn('users.id', 'tutorat_profiles.user_id')
+        .where('users.is_verified', true)
+    })
+    .where('user_id', '=', id)
+    .limit(1)
+
+  if (!tutoratProfile[0]) throw new NotFoundException(`Utilisateur introuvable`)
+
+  return tutoratProfile[0]
 }
 
 /**
@@ -135,7 +156,7 @@ export async function preloadInsameeProfile(
 }
 
 /**
- *  Load data on a user instance
+ *  Load data for insamee on a profile instance
  */
 export async function loadInsameeProfile(profile: Profile): Promise<void> {
   await profile.load((loader) => {
@@ -147,6 +168,22 @@ export async function loadInsameeProfile(profile: Profile): Promise<void> {
           association.preload('school')
         })
       })
+      .load('school')
+      .load('user')
+  })
+}
+
+/**
+ *  Load data for tutorat on a profile instance
+ */
+export async function loadTutoratProfile(profile: Profile): Promise<void> {
+  await profile.load((loader) => {
+    loader
+      .load('tutoratProfile', (tutoratProfile) => {
+        tutoratProfile.preload('difficultiesSubjects')
+        tutoratProfile.preload('preferredSubjects')
+      })
+      .load('school')
       .load('user')
   })
 }
@@ -163,6 +200,7 @@ export async function populateProfile(
       await loadInsameeProfile(profile)
       break
     case Populate.TUTORAT:
+      await loadTutoratProfile(profile)
       break
     default:
       break

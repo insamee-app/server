@@ -5,7 +5,7 @@ export default class UserPolicy extends BasePolicy {
   public async update(user: User, toCheckUser: User) {
     return user.id === toCheckUser.id
   }
-  public async delete(user: User, toCheckUser: User) {
+  public async destroy(user: User, toCheckUser: User) {
     return user.id === toCheckUser.id
   }
 }

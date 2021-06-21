@@ -9,3 +9,7 @@ export { default as profileQuery } from './profileQuery'
 // insamee
 export { default as insameeQuery } from './insamee/query'
 export { default as insameeProfile } from './insamee/profile'
+
+//tutorat
+export { default as tutoratQuery } from './tutorat/query'
+export { default as tutoratProfile } from './tutorat/profile'

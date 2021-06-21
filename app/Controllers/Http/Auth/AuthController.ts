@@ -12,6 +12,7 @@ import RegisterValidator from 'App/Validators/RegisterValidator'
 import LoginValidator from 'App/Validators/LoginValidator'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import InsameeProfile from 'App/Models/InsameeProfile'
+import TutoratProfile from 'App/Models/TutoratProfile'
 
 export default class AuthController {
   public async register({ request }: HttpContextContract) {
@@ -47,6 +48,7 @@ export default class AuthController {
 
     await user.related('profile').create({ schoolId: school.id, userId: user.id })
     await InsameeProfile.create({ userId: user.id })
+    await TutoratProfile.create({ userId: user.id })
 
     await new VerifyEmail(user.email).sendLater()
 

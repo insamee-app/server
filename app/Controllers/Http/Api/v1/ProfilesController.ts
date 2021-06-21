@@ -6,6 +6,7 @@ import {
   filterProfiles,
   getInsameeProfile,
   getProfile,
+  getTutoratProfile,
   populateProfile,
 } from 'App/Services/ProfileService'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
@@ -13,6 +14,7 @@ import Profile, { Populate } from 'App/Models/Profile'
 import InsameeProfileValidator from 'App/Validators/InsameeProfileValidator'
 import ProfileValidator from 'App/Validators/ProfileValidator'
 import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
+import TutoratProfileValidator from 'App/Validators/TutoratProfileValidator'
 
 export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
@@ -73,9 +75,6 @@ export default class ProfilesController {
 
     const { populate } = await request.validate(ProfileQueryValidator)
     const { avatar, ...data } = await request.validate(ProfileValidator)
-    const { text, skills, focusInterests, associations } = await request.validate(
-      InsameeProfileValidator
-    )
 
     if (avatar) {
       const filename = `${cuid()}.${avatar.extname}`
@@ -105,12 +104,42 @@ export default class ProfilesController {
      * Update insamee profile
      */
     if (populate === Populate.INSAMEE) {
+      const {
+        text: insameeText,
+        skills,
+        focusInterests,
+        associations,
+      } = await request.validate(InsameeProfileValidator)
+
       const insameeProfile = await getInsameeProfile(id)
-      insameeProfile.text = text || (null as unknown as undefined)
+
+      insameeProfile.text = insameeText || (null as unknown as undefined)
       await insameeProfile.save()
+
       if (associations) await insameeProfile.related('associations').sync(associations)
       if (skills) await insameeProfile.related('skills').sync(skills)
       if (focusInterests) await insameeProfile.related('focusInterests').sync(focusInterests)
+    }
+
+    /**
+     * Update tutorat profile
+     */
+    if (populate === Populate.TUTORAT) {
+      const {
+        text: tutoratText,
+        preferredSubjects,
+        difficultiesSubjects,
+      } = await request.validate(TutoratProfileValidator)
+
+      const tutoratProfile = await getTutoratProfile(id)
+
+      tutoratProfile.text = tutoratText || (null as unknown as undefined)
+      await tutoratProfile.save()
+
+      if (preferredSubjects)
+        await tutoratProfile.related('preferredSubjects').sync(preferredSubjects)
+      if (difficultiesSubjects)
+        await tutoratProfile.related('difficultiesSubjects').sync(difficultiesSubjects)
     }
 
     const updatedProfile = await profile.save()

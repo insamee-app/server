@@ -7,9 +7,7 @@ export default class ProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const school = await School.first()
-
-    if (!school) throw new Error('A school is missing')
+    const school = await School.firstOrFail()
 
     const profiles = [
       {

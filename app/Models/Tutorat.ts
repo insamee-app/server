@@ -20,7 +20,7 @@ export default class Tutorat extends BaseModel {
   public user: BelongsTo<typeof Profile>
 
   @column()
-  public subject_id: number
+  public subjectId: number
 
   @hasOne(() => Subject)
   public subject: HasOne<typeof Subject>

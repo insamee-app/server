@@ -13,6 +13,7 @@ import User from 'App/Models/User'
 import InsameeProfile from './InsameeProfile'
 import School from './School'
 import Skill from './Skill'
+import TutoratProfile from './TutoratProfile'
 
 export enum CurrentRole {
   STUDENT = 'étudiant',
@@ -40,6 +41,11 @@ export default class Profile extends BaseModel {
     foreignKey: 'userId',
   })
   public insameeProfile: HasOne<typeof InsameeProfile>
+
+  @hasOne(() => TutoratProfile, {
+    foreignKey: 'userId',
+  })
+  public tutoratProfile: HasOne<typeof TutoratProfile>
 
   @column()
   public lastName?: string

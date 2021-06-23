@@ -1,7 +1,7 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat, { TutoratType } from 'App/Models/Tutorat'
-import { filterTutorats, getTutorat } from 'App/Services/TutoratService'
+import { filterTutorats, getTutorat, loadTutorat } from 'App/Services/TutoratService'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 import TutoratUpdateValidator from 'App/Validators/TutoratUpdateValidator'
 import TutoratValidator from 'App/Validators/TutoratValidator'
@@ -16,9 +16,9 @@ export default class TutoratsController {
   public async show({ params }: HttpContextContract) {
     const id = params.id as number
 
-    const tutorat = getTutorat(id)
+    const tutorat = await getTutorat(id)
 
-    // TODO: populer le tutorat
+    await loadTutorat(tutorat)
 
     return tutorat
   }
@@ -37,9 +37,9 @@ export default class TutoratsController {
       text: data.text,
     }
 
-    const tutorat = Tutorat.create(rawTutorat)
+    const tutorat = await Tutorat.create(rawTutorat)
 
-    // TODO: voir pour populer le tutorat
+    await loadTutorat(tutorat)
 
     return tutorat
   }
@@ -66,9 +66,9 @@ export default class TutoratsController {
           : (null as unknown as undefined),
     })
 
-    tutorat.save()
+    await tutorat.save()
 
-    // TODO: il faut populer
+    await loadTutorat(tutorat)
 
     return tutorat
   }

@@ -17,12 +17,15 @@ export default class Tutorat extends BaseModel {
   public userId: number
 
   @belongsTo(() => Profile, { foreignKey: 'userId' })
-  public user: BelongsTo<typeof Profile>
+  public profile: BelongsTo<typeof Profile>
 
   @column()
   public subjectId: number
 
-  @hasOne(() => Subject)
+  @hasOne(() => Subject, {
+    foreignKey: 'id',
+    localKey: 'subjectId',
+  })
   public subject: HasOne<typeof Subject>
 
   @column()

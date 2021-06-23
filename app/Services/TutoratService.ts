@@ -1,5 +1,5 @@
 import { RequestContract } from '@ioc:Adonis/Core/Request'
-import { ModelPaginatorContract } from '@ioc:Adonis/Lucid/Orm'
+import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import Tutorat from 'App/Models/Tutorat'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
@@ -33,7 +33,7 @@ export async function filterTutorats(
 
   const queryTutorats = Tutorat.query()
 
-  // TODO: ajouter un préload
+  await preloadTutorat(queryTutorats)
 
   if (subject) {
     queryTutorats.where('subject_id', '=', subject)
@@ -53,4 +53,31 @@ export async function filterTutorats(
       : queryTutorats.exec()
 
   return result
+}
+
+/**
+ * Preload data for tutorat instance
+ */
+export async function preloadTutorat(
+  tutorats: ModelQueryBuilderContract<typeof Tutorat, Tutorat>
+): Promise<void> {
+  await tutorats
+    .preload('profile', (profileQuery) => {
+      profileQuery.preload('tutoratProfile')
+    })
+    .preload('school')
+    .preload('subject')
+}
+
+/**
+ * Load data for tutorat instance
+ */
+export async function loadTutorat(tutorat: Tutorat): Promise<void> {
+  await tutorat.load((loader) => {
+    loader.load('profile', (profile) => {
+      profile.preload('tutoratProfile')
+    })
+  })
+  await tutorat.load('school')
+  await tutorat.load('subject')
 }

@@ -343,7 +343,7 @@ Query string
 
 Authentication required, returns [multiple tutorats](#tutorats)
 
-### Store Tutorat
+#### Store Tutorat
 
 `POST /api/v1/tutorats`
 

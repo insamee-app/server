@@ -195,6 +195,7 @@ Authentication required, returns a [logout object](#logout-object)
 No authentication required, returns a [verifyEmail object](#verifyEmail-object)
 
 Throw [BadRequestException](#bad-request-exception) if url can't be validate
+
 Throw [ForbiddenException](#forbidden-exception) if user is already verified
 
 #### Reset Password
@@ -237,6 +238,7 @@ No authentication required, returns a [sendResetPassword object](#sendResetPassw
 `DELETE /api/v1/users/:id`
 
 Authentication required, returns a [deleted user object](#deleted-user-object)
+
 Authorization: only the owner
 
 #### Get Current Profile
@@ -282,6 +284,7 @@ Authentication required, returns a [profile](#profile)
 `PATCH /api/v1/profiles/:id`
 
 Authentication required, returns a [profile](#profile)
+
 Authorization: only the owner
 
 Query string
@@ -370,6 +373,7 @@ Optional fields
 - `text`, string
 
 Authentication required, returns a [tutorat](#tutorat)
+
 Authorization: only the owner
 
 #### Delete Tutorat
@@ -377,6 +381,7 @@ Authorization: only the owner
 `DELETE /api/v1/tutorats/:id`
 
 Authentication required, returns [deleted tutorat object](#deleted-tutorat-object)
+
 Authorization: only the owner
 
 #### Get Associations
@@ -401,8 +406,7 @@ Authentication required, returns [multiple skills](#multiple-skills)
 
 `GET /api/v1/focus_interests`
 
-Authentication required, returns [multiple focus of interests]
-(#multiple-focus-of-interests)
+Authentication required, returns [multiple focus of interests](#multiple-focus-of-interests)
 
 #### Get Subjects
 

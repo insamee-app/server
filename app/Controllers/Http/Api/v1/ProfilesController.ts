@@ -76,6 +76,61 @@ export default class ProfilesController {
     const { populate } = await request.validate(ProfileQueryValidator)
     const { avatar, ...data } = await request.validate(ProfileValidator)
 
+    if (populate === Populate.INSAMEE) {
+      /**
+       * Update insamee profile
+       */
+      const {
+        text: insameeText,
+        skills,
+        focusInterests,
+        associations,
+      } = await request.validate(InsameeProfileValidator)
+
+      const insameeProfile = await getInsameeProfile(id)
+
+      try {
+        await bouncer.with('InsameeProfilePolicy').authorize('update', insameeProfile)
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+
+      insameeProfile.text = insameeText || (null as unknown as undefined)
+      await insameeProfile.save()
+
+      if (associations) await insameeProfile.related('associations').sync(associations)
+      if (skills) await insameeProfile.related('skills').sync(skills)
+      if (focusInterests) await insameeProfile.related('focusInterests').sync(focusInterests)
+    } else if (populate === Populate.TUTORAT) {
+      /**
+       * Update tutorat profile
+       */
+      const {
+        text: tutoratText,
+        preferredSubjects,
+        difficultiesSubjects,
+      } = await request.validate(TutoratProfileValidator)
+
+      const tutoratProfile = await getTutoratProfile(id)
+
+      try {
+        await bouncer.with('TutoratProfilePolicy').authorize('update', tutoratProfile)
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+
+      tutoratProfile.text = tutoratText || (null as unknown as undefined)
+      await tutoratProfile.save()
+
+      if (preferredSubjects)
+        await tutoratProfile.related('preferredSubjects').sync(preferredSubjects)
+      if (difficultiesSubjects)
+        await tutoratProfile.related('difficultiesSubjects').sync(difficultiesSubjects)
+    }
+
+    /*
+     * Update global profile
+     */
     if (avatar) {
       const filename = `${cuid()}.${avatar.extname}`
       profile.avatar = filename
@@ -90,56 +145,11 @@ export default class ProfilesController {
       }
     }
 
-    /*
-     * Update profile
-     */
     for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         const element = data[key]
         profile[key] = element || null
       }
-    }
-
-    /**
-     * Update insamee profile
-     */
-    if (populate === Populate.INSAMEE) {
-      const {
-        text: insameeText,
-        skills,
-        focusInterests,
-        associations,
-      } = await request.validate(InsameeProfileValidator)
-
-      const insameeProfile = await getInsameeProfile(id)
-
-      insameeProfile.text = insameeText || (null as unknown as undefined)
-      await insameeProfile.save()
-
-      if (associations) await insameeProfile.related('associations').sync(associations)
-      if (skills) await insameeProfile.related('skills').sync(skills)
-      if (focusInterests) await insameeProfile.related('focusInterests').sync(focusInterests)
-    }
-
-    /**
-     * Update tutorat profile
-     */
-    if (populate === Populate.TUTORAT) {
-      const {
-        text: tutoratText,
-        preferredSubjects,
-        difficultiesSubjects,
-      } = await request.validate(TutoratProfileValidator)
-
-      const tutoratProfile = await getTutoratProfile(id)
-
-      tutoratProfile.text = tutoratText || (null as unknown as undefined)
-      await tutoratProfile.save()
-
-      if (preferredSubjects)
-        await tutoratProfile.related('preferredSubjects').sync(preferredSubjects)
-      if (difficultiesSubjects)
-        await tutoratProfile.related('difficultiesSubjects').sync(difficultiesSubjects)
     }
 
     const updatedProfile = await profile.save()

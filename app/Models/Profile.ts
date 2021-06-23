@@ -38,11 +38,13 @@ export default class Profile extends BaseModel {
   public user: BelongsTo<typeof User>
 
   @hasOne(() => InsameeProfile, {
+    localKey: 'userId',
     foreignKey: 'userId',
   })
   public insameeProfile: HasOne<typeof InsameeProfile>
 
   @hasOne(() => TutoratProfile, {
+    localKey: 'userId',
     foreignKey: 'userId',
   })
   public tutoratProfile: HasOne<typeof TutoratProfile>

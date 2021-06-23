@@ -20,7 +20,7 @@ export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
     const { user } = auth
 
-    const profile = await Profile.findOrFail(user!.id)
+    const profile = await Profile.findByOrFail('userId', user!.id)
 
     const { populate } = await request.validate(ProfileQueryValidator)
 

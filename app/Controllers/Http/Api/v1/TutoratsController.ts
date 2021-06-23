@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat, { TutoratType } from 'App/Models/Tutorat'
 import { filterTutorats, getTutorat } from 'App/Services/TutoratService'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
@@ -43,14 +44,16 @@ export default class TutoratsController {
     return tutorat
   }
 
-  public async update({ params, auth, request }: HttpContextContract) {
-    const { user } = auth
-
+  public async update({ params, request, bouncer }: HttpContextContract) {
     const { id } = params
 
     const tutorat = await getTutorat(id)
 
-    // TODO: add policies
+    try {
+      await bouncer.with('TutoratPolicy').authorize('update', tutorat)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
 
     const { text, time } = await request.validate(TutoratUpdateValidator)
 
@@ -70,12 +73,16 @@ export default class TutoratsController {
     return tutorat
   }
 
-  public async destroy({ params }: HttpContextContract) {
+  public async destroy({ params, bouncer }: HttpContextContract) {
     const { id } = params
 
     const tutorat = await getTutorat(id)
 
-    // TODO: add policies
+    try {
+      await bouncer.with('TutoratPolicy').authorize('delete', tutorat)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
 
     await tutorat.delete()
 

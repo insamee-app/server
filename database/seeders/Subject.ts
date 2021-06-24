@@ -12,6 +12,21 @@ export default class SubjectSeeder extends BaseSeeder {
       {
         name: 'svt',
       },
+      {
+        name: 'français',
+      },
+      {
+        name: 'anglais',
+      },
+      {
+        name: 'physique chimie',
+      },
+      {
+        name: 'histoire',
+      },
+      {
+        name: 'géographie',
+      },
     ])
   }
 }

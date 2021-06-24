@@ -131,7 +131,7 @@ export async function filterProfiles(
 
   const result =
     page || limit
-      ? queryProfiles.paginate(page ?? defaultQuery.page, limit ?? defaultQuery.limit)
+      ? await queryProfiles.paginate(page ?? defaultQuery.page, limit ?? defaultQuery.limit)
       : queryProfiles.exec()
 
   return result

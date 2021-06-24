@@ -6,11 +6,19 @@ export default class FocusInterestInsameeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const profile = await ProfileInsamee.first()
-    const focusInterest = await FocusInterest.first()
+    const profiles = await ProfileInsamee.all()
+    const focusInterests = await FocusInterest.all()
 
-    if (focusInterest?.id) {
-      await profile?.related('focusInterests').sync([focusInterest.id])
+    for (const [index, profile] of profiles.entries()) {
+      const value = index + 3
+      if (value >= focusInterests.length) break
+
+      const ids = [
+        focusInterests[value].id,
+        focusInterests[value - 1].id,
+        focusInterests[value - 2].id,
+      ]
+      await profile.related('focusInterests').sync([...ids])
     }
   }
 }

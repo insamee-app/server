@@ -7,7 +7,7 @@ export default class Associations extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.integer('thematic_id').unsigned().notNullable().references('id').inTable('thematics')
-      table.string('image_url').notNullable()
+      table.string('image_url').nullable()
       table.string('name').notNullable()
       table.string('text', 2048).nullable()
       table.string('email').nullable()

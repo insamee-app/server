@@ -52,6 +52,8 @@ Route.group(() => {
   Route.get('skills', 'SkillsController.index').as('skills.index')
   Route.get('focus_interests', 'FocusInterestsController.index').as('focus_interests.index')
   Route.get('subjects', 'SubjectsController.index').as('subjects.index')
+  Route.get('tags', 'TagsController.index').as('tags.index')
+  Route.get('thematics', 'ThematicsController.index').as('thematics.index')
 
   if (process.env.NODE_ENV === 'development')
     Route.get('uploads/:filename', async ({ response, params }) => {

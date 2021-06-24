@@ -8,12 +8,15 @@ import {
   HasOne,
   hasManyThrough,
   HasManyThrough,
+  computed,
 } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 import InsameeProfile from './InsameeProfile'
 import School from './School'
 import Skill from './Skill'
 import TutoratProfile from './TutoratProfile'
+import Env from '@ioc:Adonis/Core/Env'
+import Application from '@ioc:Adonis/Core/Application'
 
 export enum CurrentRole {
   STUDENT = 'étudiant',
@@ -90,6 +93,15 @@ export default class Profile extends BaseModel {
   //   throughForeignKey: 'id',
   // })
   // public skills: HasManyThrough<typeof Skill>
+
+  @computed()
+  public get avatarUrl(): string | null {
+    if (!this.avatar) return null
+
+    if (Application.inDev) {
+      return `${process.env.BACK_HOST}/api/v1/uploads/${this.avatar}`
+    } else return null
+  }
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

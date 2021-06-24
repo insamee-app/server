@@ -27,6 +27,8 @@ export default class IndexSeeder extends BaseSeeder {
     await this.runSeeder(await import('../SkillInsameeProfile'))
     await this.runSeeder(await import('../AssociationInsameeProfile'))
     await this.runSeeder(await import('../Subject'))
+    await this.runSeeder(await import('../Tag'))
+    await this.runSeeder(await import('../TagAssociation'))
     await this.runSeeder(await import('../Tutorat'))
     await this.runSeeder(await import('../TutoratProfile'))
     await this.runSeeder(await import('../PreferredSubjectTutoratProfile'))

@@ -1,7 +1,7 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
-export default class TagAssociations extends BaseSchema {
-  protected tableName = 'tag_associations'
+export default class TagAssociation extends BaseSchema {
+  protected tableName = 'tag_association'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {

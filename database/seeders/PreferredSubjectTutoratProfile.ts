@@ -4,9 +4,15 @@ import TutoratProfile from 'App/Models/TutoratProfile'
 
 export default class PreferredSubjectTutoratProfileSeeder extends BaseSeeder {
   public async run() {
-    const tutoratProfile = await TutoratProfile.firstOrFail()
-    const subject = await Subject.firstOrFail()
+    const profiles = await TutoratProfile.all()
+    const subjects = await Subject.all()
 
-    await tutoratProfile.related('preferredSubjects').sync([subject.id])
+    for (const [index, profile] of profiles.entries()) {
+      const value = index + 3
+      if (value >= subjects.length) break
+
+      const ids = [subjects[value].id, subjects[value - 1].id, subjects[value - 2].id]
+      await profile.related('preferredSubjects').sync([...ids])
+    }
   }
 }

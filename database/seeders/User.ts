@@ -6,53 +6,54 @@ export default class UserSeeder extends BaseSeeder {
 
   public async run() {
     const uniqueKey = 'email'
+    const password = 'azerty'
 
     await User.updateOrCreateMany(uniqueKey, [
       {
         email: 'VirginiaBMarker@insa-cvl.fr'.toLowerCase(),
         isVerified: true,
-        password: 'ronaeT2Iu',
+        password,
       },
       {
         email: 'EdwardMTaber@insa-cvl.fr'.toLowerCase(),
         isVerified: true,
-        password: 'Si2yuiPh',
+        password,
       },
       {
         email: 'MyrtleDGlover@insa-cvl.fr'.toLowerCase(),
         isVerified: true,
-        password: 'Si2yuiPh',
+        password,
       },
       {
         email: 'BillyRRogers@insa-cvl.fr'.toLowerCase(),
         isVerified: true,
-        password: 'Si2yuiPh',
-      },
-      {
-        email: 'AnnaKSanchez@insa-cvl.fr'.toLowerCase(),
-        password: 'Si2yuiPh',
-      },
-      {
-        email: 'TeresaDClark@insa-cvl.fr'.toLowerCase(),
-        password: 'Si2yuiPh',
-      },
-      {
-        email: 'PaulLCook@insa-cvl.fr'.toLowerCase(),
-        password: 'Si2yuiPh',
+        password,
       },
       {
         email: 'ShawnJMartin@insa-cvl.fr'.toLowerCase(),
-        password: 'Si2yuiPh',
+        password,
         isVerified: true,
       },
       {
         email: 'PaulDSullivan@insa-cvl.fr'.toLowerCase(),
         isVerified: true,
-        password: 'Si2yuiPh',
+        password,
+      },
+      {
+        email: 'AnnaKSanchez@insa-cvl.fr'.toLowerCase(),
+        password,
+      },
+      {
+        email: 'TeresaDClark@insa-cvl.fr'.toLowerCase(),
+        password,
+      },
+      {
+        email: 'PaulLCook@insa-cvl.fr'.toLowerCase(),
+        password,
       },
       {
         email: 'CarrollCButler@insa-cvl.fr'.toLowerCase(),
-        password: 'Si2yuiPh',
+        password,
       },
     ])
   }

@@ -97,10 +97,15 @@ export default class ProfileSeeder extends BaseSeeder {
 
     const users = await User.all()
 
-    for (const [index, user] of users.entries()) {
-      await user
-        .related('profile')
-        .updateOrCreate({ userId: user.id }, { ...profiles[index], userId: user.id })
+    for (const user of users) {
+      for (let index = 0; index < profiles.length; index++) {
+        const profile = profiles[index]
+        if (user.email.includes(profile.lastName.toLowerCase())) {
+          await user
+            .related('profile')
+            .updateOrCreate({ userId: user.id }, { ...profile, userId: user.id })
+        }
+      }
     }
   }
 }

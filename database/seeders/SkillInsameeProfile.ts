@@ -6,11 +6,15 @@ export default class SkillInsameeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const profile = await ProfileInsamee.first()
-    const skill = await Skill.first()
+    const profiles = await ProfileInsamee.all()
+    const skills = await Skill.all()
 
-    if (skill?.id) {
-      await profile?.related('skills').sync([skill.id])
+    for (const [index, profile] of profiles.entries()) {
+      const value = index + 3
+      if (value >= skills.length) break
+
+      const ids = [skills[value].id, skills[value - 1].id, skills[value - 2].id]
+      await profile.related('skills').sync([...ids])
     }
   }
 }

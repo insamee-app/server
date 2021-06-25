@@ -160,10 +160,17 @@ export default class ProfilesController {
     return updatedProfile
   }
 
-  public async tutorats({ params }: HttpContextContract) {
+  public async tutorats({ params, request }: HttpContextContract) {
     const { id } = params
 
-    const tutorats = await Tutorat.query().where('user_id', '=', id)
+    const { limit, page } = await request.validate(ProfileQueryValidator)
+
+    const tutorats = await Tutorat.query()
+      .where('user_id', '=', id)
+      .preload('subject')
+      .preload('school')
+      .preload('profile')
+      .paginate(page ?? 1, limit ?? 5)
 
     return tutorats
   }

@@ -390,6 +390,23 @@ Authorization: only the owner
 
 Authentication required, returns [multiple associations](#multiple-associations)
 
+#### Get Association
+
+`GET /api/v1/associations/:id`
+
+Authentication required, returns an [association](#association)
+
+#### Get Profiles for One Association
+
+`GET /api/v1/associations/:id/profiles`
+
+Query string
+
+- `limit`, as string
+- `page`, as string
+
+Authentication required, returns a [multiple profiles](#multiple-profiles)
+
 #### Get Schools
 
 `GET /api/v1/schools`

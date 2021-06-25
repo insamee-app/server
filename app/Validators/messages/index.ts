@@ -14,3 +14,6 @@ export { default as insameeProfile } from './insamee/profile'
 //tutorat
 export { default as tutoratQuery } from './tutorat/query'
 export { default as tutoratProfile } from './tutorat/profile'
+
+// associations
+export { default as associationsQuery } from './associations/query'

@@ -29,7 +29,7 @@ export async function filterTutorats(
     limit: 5,
   }
 
-  const { limit, page, currentRole, subject, school, time } = await request.validate(
+  const { limit, page, currentRole, subject, school, time, type } = await request.validate(
     tutoratValidator
   )
 
@@ -55,6 +55,10 @@ export async function filterTutorats(
 
   if (time) {
     queryTutorats.where('time', '<', time)
+  }
+
+  if (type) {
+    queryTutorats.where('type', '=', type)
   }
 
   const result =

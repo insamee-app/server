@@ -352,6 +352,7 @@ Query string
 - `subject` as number, filter (=)
 - `school` as number, filter (=)
 - `time` as number, filter (<)
+- `type` as number, filter (=)
 
 #### Get Tutorat
 

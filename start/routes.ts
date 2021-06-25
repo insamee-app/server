@@ -45,6 +45,7 @@ Route.group(() => {
   Route.resource('users', 'UsersController').only(['destroy'])
   Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
+  Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
   Route.resource('tutorats', 'TutoratsController').apiOnly()
 
   Route.get('associations', 'AssociationsController.index').as('associations.index')

@@ -15,6 +15,7 @@ import InsameeProfileValidator from 'App/Validators/InsameeProfileValidator'
 import ProfileValidator from 'App/Validators/ProfileValidator'
 import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
 import TutoratProfileValidator from 'App/Validators/TutoratProfileValidator'
+import Tutorat from 'App/Models/Tutorat'
 
 export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
@@ -157,5 +158,13 @@ export default class ProfilesController {
     await populateProfile(updatedProfile, populate)
 
     return updatedProfile
+  }
+
+  public async tutorats({ params }: HttpContextContract) {
+    const { id } = params
+
+    const tutorats = await Tutorat.query().where('user_id', '=', id)
+
+    return tutorats
   }
 }

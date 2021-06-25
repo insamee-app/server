@@ -30,6 +30,8 @@ export default class TutoratQueryValidator {
     page: schema.number.optional(),
     currentRole: schema.enum.optional(Object.values(CurrentRole)),
     subject: schema.number.optional(),
+    school: schema.number.optional(),
+    time: schema.number.optional(),
   })
 
   /**
@@ -48,5 +50,7 @@ export default class TutoratQueryValidator {
     'page.number': tutoratQuery.page.number,
     'currentRole.enum': tutoratQuery.currentRole.enum,
     'subject.number': tutoratQuery.subject.number,
+    'school.number': tutoratQuery.school.number,
+    'time.number': tutoratQuery.time.number,
   }
 }

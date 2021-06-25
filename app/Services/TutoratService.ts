@@ -29,7 +29,9 @@ export async function filterTutorats(
     limit: 5,
   }
 
-  const { limit, page, currentRole, subject } = await request.validate(tutoratValidator)
+  const { limit, page, currentRole, subject, school, time } = await request.validate(
+    tutoratValidator
+  )
 
   const queryTutorats = Tutorat.query()
 
@@ -46,6 +48,14 @@ export async function filterTutorats(
         .whereColumn('profiles.user_id', 'tutorats.user_id')
         .where('profiles.current_role', currentRole)
     })
+
+  if (school) {
+    queryTutorats.where('school_id', '=', school)
+  }
+
+  if (time) {
+    queryTutorats.where('time', '<', time)
+  }
 
   const result =
     page || limit

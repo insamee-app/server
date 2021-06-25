@@ -279,6 +279,17 @@ Query string
 
 Authentication required, returns a [profile](#profile)
 
+#### Get Tutorats Profile
+
+`GET /api/v1/profiles/:id/tutorats`
+
+Query string
+
+- `limit` as string
+- `page` as string
+
+Authentication required, returns [multiple tutorats](#multiple-tutorats)
+
 #### Update Profile
 
 `PATCH /api/v1/profiles/:id`
@@ -337,8 +348,10 @@ Query string
 
 - `limit` as string
 - `page` as string
-- `currentRole` as string, filter
-- `subject` as number, filter
+- `currentRole` as string, filter (=)
+- `subject` as number, filter (=)
+- `school` as number, filter (=)
+- `time` as number, filter (<)
 
 #### Get Tutorat
 

@@ -48,6 +48,11 @@ Route.group(() => {
   Route.resource('tutorats', 'TutoratsController').apiOnly()
 
   Route.get('associations', 'AssociationsController.index').as('associations.index')
+  Route.get('associations/:id', 'AssociationsController.show').as('associations.show')
+  Route.get('associations/:id/profiles', 'AssociationsController.profiles').as(
+    'associations.profiles'
+  )
+
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
   Route.get('focus_interests', 'FocusInterestsController.index').as('focus_interests.index')

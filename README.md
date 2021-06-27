@@ -287,6 +287,7 @@ Query string
 
 - `limit` as string
 - `page` as string
+- `type`, as string, filter
 
 Authentication required, returns [multiple tutorats](#multiple-tutorats)
 

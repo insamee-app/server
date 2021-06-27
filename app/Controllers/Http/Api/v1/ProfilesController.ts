@@ -16,6 +16,7 @@ import ProfileValidator from 'App/Validators/ProfileValidator'
 import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
 import TutoratProfileValidator from 'App/Validators/TutoratProfileValidator'
 import Tutorat from 'App/Models/Tutorat'
+import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 
 export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
@@ -165,13 +166,20 @@ export default class ProfilesController {
 
     const { limit, page } = await request.validate(ProfileQueryValidator)
 
-    const tutorats = await Tutorat.query()
+    const { type } = await request.validate(TutoratQueryValidator)
+
+    const tutorats = Tutorat.query()
       .where('user_id', '=', id)
       .preload('subject')
       .preload('school')
       .preload('profile')
-      .paginate(page ?? 1, limit ?? 5)
 
-    return tutorats
+    if (type) {
+      tutorats.where('type', '=', type)
+    }
+
+    const result = await tutorats.paginate(page ?? 1, limit ?? 5)
+
+    return result
   }
 }

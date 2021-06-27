@@ -28,7 +28,7 @@ Route.get('/', async () => {
 Route.group(() => {
   Route.post('register', 'AuthController.register')
   Route.post('login', 'AuthController.login')
-  Route.post('logout', 'AuthController.logout')
+  Route.post('logout', 'AuthController.logout').middleware('auth')
 
   Route.post('verify/:email', 'AuthController.verifyEmail').as('verifyEmail')
   Route.post('resetPassword/:email', 'AuthController.resetPassword').as('resetPassword')
@@ -45,6 +45,7 @@ Route.group(() => {
   Route.resource('users', 'UsersController').only(['destroy'])
   Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
+  Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
   Route.resource('tutorats', 'TutoratsController').apiOnly()
 
   Route.get('associations', 'AssociationsController.index').as('associations.index')

@@ -43,7 +43,7 @@ export default class AuthController {
     try {
       await user.save()
     } catch (error) {
-      throw new BadRequestException(`L'utilisateur ${user.email} existe déjà`)
+      throw new BadRequestException(`L'utilisateur existe déjà`)
     }
 
     await user.related('profile').create({ schoolId: school.id, userId: user.id })
@@ -126,6 +126,7 @@ export default class AuthController {
 
   public async sendResetPassword({ request }: HttpContextContract) {
     const { email } = await request.validate(SendResetPasswordValidator)
+
     await new ResetPassword(email).sendLater()
 
     return {
@@ -135,7 +136,7 @@ export default class AuthController {
 
   public async sendVerifyEmail({ request }: HttpContextContract) {
     const { email } = await request.validate(SendVerifyEmailValidator)
-
+    // TODO: il faut mettre en place le silent auth et on ne fait rien si le user est check et envoyer une error si c'est le cas (un forbidden)
     await new VerifyEmail(email).sendLater()
 
     return {

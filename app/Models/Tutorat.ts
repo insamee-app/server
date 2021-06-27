@@ -16,7 +16,7 @@ export default class Tutorat extends BaseModel {
   @column()
   public userId: number
 
-  @belongsTo(() => Profile, { foreignKey: 'userId' })
+  @belongsTo(() => Profile, { foreignKey: 'userId', localKey: 'userId' })
   public profile: BelongsTo<typeof Profile>
 
   @column()

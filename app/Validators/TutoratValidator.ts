@@ -50,6 +50,7 @@ export default class TutoratValidator {
    *
    */
   public messages = {
+    //  TODO: required fields
     'text.string': tutorat.text.string,
     'text.maxLength': tutorat.text.maxLength,
     'subject.array': tutorat.subject.array,

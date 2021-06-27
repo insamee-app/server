@@ -3,15 +3,22 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
 import Profile from 'App/Models/Profile'
 import AssociationQueryValidator from 'App/Validators/AssociationQueryValidator'
-import { insameeProfile } from 'App/Validators/messages'
 
 export default class AssociationsController {
-  public async index() {
-    const associations = await Association.query()
+  public async index({ request }: HttpContextContract) {
+    const associationsQuery = Association.query()
       .preload('school')
       .preload('tags')
       .preload('thematic')
-    return associations
+
+    const { page, limit } = await request.validate(AssociationQueryValidator)
+
+    const result =
+      page || limit
+        ? await associationsQuery.paginate(page ?? 1, limit ?? 5)
+        : associationsQuery.exec()
+
+    return result
   }
 
   public async show({ params }: HttpContextContract) {
@@ -32,6 +39,12 @@ export default class AssociationsController {
     const { page, limit } = await request.validate(AssociationQueryValidator)
 
     const profiles = await Profile.query()
+      .whereExists((query) => {
+        query
+          .from('users')
+          .whereColumn('users.id', 'profiles.user_id')
+          .where('users.is_verified', true)
+      })
       .join(
         'association_insamee_profile',
         'profiles.user_id',

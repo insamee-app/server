@@ -57,7 +57,7 @@ export default class AuthController {
     }
   }
 
-  public async login({ auth, request }: HttpContextContract) {
+  public async login({ auth, request, response }: HttpContextContract) {
     /*
      * Get email and password
      */
@@ -67,8 +67,6 @@ export default class AuthController {
      * Try to login the user
      */
     await auth.attempt(email, password, rememberMe ?? false)
-
-    // await loadUser(user)
 
     return {
       login: 'ok',

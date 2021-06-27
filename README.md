@@ -388,6 +388,11 @@ Authorization: only the owner
 
 `GET /api/v1/associations`
 
+Query string
+
+- `limit`, as string
+- `page`, as string
+
 Authentication required, returns [multiple associations](#multiple-associations)
 
 #### Get Association

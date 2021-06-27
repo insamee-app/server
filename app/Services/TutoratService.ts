@@ -9,13 +9,19 @@ import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
  * @throws {NotFoundException} Will thow an error if profil is not found
  */
 export async function getTutorat(id: number): Promise<Tutorat> {
-  let tutorat
-  try {
-    tutorat = await Tutorat.findOrFail(id)
-  } catch (e) {
-    throw new NotFoundException('Tutorat introuvable')
-  }
-  return tutorat
+  const tutorat = await Tutorat.query()
+    .whereExists((query) => {
+      query
+        .from('users')
+        .whereColumn('users.id', 'tutorats.user_id')
+        .where('users.is_verified', true)
+    })
+    .where('id', '=', id)
+    .limit(1)
+
+  if (!tutorat[0]) throw new NotFoundException('Tutorat introuvable')
+
+  return tutorat[0]
 }
 
 type TTutoratValidator = typeof TutoratQueryValidator
@@ -33,7 +39,9 @@ export async function filterTutorats(
     tutoratValidator
   )
 
-  const queryTutorats = Tutorat.query()
+  const queryTutorats = Tutorat.query().whereExists((query) => {
+    query.from('users').whereColumn('users.id', 'tutorats.user_id').where('users.is_verified', true)
+  })
 
   await preloadTutorat(queryTutorats)
 
@@ -90,6 +98,7 @@ export async function loadTutorat(tutorat: Tutorat): Promise<void> {
   await tutorat.load((loader) => {
     loader.load('profile', (profile) => {
       profile.preload('tutoratProfile')
+      profile.preload('user')
     })
   })
   await tutorat.load('school')

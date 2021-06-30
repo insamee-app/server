@@ -2,7 +2,11 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import InsameeProfileQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
 import { DatabaseQueryBuilderContract } from '@ioc:Adonis/Lucid/Database'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
-import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import {
+  CherryPick,
+  ModelPaginatorContract,
+  ModelQueryBuilderContract,
+} from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import InsameeProfile from 'App/Models/InsameeProfile'
 import Skill from 'App/Models/Skill'
@@ -11,6 +15,9 @@ import Association from 'App/Models/Association'
 import Profile, { Populate } from 'App/Models/Profile'
 import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
 import TutoratProfile from 'App/Models/TutoratProfile'
+import SerializationQueryValidator, {
+  Serialization,
+} from 'App/Validators/SerializationQueryValidator'
 
 /**
  * Get a profile by id
@@ -86,7 +93,7 @@ export async function filterProfiles(
   request: RequestContract,
   profileValidator: TProfileValidator,
   insameeValidator: TInsameeProfileValidator
-): Promise<Profile[] | ModelPaginatorContract<Profile>> {
+): Promise<ModelPaginatorContract<Profile>> {
   const defaultQuery = {
     page: 1,
     limit: 5,
@@ -129,10 +136,10 @@ export async function filterProfiles(
 
   if (currentRole) queryProfiles.where('currentRole', currentRole)
 
-  const result =
-    page || limit
-      ? await queryProfiles.paginate(page ?? defaultQuery.page, limit ?? defaultQuery.limit)
-      : queryProfiles.exec()
+  const result = await queryProfiles.paginate(
+    page ?? defaultQuery.page,
+    limit ?? defaultQuery.limit
+  )
 
   return result
 }
@@ -220,4 +227,81 @@ export async function populateProfile(
     default:
       break
   }
+}
+
+export const profileSerialize: CherryPick = {
+  fields: [
+    'user_id',
+    'avatar_url',
+    'last_name',
+    'first_name',
+    'graduation_year',
+    'current_role',
+    'mobile',
+    'url_facebook',
+    'url_instagram',
+    'url_twitter',
+  ],
+  relations: {
+    user: {
+      fields: ['email'],
+    },
+    school: {
+      fields: ['name'],
+    },
+  },
+}
+
+export const profileCardSerialize: CherryPick = {
+  fields: {
+    pick: ['user_id', 'avatar_url', 'last_name', 'first_name', 'current_role'],
+  },
+  relations: {
+    user: {
+      fields: [],
+    },
+    school: {
+      fields: [],
+    },
+  },
+}
+
+export const insameeProfileSerialize: CherryPick = {
+  fields: ['text'],
+  relations: {
+    skills: {
+      fields: ['name'],
+    },
+    focus_interests: {
+      fields: ['name'],
+    },
+    associations: {
+      fields: ['name', 'image_url'],
+      relations: {
+        school: {
+          fields: ['name'],
+        },
+      },
+    },
+  },
+}
+
+export const insameeProfileCardSerialize: CherryPick = {
+  fields: ['short_text'],
+  relations: {
+    skills: {
+      fields: ['name'],
+    },
+    focus_interests: {
+      fields: [],
+    },
+    associations: {
+      fields: ['name', 'image_url'],
+      relations: {
+        school: {
+          fields: [],
+        },
+      },
+    },
+  },
 }

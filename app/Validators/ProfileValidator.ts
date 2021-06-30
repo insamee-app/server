@@ -61,7 +61,7 @@ export default class ProfileValidator {
     'lastName.string': profile.lastName.string,
     'lastName.maxLength': profile.lastName.maxLength,
     'firstName.string': profile.firstName.string,
-    'firstName.maxLength': profile,
+    'firstName.maxLength': profile.firstName.maxLength,
     'currentRole.enum': profile.currentRole.enum,
     'mobile.string': profile.mobile.string,
     'mobile.nullableMobile': profile.mobile.nullableMobile,

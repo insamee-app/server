@@ -38,6 +38,7 @@ export default class InsameeProfile extends BaseModel {
     relatedKey: 'id',
     pivotRelatedForeignKey: 'focus_interest_id',
     pivotTable: 'focus_interest_insamee_profile',
+    serializeAs: 'focus_interests',
   })
   public focusInterests: ManyToMany<typeof FocusInterest>
 

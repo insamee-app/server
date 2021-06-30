@@ -119,22 +119,25 @@ In order to be used this server with any of the front-end, you must create a `.e
   "meta": {},
   "data": [
     {
-      "id": "string",
-      "imageUrl": "string",
+      "user_id": "string",
+      "avatar_url": "string",
       "last_name": "string",
       "first_name": "string",
       "current_role": "string",
-      "associations": [
-        {
-          "imageUrl": "string"
-        }
-      ],
-      "skills": [
-        {
-          "name": "string"
-        }
-      ],
-      "shortText": "string"
+      "insameeProfile": {
+        "short_text": "string",
+        "associations": [
+          {
+            "name": "string",
+            "image_url": "string"
+          }
+        ],
+        "skills": [
+          {
+            "name": "string"
+          }
+        ]
+      }
     }
   ]
 }
@@ -144,8 +147,8 @@ In order to be used this server with any of the front-end, you must create a `.e
 
 ```json
 {
-  "id": "string",
-  "imageUrl": "string",
+  "user_id": "string",
+  "avatar_url": "string",
   "last_name": "string",
   "first_name": "string",
   "user": {
@@ -156,30 +159,45 @@ In order to be used this server with any of the front-end, you must create a `.e
   },
   "graduation_year": "number",
   "current_role": "string",
-  "skills": [
-    {
-      "name": "string"
-    }
-  ],
-  "focus_interests": [
-    {
-      "name": "string"
-    }
-  ],
-  "text": "string",
-  "mobile": "string",
-  "urlFacebook": "string",
-  "urlInstagram": "string",
-  "urlLinkedin": "string",
-  "association": [
-    {
-      "name": "string",
-      "imageUrl": "string",
-      "school": {
+  "insameeProfile": {
+    "text": "string",
+    "skills": [
+      {
         "name": "string"
       }
-    }
-  ]
+    ],
+    "focus_interests": [
+      {
+        "name": "string"
+      }
+    ],
+    "associations": [
+      {
+        "name": "string",
+        "image_url": "string",
+        "school": {
+          "name": "string"
+        }
+      }
+    ]
+  },
+  "tutoratProfile": {
+    "text": "string",
+    "difficulties_subjects": [
+      {
+        "name": "string"
+      }
+    ],
+    "preferred_subjects": [
+      {
+        "name": "string"
+      }
+    ]
+  },
+  "mobile": "string",
+  "url_facebook": "string",
+  "url_instagram": "string",
+  "url_twitter": "string"
 }
 ```
 
@@ -210,7 +228,7 @@ In order to be used this server with any of the front-end, you must create a `.e
     {
       "id": "number",
       "name": "string",
-      "imageUrl": "string",
+      "image_url": "string",
       "school": {
         "name": "string"
       },
@@ -222,7 +240,7 @@ In order to be used this server with any of the front-end, you must create a `.e
           "name": "string"
         }
       ],
-      "shortText": "string"
+      "short_text": "string"
     }
   ]
 }
@@ -234,7 +252,7 @@ In order to be used this server with any of the front-end, you must create a `.e
 {
   "id": "number",
   "name": "string",
-  "imageUrl": "string",
+  "image_url": "string",
   "school": {
     "name": "string"
   },
@@ -256,7 +274,7 @@ In order to be used this server with any of the front-end, you must create a `.e
 {}
 ```
 
-##### Filters
+##### Filter Schools
 
 ```json
 {

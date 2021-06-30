@@ -3,9 +3,14 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
 import Profile from 'App/Models/Profile'
 import AssociationQueryValidator from 'App/Validators/AssociationQueryValidator'
+import SerializationQueryValidator, {
+  Serialization,
+} from 'App/Validators/SerializationQueryValidator'
 
 export default class AssociationsController {
   public async index({ request }: HttpContextContract) {
+    const { serialize } = await request.validate(SerializationQueryValidator)
+
     const associationsQuery = Association.query()
       .preload('school')
       .preload('tags')
@@ -13,10 +18,23 @@ export default class AssociationsController {
 
     const { page, limit } = await request.validate(AssociationQueryValidator)
 
-    const result =
-      page || limit
-        ? await associationsQuery.paginate(page ?? 1, limit ?? 5)
-        : associationsQuery.exec()
+    const result = await associationsQuery.paginate(page ?? 1, limit ?? 5)
+
+    if (serialize === Serialization.CARD)
+      return result.serialize({
+        fields: ['id', 'name', 'imageUrl', 'shortText'],
+        relations: {
+          school: {
+            fields: ['name'],
+          },
+          thematic: {
+            fields: ['name'],
+          },
+          tags: {
+            fields: ['name'],
+          },
+        },
+      })
 
     return result
   }
@@ -30,7 +48,20 @@ export default class AssociationsController {
     await association.load('tags')
     await association.load('thematic')
 
-    return association
+    return association.serialize({
+      fields: ['id', 'name', 'imageUrl', 'text'],
+      relations: {
+        school: {
+          fields: ['name'],
+        },
+        thematic: {
+          fields: ['name'],
+        },
+        tags: {
+          fields: ['name'],
+        },
+      },
+    })
   }
 
   public async profiles({ params, request }: HttpContextContract) {

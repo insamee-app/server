@@ -39,6 +39,7 @@ export default class Profile extends BaseModel {
   @hasOne(() => InsameeProfile, {
     localKey: 'userId',
     foreignKey: 'userId',
+    serializeAs: 'insamee_profile',
   })
   public insameeProfile: HasOne<typeof InsameeProfile>
 
@@ -90,7 +91,7 @@ export default class Profile extends BaseModel {
   // })
   // public skills: HasManyThrough<typeof Skill>
 
-  @computed()
+  @computed({ serializeAs: 'avatar_url' })
   public get avatarUrl(): string | null {
     if (!this.avatar) return null
 

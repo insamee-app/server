@@ -1,8 +1,8 @@
 import Database from '@ioc:Adonis/Lucid/Database'
 import InsameeProfileQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
-import { DatabaseQueryBuilderContract } from '@ioc:Adonis/Lucid/DatabaseQueryBuilder'
+import { DatabaseQueryBuilderContract } from '@ioc:Adonis/Lucid/Database'
 import { RequestContract } from '@ioc:Adonis/Core/Request'
-import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Model'
+import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import InsameeProfile from 'App/Models/InsameeProfile'
 import Skill from 'App/Models/Skill'
@@ -86,7 +86,7 @@ export async function filterProfiles(
   request: RequestContract,
   profileValidator: TProfileValidator,
   insameeValidator: TInsameeProfileValidator
-): Promise<InsameeProfile[] | ModelPaginatorContract<InsameeProfile>> {
+): Promise<Profile[] | ModelPaginatorContract<Profile>> {
   const defaultQuery = {
     page: 1,
     limit: 5,

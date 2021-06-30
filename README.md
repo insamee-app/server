@@ -112,10 +112,75 @@ In order to be used this server with any of the front-end, you must create a `.e
 {}
 ```
 
+##### Cards Multiple Profiles
+
+```json
+{
+  "meta": {},
+  "data": [
+    {
+      "id": "string",
+      "imageUrl": "string",
+      "last_name": "string",
+      "first_name": "string",
+      "current_role": "string",
+      "associations": [
+        {
+          "imageUrl": "string"
+        }
+      ],
+      "skills": [
+        {
+          "name": "string"
+        }
+      ],
+      "shortText": "string"
+    }
+  ]
+}
+```
+
 #### Profile
 
 ```json
-{}
+{
+  "id": "string",
+  "imageUrl": "string",
+  "last_name": "string",
+  "first_name": "string",
+  "user": {
+    "email": "string"
+  },
+  "school": {
+    "name": "string"
+  },
+  "graduation_year": "number",
+  "current_role": "string",
+  "skills": [
+    {
+      "name": "string"
+    }
+  ],
+  "focus_interests": [
+    {
+      "name": "string"
+    }
+  ],
+  "text": "string",
+  "mobile": "string",
+  "urlFacebook": "string",
+  "urlInstagram": "string",
+  "urlLinkedin": "string",
+  "association": [
+    {
+      "name": "string",
+      "imageUrl": "string",
+      "school": {
+        "name": "string"
+      }
+    }
+  ]
+}
 ```
 
 #### Multiple Tutorats
@@ -136,10 +201,68 @@ In order to be used this server with any of the front-end, you must create a `.e
 {}
 ```
 
+##### Cards Multiple Associations
+
+```json
+{
+  "meta": {},
+  "data": [
+    {
+      "id": "number",
+      "name": "string",
+      "imageUrl": "string",
+      "school": {
+        "name": "string"
+      },
+      "thematic": {
+        "name": "string"
+      },
+      "tags": [
+        {
+          "name": "string"
+        }
+      ],
+      "shortText": "string"
+    }
+  ]
+}
+```
+
+#### Association
+
+```json
+{
+  "id": "number",
+  "name": "string",
+  "imageUrl": "string",
+  "school": {
+    "name": "string"
+  },
+  "thematic": {
+    "name": "string"
+  },
+  "tags": [
+    {
+      "name": "string"
+    }
+  ],
+  "text": "string"
+}
+```
+
 #### Multiple Schools
 
 ```json
 {}
+```
+
+##### Filters
+
+```json
+{
+  "id": "number",
+  "name": "string"
+}
 ```
 
 #### Multiple Focus of Interests
@@ -152,6 +275,24 @@ In order to be used this server with any of the front-end, you must create a `.e
 
 ```json
 {}
+```
+
+#### Multiple Thematics
+
+```json
+{
+  "id": "number",
+  "name": "string"
+}
+```
+
+#### Multiple Tags
+
+```json
+{
+  "id": "number",
+  "name": "string"
+}
 ```
 
 ### EndPoints
@@ -450,6 +591,18 @@ Authentication required, returns [multiple focus of interests](#multiple-focus-o
 `GET /api/v1/subjects`
 
 Authentication required, returns [multiple subjects](#multiple-subjects)
+
+#### Get Thematics
+
+`GET /api/v1/thematics`
+
+Authentication required, returns [multiple thematics](#multiple-thematics)
+
+#### Get Tags
+
+`GET /api/v1/tags`
+
+Authentication required, returns [multiple tags](#multiple-tags)
 
 ### Authentication Workflow
 

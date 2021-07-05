@@ -16,13 +16,13 @@ export default class AssociationsController {
       .preload('tags')
       .preload('thematic')
 
-    const { page, limit } = await request.validate(AssociationQueryValidator)
+    const { page } = await request.validate(AssociationQueryValidator)
 
-    const result = await associationsQuery.paginate(page ?? 1, limit ?? 5)
+    const result = await associationsQuery.paginate(page ?? 1, 20)
 
     if (serialize === Serialization.CARD)
       return result.serialize({
-        fields: ['id', 'name', 'imageUrl', 'shortText'],
+        fields: ['id', 'name', 'image_url', 'short_text'],
         relations: {
           school: {
             fields: ['name'],
@@ -35,8 +35,6 @@ export default class AssociationsController {
           },
         },
       })
-
-    return result
   }
 
   public async show({ params }: HttpContextContract) {
@@ -49,7 +47,7 @@ export default class AssociationsController {
     await association.load('thematic')
 
     return association.serialize({
-      fields: ['id', 'name', 'imageUrl', 'text'],
+      fields: ['id', 'name', 'image_url', 'text'],
       relations: {
         school: {
           fields: ['name'],
@@ -67,7 +65,7 @@ export default class AssociationsController {
   public async profiles({ params, request }: HttpContextContract) {
     const { id } = params
 
-    const { page, limit } = await request.validate(AssociationQueryValidator)
+    const { page } = await request.validate(AssociationQueryValidator)
 
     const profiles = await Profile.query()
       .whereExists((query) => {
@@ -88,7 +86,7 @@ export default class AssociationsController {
         insameeProfile.preload('skills')
       })
       .preload('school')
-      .paginate(page ?? 1, limit ?? 5)
+      .paginate(page ?? 1, 20)
 
     return profiles
   }

@@ -25,7 +25,6 @@ export default class AssociationQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    limit: schema.number.optional(),
     page: schema.number.optional(),
   })
 
@@ -41,7 +40,6 @@ export default class AssociationQueryValidator {
    *
    */
   public messages = {
-    'limit.number': associationsQuery.limit.number,
     'page.number': associationsQuery.page.number,
   }
 }

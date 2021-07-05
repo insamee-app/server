@@ -8,6 +8,8 @@ import SerializationQueryValidator, {
   Serialization,
 } from 'App/Validators/SerializationQueryValidator'
 
+const LIMIT = 20
+
 export default class AssociationsController {
   public async index({ request }: HttpContextContract) {
     const { serialize } = await request.validate(SerializationQueryValidator)
@@ -28,7 +30,7 @@ export default class AssociationsController {
       schools
     )
 
-    const result = await filteredAssociations.paginate(page ?? 1, 20)
+    const result = await filteredAssociations.paginate(page ?? 1, LIMIT)
 
     if (serialize === Serialization.CARD)
       return result.serialize({
@@ -97,7 +99,7 @@ export default class AssociationsController {
         insameeProfile.preload('skills')
       })
       .preload('school')
-      .paginate(page ?? 1, 20)
+      .paginate(page ?? 1, LIMIT)
 
     return profiles
   }

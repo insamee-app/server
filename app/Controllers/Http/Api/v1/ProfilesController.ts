@@ -53,7 +53,7 @@ export default class ProfilesController {
     const profile = await getProfile(id)
 
     try {
-      await bouncer.with('ProfilePolicy').authorize('view', profile)
+      await bouncer.with('ProfilePolicy').authorize('view')
     } catch (error) {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }

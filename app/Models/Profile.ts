@@ -6,16 +6,12 @@ import {
   BelongsTo,
   hasOne,
   HasOne,
-  hasManyThrough,
-  HasManyThrough,
   computed,
 } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 import InsameeProfile from './InsameeProfile'
 import School from './School'
-import Skill from './Skill'
 import TutoratProfile from './TutoratProfile'
-import Env from '@ioc:Adonis/Core/Env'
 import Application from '@ioc:Adonis/Core/Application'
 
 export enum CurrentRole {

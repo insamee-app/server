@@ -3,10 +3,10 @@ import User from 'App/Models/User'
 import Profile from 'App/Models/Profile'
 
 export default class ProfilePolicy extends BasePolicy {
-  public async viewList(user: User) {
+  public async viewList() {
     return true
   }
-  public async view(user: User, profile: Profile) {
+  public async view() {
     return true
   }
   public async update(user: User, profile: Profile) {

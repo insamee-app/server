@@ -57,7 +57,7 @@ export default class AuthController {
     }
   }
 
-  public async login({ auth, request, response }: HttpContextContract) {
+  public async login({ auth, request }: HttpContextContract) {
     /*
      * Get email and password
      */

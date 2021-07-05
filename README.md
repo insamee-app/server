@@ -116,7 +116,17 @@ In order to be used this server with any of the front-end, you must create a `.e
 
 ```json
 {
-  "meta": {},
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
   "data": [
     {
       "user_id": "string",
@@ -124,7 +134,7 @@ In order to be used this server with any of the front-end, you must create a `.e
       "last_name": "string",
       "first_name": "string",
       "current_role": "string",
-      "insameeProfile": {
+      "insamee_profile": {
         "short_text": "string",
         "associations": [
           {
@@ -159,7 +169,7 @@ In order to be used this server with any of the front-end, you must create a `.e
   },
   "graduation_year": "number",
   "current_role": "string",
-  "insameeProfile": {
+  "insamee_profile": {
     "text": "string",
     "skills": [
       {
@@ -223,7 +233,17 @@ In order to be used this server with any of the front-end, you must create a `.e
 
 ```json
 {
-  "meta": {},
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
   "data": [
     {
       "id": "number",
@@ -564,8 +584,12 @@ Authorization: only the owner
 
 Query string
 
-- `limit`, as string
+- `serialize`, as enum (card)
 - `page`, as string
+- `name`, as string
+- `thematics[]`, as array of number
+- `tags[]`, as array of number
+- `schools[]`, as array of number
 
 Authentication required, returns [multiple associations](#multiple-associations)
 

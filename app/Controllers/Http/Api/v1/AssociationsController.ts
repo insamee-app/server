@@ -2,6 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 import Association from 'App/Models/Association'
 import Profile from 'App/Models/Profile'
+import { filterAssociations } from 'App/Services/AssociationService'
 import AssociationQueryValidator from 'App/Validators/AssociationQueryValidator'
 import SerializationQueryValidator, {
   Serialization,
@@ -10,15 +11,24 @@ import SerializationQueryValidator, {
 export default class AssociationsController {
   public async index({ request }: HttpContextContract) {
     const { serialize } = await request.validate(SerializationQueryValidator)
+    const { page, name, thematics, tags, schools } = await request.validate(
+      AssociationQueryValidator
+    )
 
-    const associationsQuery = Association.query()
+    const queryAssociations = Association.query()
       .preload('school')
       .preload('tags')
       .preload('thematic')
 
-    const { page } = await request.validate(AssociationQueryValidator)
+    const filteredAssociations = filterAssociations(
+      queryAssociations,
+      name,
+      thematics,
+      tags,
+      schools
+    )
 
-    const result = await associationsQuery.paginate(page ?? 1, 20)
+    const result = await filteredAssociations.paginate(page ?? 1, 20)
 
     if (serialize === Serialization.CARD)
       return result.serialize({
@@ -35,6 +45,7 @@ export default class AssociationsController {
           },
         },
       })
+    else return {}
   }
 
   public async show({ params }: HttpContextContract) {

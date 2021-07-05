@@ -15,9 +15,6 @@ import Association from 'App/Models/Association'
 import Profile, { Populate } from 'App/Models/Profile'
 import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
 import TutoratProfile from 'App/Models/TutoratProfile'
-import SerializationQueryValidator, {
-  Serialization,
-} from 'App/Validators/SerializationQueryValidator'
 
 /**
  * Get a profile by id

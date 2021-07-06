@@ -1,18 +1,17 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Association from 'App/Models/Association'
+import Associations from './data/associations'
 import Tag from 'App/Models/Tag'
 
 export default class TagAssociationSeeder extends BaseSeeder {
   public async run() {
-    const associations = await Association.all()
-    const tags = await Tag.all()
+    for (const association of Associations) {
+      const tagsIds = (await Tag.query().whereIn('name', Object.values(association.tags))).map(
+        (tag) => tag.id
+      )
+      const asso = await Association.findByOrFail('name', association.name)
 
-    for (const [index, association] of associations.entries()) {
-      const value = index + 3
-      if (value >= tags.length) break
-
-      const ids = [tags[value].id, tags[value - 1].id, tags[value - 2].id]
-      await association.related('tags').sync([...ids])
+      await asso.related('tags').sync(tagsIds)
     }
   }
 }

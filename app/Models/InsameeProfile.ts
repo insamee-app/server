@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { column, BaseModel, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { column, BaseModel, manyToMany, ManyToMany, computed } from '@ioc:Adonis/Lucid/Orm'
 import Association from './Association'
 import Skill from './Skill'
 import FocusInterest from './FocusInterest'
@@ -41,6 +41,13 @@ export default class InsameeProfile extends BaseModel {
     serializeAs: 'focus_interests',
   })
   public focusInterests: ManyToMany<typeof FocusInterest>
+
+  @computed({ serializeAs: 'short_text' })
+  public get shortText(): string | null {
+    if (!this.text) return null
+
+    return this.text.slice(0, 120) + '...'
+  }
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

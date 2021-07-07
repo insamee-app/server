@@ -3,6 +3,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
 import Profile from 'App/Models/Profile'
 import { filterAssociations } from 'App/Services/AssociationService'
+import { insameeProfileCardSerialize, profileCardSerialize } from 'App/Services/ProfileService'
 import AssociationQueryValidator from 'App/Validators/AssociationQueryValidator'
 import SerializationQueryValidator, {
   Serialization,
@@ -98,9 +99,10 @@ export default class AssociationsController {
         insameeProfile.preload('associations')
         insameeProfile.preload('skills')
       })
-      .preload('school')
-      .paginate(page ?? 1, LIMIT)
+      .paginate(page ?? 1, 6)
 
-    return profiles
+    const serialize = profileCardSerialize
+    serialize.relations = { insamee_profile: insameeProfileCardSerialize }
+    return profiles.serialize(serialize)
   }
 }

@@ -253,14 +253,7 @@ export const profileCardSerialize: CherryPick = {
   fields: {
     pick: ['user_id', 'avatar_url', 'last_name', 'first_name', 'current_role'],
   },
-  relations: {
-    user: {
-      fields: [],
-    },
-    school: {
-      fields: [],
-    },
-  },
+  relations: {},
 }
 
 export const insameeProfileSerialize: CherryPick = {
@@ -289,16 +282,8 @@ export const insameeProfileCardSerialize: CherryPick = {
     skills: {
       fields: ['name'],
     },
-    focus_interests: {
-      fields: [],
-    },
     associations: {
       fields: ['name', 'image_url'],
-      relations: {
-        school: {
-          fields: [],
-        },
-      },
     },
   },
 }

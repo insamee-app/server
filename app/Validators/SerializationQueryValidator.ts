@@ -1,8 +1,13 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { associationsQuery } from './messages'
 
-export default class AssociationQueryValidator {
+export enum Serialization {
+  CARD = 'card',
+  FULL = 'full',
+  FILTER = 'filter',
+}
+
+export default class SerializationQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -25,11 +30,7 @@ export default class AssociationQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    page: schema.number.optional(),
-    name: schema.string.optional(),
-    thematics: schema.array.optional().members(schema.number()),
-    tags: schema.array.optional().members(schema.number()),
-    schools: schema.array.optional().members(schema.number()),
+    serialize: schema.enum(Object.values(Serialization)),
   })
 
   /**
@@ -43,14 +44,5 @@ export default class AssociationQueryValidator {
    * }
    *
    */
-  public messages = {
-    'page.number': associationsQuery.page.number,
-    'name.string': associationsQuery.name,
-    'thematics.array': associationsQuery.thematics.array,
-    'thematics.*.number': associationsQuery.thematics.number,
-    'tags.array': associationsQuery.tags.array,
-    'tags.*.number': associationsQuery.tags.number,
-    'schools.array': associationsQuery.schools.array,
-    'schools.*.number': associationsQuery.schools.number,
-  }
+  public messages = {}
 }

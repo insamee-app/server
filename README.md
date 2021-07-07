@@ -112,10 +112,103 @@ In order to be used this server with any of the front-end, you must create a `.e
 {}
 ```
 
+##### Cards Multiple Profiles
+
+```json
+{
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
+  "data": [
+    {
+      "user_id": "string",
+      "avatar_url": "string",
+      "last_name": "string",
+      "first_name": "string",
+      "current_role": "string",
+      "insamee_profile": {
+        "short_text": "string",
+        "associations": [
+          {
+            "name": "string",
+            "image_url": "string"
+          }
+        ],
+        "skills": [
+          {
+            "name": "string"
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
 #### Profile
 
 ```json
-{}
+{
+  "user_id": "string",
+  "avatar_url": "string",
+  "last_name": "string",
+  "first_name": "string",
+  "user": {
+    "email": "string"
+  },
+  "school": {
+    "name": "string"
+  },
+  "graduation_year": "number",
+  "current_role": "string",
+  "insamee_profile": {
+    "text": "string",
+    "skills": [
+      {
+        "name": "string"
+      }
+    ],
+    "focus_interests": [
+      {
+        "name": "string"
+      }
+    ],
+    "associations": [
+      {
+        "name": "string",
+        "image_url": "string",
+        "school": {
+          "name": "string"
+        }
+      }
+    ]
+  },
+  "tutoratProfile": {
+    "text": "string",
+    "difficulties_subjects": [
+      {
+        "name": "string"
+      }
+    ],
+    "preferred_subjects": [
+      {
+        "name": "string"
+      }
+    ]
+  },
+  "mobile": "string",
+  "url_facebook": "string",
+  "url_instagram": "string",
+  "url_twitter": "string"
+}
 ```
 
 #### Multiple Tutorats
@@ -136,10 +229,78 @@ In order to be used this server with any of the front-end, you must create a `.e
 {}
 ```
 
+##### Cards Multiple Associations
+
+```json
+{
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
+  "data": [
+    {
+      "id": "number",
+      "name": "string",
+      "image_url": "string",
+      "school": {
+        "name": "string"
+      },
+      "thematic": {
+        "name": "string"
+      },
+      "tags": [
+        {
+          "name": "string"
+        }
+      ],
+      "short_text": "string"
+    }
+  ]
+}
+```
+
+#### Association
+
+```json
+{
+  "id": "number",
+  "name": "string",
+  "image_url": "string",
+  "school": {
+    "name": "string"
+  },
+  "thematic": {
+    "name": "string"
+  },
+  "tags": [
+    {
+      "name": "string"
+    }
+  ],
+  "text": "string"
+}
+```
+
 #### Multiple Schools
 
 ```json
 {}
+```
+
+##### Filter Schools
+
+```json
+{
+  "id": "number",
+  "name": "string"
+}
 ```
 
 #### Multiple Focus of Interests
@@ -152,6 +313,24 @@ In order to be used this server with any of the front-end, you must create a `.e
 
 ```json
 {}
+```
+
+#### Multiple Thematics
+
+```json
+{
+  "id": "number",
+  "name": "string"
+}
+```
+
+#### Multiple Tags
+
+```json
+{
+  "id": "number",
+  "name": "string"
+}
 ```
 
 ### EndPoints
@@ -405,8 +584,12 @@ Authorization: only the owner
 
 Query string
 
-- `limit`, as string
+- `serialize`, as enum (card)
 - `page`, as string
+- `name`, as string
+- `thematics[]`, as array of number
+- `tags[]`, as array of number
+- `schools[]`, as array of number
 
 Authentication required, returns [multiple associations](#multiple-associations)
 
@@ -450,6 +633,18 @@ Authentication required, returns [multiple focus of interests](#multiple-focus-o
 `GET /api/v1/subjects`
 
 Authentication required, returns [multiple subjects](#multiple-subjects)
+
+#### Get Thematics
+
+`GET /api/v1/thematics`
+
+Authentication required, returns [multiple thematics](#multiple-thematics)
+
+#### Get Tags
+
+`GET /api/v1/tags`
+
+Authentication required, returns [multiple tags](#multiple-tags)
 
 ### Authentication Workflow
 

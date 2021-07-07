@@ -4,6 +4,7 @@ import {
   belongsTo,
   BelongsTo,
   column,
+  computed,
   HasOne,
   hasOne,
   ManyToMany,
@@ -12,6 +13,7 @@ import {
 import School from './School'
 import Thematic from './Thematic'
 import Tag from './Tag'
+import Application from '@ioc:Adonis/Core/Application'
 
 export default class Association extends BaseModel {
   @column({ isPrimary: true })
@@ -30,7 +32,7 @@ export default class Association extends BaseModel {
   public thematic: HasOne<typeof Thematic>
 
   @column()
-  public imageUrl: string
+  public image: string
 
   @column()
   public text: string
@@ -54,6 +56,22 @@ export default class Association extends BaseModel {
     pivotTable: 'tag_association',
   })
   public tags: ManyToMany<typeof Tag>
+
+  @computed({ serializeAs: 'image_url' })
+  public get avatarUrl(): string | null {
+    if (!this.image) return null
+
+    if (Application.inDev) {
+      return `${process.env.BACK_HOST}/api/v1/uploads/${this.image}`
+    } else return null
+  }
+
+  @computed({ serializeAs: 'short_text' })
+  public get shortText(): string | null {
+    if (!this.text) return null
+
+    return this.text.slice(0, 120) + '...'
+  }
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -7,7 +7,11 @@ import {
   getInsameeProfile,
   getProfile,
   getTutoratProfile,
+  insameeProfileCardSerialize,
+  insameeProfileSerialize,
   populateProfile,
+  profileCardSerialize,
+  profileSerialize,
 } from 'App/Services/ProfileService'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Profile, { Populate } from 'App/Models/Profile'
@@ -17,6 +21,10 @@ import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
 import TutoratProfileValidator from 'App/Validators/TutoratProfileValidator'
 import Tutorat from 'App/Models/Tutorat'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
+import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
+import SerializationQueryValidator, {
+  Serialization,
+} from 'App/Validators/SerializationQueryValidator'
 
 export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
@@ -38,13 +46,22 @@ export default class ProfilesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
+    const { serialize } = await request.validate(SerializationQueryValidator)
+    const { populate } = await request.validate(ProfileQueryValidator)
+
     const profiles = await filterProfiles(
       request,
       ProfileQueryValidator,
       InsameeProfilesQueryValidator
     )
 
-    return profiles
+    if (populate === Populate.INSAMEE && serialize === Serialization.CARD) {
+      const serialization: CherryPick = profileCardSerialize
+      serialization.relations!.insamee_profile = insameeProfileCardSerialize
+      return profiles.serialize(serialization)
+    }
+
+    return profiles.serialize(profileSerialize)
   }
 
   public async show({ params, bouncer, request }: HttpContextContract) {
@@ -62,7 +79,14 @@ export default class ProfilesController {
 
     await populateProfile(profile, populate)
 
-    return profile
+    if (populate === Populate.INSAMEE) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.insamee_profile = insameeProfileSerialize
+
+      return profile.serialize(serialization)
+    }
+
+    return profile.serialize(profileSerialize)
   }
 
   public async update({ request, params, bouncer }: HttpContextContract) {

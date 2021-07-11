@@ -22,7 +22,9 @@ export function filterAssociations(
   schools: Array<number> | undefined
 ): ModelQueryBuilderContract<typeof Association, Association> {
   if (name) {
-    associations.whereRaw('name @@ :term', { term: '%' + name + '%' })
+    // associations.whereRaw('name @@ :term', { term: '%' + name + '%' }) // useful for text but not name (% is useless on full text search)
+    // associations.whereRaw(`to_tsvector(name) @@ to_tsquery(%${name}%')`)
+    associations.where('name', 'LIKE', `%${name}%`)
   }
 
   if (thematics) {

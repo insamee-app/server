@@ -61,7 +61,7 @@ export default class AssociationsController {
     await association.load('thematic')
 
     return association.serialize({
-      fields: ['id', 'name', 'image_url', 'text'],
+      fields: ['id', 'name', 'image_url', 'text', 'email'],
       relations: {
         school: {
           fields: ['name'],

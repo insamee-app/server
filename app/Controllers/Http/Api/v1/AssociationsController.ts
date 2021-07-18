@@ -97,7 +97,7 @@ export default class AssociationsController {
       .where('association_insamee_profile.association_id', '=', id)
       .preload('insameeProfile', (insameeProfile) => {
         insameeProfile.preload('associations')
-        insameeProfile.preload('skills')
+        insameeProfile.preload('focusInterests')
       })
       .paginate(page ?? 1, 6)
 

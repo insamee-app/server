@@ -279,7 +279,7 @@ export const insameeProfileSerialize: CherryPick = {
 export const insameeProfileCardSerialize: CherryPick = {
   fields: ['short_text'],
   relations: {
-    skills: {
+    focus_interests: {
       fields: ['name'],
     },
     associations: {

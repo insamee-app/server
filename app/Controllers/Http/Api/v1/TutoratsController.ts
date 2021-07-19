@@ -32,7 +32,7 @@ export default class TutoratsController {
 
     if (serialize === Serialization.CARD)
       return result.serialize({
-        fields: ['type', 'short_text', 'time'],
+        fields: ['type', 'short_text', 'time', 'id'],
         relations: {
           school: {
             fields: ['name'],

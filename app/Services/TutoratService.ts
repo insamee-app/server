@@ -39,12 +39,11 @@ export function filterTutorats(
   tutorats
     .if(currentRole, (query) => {
       query
-        .from('profiles')
-        .whereColumn('profiles.user_id', 'tutorats.user_id')
+        .join('profiles', 'profiles.user_id', '=', 'tutorats.user_id')
         .where('profiles.current_role', currentRole!)
     })
     .if(time, (query) => {
-      query.where('time', '<', time!)
+      query.where('time', '<=', time!)
     })
     .if(type, (query) => {
       query.where('type', '=', type!)

@@ -234,6 +234,7 @@ In order to be used this server with any of the front-end, you must create a `.e
         "first_name": "string",
         "current_role": "string"
       },
+      "id": "number",
       "type": "enum",
       "shortText": "string",
       "time": "number",

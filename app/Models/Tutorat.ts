@@ -1,5 +1,13 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  belongsTo,
+  column,
+  computed,
+  HasOne,
+  hasOne,
+} from '@ioc:Adonis/Lucid/Orm'
 import Profile from 'App/Models/Profile'
 import Subject from 'App/Models/Subject'
 import School from 'App/Models/School'
@@ -42,6 +50,13 @@ export default class Tutorat extends BaseModel {
 
   @column()
   public type: TutoratType
+
+  @computed({ serializeAs: 'short_text' })
+  public get shortText(): string | null {
+    if (!this.text) return null
+
+    return this.text.slice(0, 120) + '...'
+  }
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -27,13 +27,12 @@ export default class TutoratQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    limit: schema.number.optional(),
     page: schema.number.optional(),
     currentRole: schema.enum.optional(Object.values(CurrentRole)),
-    subject: schema.number.optional(),
-    school: schema.number.optional(),
-    time: schema.number.optional(),
     type: schema.enum.optional(Object.values(TutoratType)),
+    subjects: schema.array.optional().members(schema.number()),
+    schools: schema.array.optional().members(schema.number()),
+    time: schema.number.optional(),
   })
 
   /**
@@ -48,12 +47,13 @@ export default class TutoratQueryValidator {
    *
    */
   public messages = {
-    'limit.number': tutoratQuery.limit.number,
     'page.number': tutoratQuery.page.number,
     'currentRole.enum': tutoratQuery.currentRole.enum,
     'type.enum': tutoratQuery.type.enum,
-    'subject.number': tutoratQuery.subject.number,
-    'school.number': tutoratQuery.school.number,
+    'subjects.*.array': tutoratQuery.subjects.array,
+    'subject.number': tutoratQuery.subjects.number,
+    'schools.*.array': tutoratQuery.schools.array,
+    'schools.number': tutoratQuery.schools.number,
     'time.number': tutoratQuery.time.number,
   }
 }

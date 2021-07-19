@@ -1,7 +1,8 @@
 import { RequestContract } from '@ioc:Adonis/Core/Request'
 import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
-import Tutorat from 'App/Models/Tutorat'
+import { CurrentRole } from 'App/Models/Profile'
+import Tutorat, { TutoratType } from 'App/Models/Tutorat'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 
 /**
@@ -24,57 +25,38 @@ export async function getTutorat(id: number): Promise<Tutorat> {
   return tutorat[0]
 }
 
-type TTutoratValidator = typeof TutoratQueryValidator
-
-export async function filterTutorats(
-  request: RequestContract,
-  tutoratValidator: TTutoratValidator
-): Promise<Tutorat[] | ModelPaginatorContract<Tutorat>> {
-  const defaultQuery = {
-    page: 1,
-    limit: 5,
-  }
-
-  const { limit, page, currentRole, subject, school, time, type } = await request.validate(
-    tutoratValidator
-  )
-
-  const queryTutorats = Tutorat.query().whereExists((query) => {
-    query.from('users').whereColumn('users.id', 'tutorats.user_id').where('users.is_verified', true)
-  })
-
-  await preloadTutorat(queryTutorats)
-
-  if (subject) {
-    queryTutorats.where('subject_id', '=', subject)
-  }
-
-  if (currentRole)
-    queryTutorats.whereExists((query) => {
+/**
+ * Used to filter tutorats
+ */
+export function filterTutorats(
+  tutorats: ModelQueryBuilderContract<typeof Tutorat, Tutorat>,
+  currentRole: CurrentRole | undefined,
+  type: TutoratType | undefined,
+  subjects: Array<number> | undefined,
+  schools: Array<number> | undefined,
+  time: number | undefined
+): ModelQueryBuilderContract<typeof Tutorat, Tutorat> {
+  tutorats
+    .if(currentRole, (query) => {
       query
         .from('profiles')
         .whereColumn('profiles.user_id', 'tutorats.user_id')
-        .where('profiles.current_role', currentRole)
+        .where('profiles.current_role', currentRole!)
+    })
+    .if(time, (query) => {
+      query.where('time', '<', time!)
+    })
+    .if(type, (query) => {
+      query.where('type', '=', type!)
+    })
+    .if(subjects, (query) => {
+      query.whereIn('subject_id', subjects!)
+    })
+    .if(schools, (query) => {
+      query.whereIn('school_id', schools!)
     })
 
-  if (school) {
-    queryTutorats.where('school_id', '=', school)
-  }
-
-  if (time) {
-    queryTutorats.where('time', '<', time)
-  }
-
-  if (type) {
-    queryTutorats.where('type', '=', type)
-  }
-
-  const result =
-    page || limit
-      ? queryTutorats.paginate(page ?? defaultQuery.page, limit ?? defaultQuery.limit)
-      : queryTutorats.exec()
-
-  return result
+  return tutorats
 }
 
 /**

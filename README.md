@@ -214,7 +214,38 @@ In order to be used this server with any of the front-end, you must create a `.e
 #### Multiple Tutorats
 
 ```json
-{}
+{
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
+  "data": [
+    {
+      "profile": {
+        "avatar_url": "string",
+        "last_name": "string",
+        "first_name": "string",
+        "current_role": "string"
+      },
+      "type": "enum",
+      "shortText": "string",
+      "time": "number",
+      "subject": {
+        "name": "string"
+      },
+      "school": {
+        "name": "string"
+      }
+    }
+  ]
+}
 ```
 
 #### Tutorat

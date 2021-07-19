@@ -5,12 +5,47 @@ import { filterTutorats, getTutorat, loadTutorat } from 'App/Services/TutoratSer
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 import TutoratUpdateValidator from 'App/Validators/TutoratUpdateValidator'
 import TutoratValidator from 'App/Validators/TutoratValidator'
+import SerializationQueryValidator, {
+  Serialization,
+} from 'App/Validators/SerializationQueryValidator'
 
+const LIMIT = 20
 export default class TutoratsController {
   public async index({ request }: HttpContextContract) {
-    const tutorats = filterTutorats(request, TutoratQueryValidator)
+    const { serialize } = await request.validate(SerializationQueryValidator)
+    const { page, subjects, currentRole, schools, type, time } = await request.validate(
+      TutoratQueryValidator
+    )
 
-    return tutorats
+    const queryTutorats = Tutorat.query().preload('school').preload('subject').preload('profile')
+
+    const filteredTutorats = filterTutorats(
+      queryTutorats,
+      currentRole,
+      type,
+      subjects,
+      schools,
+      time
+    )
+
+    const result = await filteredTutorats.paginate(page ?? 1, LIMIT)
+
+    if (serialize === Serialization.CARD)
+      return result.serialize({
+        fields: ['type', 'short_text', 'time'],
+        relations: {
+          school: {
+            fields: ['name'],
+          },
+          subject: {
+            fields: ['name'],
+          },
+          profile: {
+            fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
+          },
+        },
+      })
+    else return {}
   }
 
   public async show({ params }: HttpContextContract) {

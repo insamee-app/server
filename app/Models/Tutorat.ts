@@ -7,6 +7,8 @@ import {
   computed,
   HasOne,
   hasOne,
+  ManyToMany,
+  manyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import Profile from 'App/Models/Profile'
 import Subject from 'App/Models/Subject'
@@ -50,6 +52,15 @@ export default class Tutorat extends BaseModel {
 
   @column()
   public type: TutoratType
+
+  @manyToMany(() => Profile, {
+    localKey: 'id',
+    pivotForeignKey: 'tutorat_id',
+    pivotRelatedForeignKey: 'user_id',
+    relatedKey: 'userId',
+    pivotTable: 'registration_tutorat',
+  })
+  public registrations: ManyToMany<typeof Profile>
 
   @computed({ serializeAs: 'short_text' })
   public get shortText(): string | null {

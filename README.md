@@ -274,6 +274,30 @@ In order to be used this server with any of the front-end, you must create a `.e
 }
 ```
 
+#### Registration Object
+
+```json
+{
+  "registration": "string"
+}
+```
+
+#### Deregistration Object
+
+```json
+{
+  "deregistration": "string"
+}
+```
+
+#### Contact Object
+
+```json
+{
+  "mailto": "string"
+}
+```
+
 #### Multiple Associations
 
 ```json
@@ -658,6 +682,24 @@ Body
 - `description` as string
 
 Authentication required, returns a [report](#report)
+
+#### Registration to a Tutorat
+
+`POST /api/v1/tutorats/:id/registrations`
+
+Authentication required, returns a [registration object](#registration-object)
+
+#### Deregistration to a Tutorat
+
+`DELETE /api/v1/tutorats/:id/registrations`
+
+Authentication required, returns a [deregistration object](#deregistration-object)
+
+#### Get Contact Registrations from a Tutorat
+
+`GET /api/v1/tutorats/:id/registrations/contacts`
+
+Authentication required, returns a [contact object](#contact-object)
 
 #### Get Associations
 

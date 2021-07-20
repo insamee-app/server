@@ -46,7 +46,15 @@ Route.group(() => {
   Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
+
   Route.resource('tutorats', 'TutoratsController').apiOnly()
+  Route.group(() => {
+    Route.post('/registrations', 'TutoratsController.registration').as('registration')
+    Route.delete('/registrations', 'TutoratsController.deregistration').as('deregistration')
+    Route.get('/registrations/contacts', 'TutoratsController.contact').as('registration.contact')
+  })
+    .prefix('tutorats/:id')
+    .as('tutorats.id')
 
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('associations/:id', 'AssociationsController.show').as('associations.show')

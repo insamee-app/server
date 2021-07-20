@@ -60,6 +60,7 @@ export default class Tutorat extends BaseModel {
     pivotRelatedForeignKey: 'user_id',
     relatedKey: 'id',
     pivotTable: 'registration_tutorat',
+    serializeAs: 'users_registrations',
   })
   public usersRegistrations: ManyToMany<typeof User>
 

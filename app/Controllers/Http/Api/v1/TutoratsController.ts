@@ -1,14 +1,18 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat, { TutoratType } from 'App/Models/Tutorat'
-import { filterTutorats, getTutorat, loadTutorat } from 'App/Services/TutoratService'
+import {
+  filterTutorats,
+  getTutorat,
+  loadTutorat,
+  tutoratCardSerialize,
+} from 'App/Services/TutoratService'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 import TutoratUpdateValidator from 'App/Validators/TutoratUpdateValidator'
 import TutoratValidator from 'App/Validators/TutoratValidator'
 import SerializationQueryValidator, {
   Serialization,
 } from 'App/Validators/SerializationQueryValidator'
-import InternalServerErrorException from 'App/Exceptions/InternalServerErrorException'
 import Database from '@ioc:Adonis/Lucid/Database'
 
 const LIMIT = 20
@@ -32,21 +36,7 @@ export default class TutoratsController {
 
     const result = await filteredTutorats.paginate(page ?? 1, LIMIT)
 
-    if (serialize === Serialization.CARD)
-      return result.serialize({
-        fields: ['type', 'short_text', 'time', 'id'],
-        relations: {
-          school: {
-            fields: ['name'],
-          },
-          subject: {
-            fields: ['name'],
-          },
-          profile: {
-            fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
-          },
-        },
-      })
+    if (serialize === Serialization.CARD) return result.serialize(tutoratCardSerialize)
     else return {}
   }
 

@@ -1,4 +1,4 @@
-import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { CherryPick, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import { CurrentRole } from 'App/Models/Profile'
 import Tutorat, { TutoratType } from 'App/Models/Tutorat'
@@ -86,4 +86,19 @@ export async function loadTutorat(tutorat: Tutorat): Promise<void> {
   })
   await tutorat.load('school')
   await tutorat.load('subject')
+}
+
+export const tutoratCardSerialize: CherryPick = {
+  fields: ['type', 'short_text', 'time', 'id'],
+  relations: {
+    school: {
+      fields: ['name'],
+    },
+    subject: {
+      fields: ['name'],
+    },
+    profile: {
+      fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
+    },
+  },
 }

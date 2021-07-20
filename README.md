@@ -524,6 +524,12 @@ Query string
 
 Authentication required, returns a [profile](#profile)
 
+#### Get Tutorats Registrations from Current Profile
+
+`GET /api/v1/profiles/me/tutorats/registrations`
+
+Authentication required, returns a [cards-multiple-tutorats](#cards-multiple-tutorats)
+
 #### Get Profiles
 
 `GET /api/v1/profiles`
@@ -672,6 +678,7 @@ Authentication required, returns [deleted tutorat object](#deleted-tutorat-objec
 
 Authorization: only the owner
 
+<<<<<<< HEAD
 #### Report a Tutorat
 
 `POST /api/v1/tutorats/:id/reports`
@@ -682,6 +689,13 @@ Body
 - `description` as string
 
 Authentication required, returns a [report](#report)
+=======
+#### Registration Tutorat
+
+`GET /api/v1/tutorats/:id/registrations`
+
+Authentication required, returns a [Cards Multiple Profiles](#cards-multiple-profiles)
+>>>>>>> feat(tutorat): add new routes
 
 #### Registration to a Tutorat
 

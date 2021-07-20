@@ -13,6 +13,7 @@ import {
 import Profile from 'App/Models/Profile'
 import Subject from 'App/Models/Subject'
 import School from 'App/Models/School'
+import User from './User'
 
 export enum TutoratType {
   OFFER = 'offre',
@@ -53,14 +54,14 @@ export default class Tutorat extends BaseModel {
   @column()
   public type: TutoratType
 
-  @manyToMany(() => Profile, {
+  @manyToMany(() => User, {
     localKey: 'id',
     pivotForeignKey: 'tutorat_id',
     pivotRelatedForeignKey: 'user_id',
-    relatedKey: 'userId',
+    relatedKey: 'id',
     pivotTable: 'registration_tutorat',
   })
-  public registrations: ManyToMany<typeof Profile>
+  public usersRegistrations: ManyToMany<typeof User>
 
   @computed({ serializeAs: 'short_text' })
   public get shortText(): string | null {

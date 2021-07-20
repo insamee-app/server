@@ -8,7 +8,7 @@ import User from 'App/Models/User'
 export async function getUser(id: number): Promise<User> {
   const user = await User.findOrFail(id)
 
-  if (!user.isVerified) throw new NotFoundException(`Utilisateur ${id} introuvable`)
+  if (!user.isVerified) throw new NotFoundException(`Utilisateur introuvable`)
 
   return user
 }

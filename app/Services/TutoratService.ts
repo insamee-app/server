@@ -1,9 +1,7 @@
-import { RequestContract } from '@ioc:Adonis/Core/Request'
-import { ModelPaginatorContract, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import { CurrentRole } from 'App/Models/Profile'
 import Tutorat, { TutoratType } from 'App/Models/Tutorat'
-import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 
 /**
  * Get a tutorat by id
@@ -36,6 +34,11 @@ export function filterTutorats(
   schools: Array<number> | undefined,
   time: number | undefined
 ): ModelQueryBuilderContract<typeof Tutorat, Tutorat> {
+  // Get only tutorats where user is verified (but a tutorat can't be created by an unverified user, except in dev)
+  tutorats.whereExists((query) => {
+    query.from('users').whereColumn('users.id', 'tutorats.user_id').where('users.is_verified', true)
+  })
+
   tutorats
     .if(currentRole, (query) => {
       query
@@ -78,7 +81,6 @@ export async function preloadTutorat(
 export async function loadTutorat(tutorat: Tutorat): Promise<void> {
   await tutorat.load((loader) => {
     loader.load('profile', (profile) => {
-      profile.preload('tutoratProfile')
       profile.preload('user')
     })
   })

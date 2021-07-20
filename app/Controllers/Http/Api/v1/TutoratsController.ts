@@ -55,7 +55,25 @@ export default class TutoratsController {
 
     await loadTutorat(tutorat)
 
-    return tutorat
+    return tutorat.serialize({
+      fields: ['type', 'text', 'time'],
+      relations: {
+        school: {
+          fields: ['name'],
+        },
+        subject: {
+          fields: ['name'],
+        },
+        profile: {
+          fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
+          relations: {
+            user: {
+              fields: ['email'],
+            },
+          },
+        },
+      },
+    })
   }
 
   public async store({ auth, request }: HttpContextContract) {

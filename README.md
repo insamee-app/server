@@ -211,7 +211,7 @@ In order to be used this server with any of the front-end, you must create a `.e
 }
 ```
 
-#### Multiple Tutorats
+#### Cards Multiple Tutorats
 
 ```json
 {
@@ -252,7 +252,26 @@ In order to be used this server with any of the front-end, you must create a `.e
 #### Tutorat
 
 ```json
-{}
+{
+  "type": "enum",
+  "time": "number",
+  "text": "string",
+  "profile": {
+    "avatar_url": "string",
+    "last_name": "string",
+    "first_name": "string",
+    "current_role": "string",
+    "user": {
+      "email": "string"
+    }
+  },
+  "school": {
+    "name": "string"
+  },
+  "subject": {
+    "name": "string"
+  }
+}
 ```
 
 #### Multiple Associations

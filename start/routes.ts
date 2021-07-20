@@ -53,10 +53,14 @@ Route.group(() => {
 
   Route.resource('tutorats', 'TutoratsController').apiOnly()
   Route.group(() => {
-    Route.get('/registrations', 'TutoratsController.registrations').as('registrations.index')
-    Route.post('/registrations', 'TutoratsController.registration').as('registrations.create')
-    Route.delete('/registrations', 'TutoratsController.deregistration').as('registrations.destroy')
-    Route.get('/registrations/contacts', 'TutoratsController.contact').as('registrations.contact')
+    Route.get('/registrations', 'TutoratsRegistrationsController.index').as('registrations.index')
+    Route.post('/registrations', 'TutoratsRegistrationsController.store').as('registrations.store')
+    Route.delete('/registrations', 'TutoratsRegistrationsController.destroy').as(
+      'registrations.destroy'
+    )
+    Route.get('/registrations/contacts', 'TutoratsRegistrationsController.contact').as(
+      'registrations.contact'
+    )
   })
     .prefix('tutorats/:id')
     .as('tutorats.id')

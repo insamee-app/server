@@ -135,40 +135,4 @@ export default class TutoratsController {
       destroy: 'ok',
     }
   }
-
-  public async registration({ auth, params }: HttpContextContract) {
-    const { user } = auth
-    const { id } = params
-
-    const related = await Database.from('registration_tutorat').where('user_id', user!.id)
-    const relatedIds = related.map((r) => r.tutorat_id)
-
-    if (!relatedIds.includes(+id)) await user!.related('tutoratsRegistrations').attach([id])
-
-    return {
-      registration: 'ok',
-    }
-  }
-
-  public async deregistration({ auth, params }: HttpContextContract) {
-    const { user } = auth
-    const { id } = params
-
-    await user!.related('tutoratsRegistrations').detach([id])
-
-    return {
-      deregistration: 'ok',
-    }
-  }
-
-  public async contact({ params }: HttpContextContract) {
-    const { id } = params
-
-    const tutorat = await getTutorat(id)
-    const users = await tutorat.related('usersRegistrations').query().select('email')
-
-    return {
-      mailto: `mailto:${users.map((user) => user.email).join(';')}`,
-    }
-  }
 }

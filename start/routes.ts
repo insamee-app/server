@@ -65,6 +65,8 @@ Route.group(() => {
     .prefix('tutorats/:id')
     .as('tutorats.id')
 
+  Route.get('/registrations/:id', 'RegistrationsController.show').as('registrations.show')
+
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('associations/:id', 'AssociationsController.show').as('associations.show')
   Route.get('associations/:id/profiles', 'AssociationsController.profiles').as(

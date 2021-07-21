@@ -693,7 +693,7 @@ Authentication required, returns [multiple tags](#multiple-tags)
 
 Query string
 
-- `plateforme` as string
+- `platform` as string
 
 Authentication required, returns [multiple reasons](#multiple-reasons)
 

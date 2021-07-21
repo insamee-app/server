@@ -7,12 +7,15 @@ import {
   hasOne,
   HasOne,
   computed,
+  manyToMany,
+  ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
 import InsameeProfile from './InsameeProfile'
 import School from './School'
 import TutoratProfile from './TutoratProfile'
 import Application from '@ioc:Adonis/Core/Application'
+import Tutorat from './Tutorat'
 
 export enum CurrentRole {
   STUDENT = 'étudiant',
@@ -83,6 +86,16 @@ export default class Profile extends BaseModel {
     foreignKey: 'schoolId',
   })
   public school: BelongsTo<typeof School>
+
+  @manyToMany(() => Tutorat, {
+    localKey: 'userId',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'tutorat_id',
+    relatedKey: 'id',
+    pivotTable: 'registration_tutorat',
+    serializeAs: 'tutorats_registrations',
+  })
+  public tutoratsRegistrations: ManyToMany<typeof Tutorat>
 
   // @hasManyThrough([() => Skill, () => InsameeProfile], {
   //   localKey: 'userId',

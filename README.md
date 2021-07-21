@@ -211,16 +211,91 @@ In order to be used this server with any of the front-end, you must create a `.e
 }
 ```
 
-#### Multiple Tutorats
+#### Cards Multiple Tutorats
 
 ```json
-{}
+{
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
+  "data": [
+    {
+      "profile": {
+        "avatar_url": "string",
+        "last_name": "string",
+        "first_name": "string",
+        "current_role": "string"
+      },
+      "id": "number",
+      "type": "enum",
+      "shortText": "string",
+      "time": "number",
+      "subject": {
+        "name": "string"
+      },
+      "school": {
+        "name": "string"
+      }
+    }
+  ]
+}
 ```
 
 #### Tutorat
 
 ```json
-{}
+{
+  "type": "enum",
+  "time": "number",
+  "text": "string",
+  "profile": {
+    "avatar_url": "string",
+    "last_name": "string",
+    "first_name": "string",
+    "current_role": "string",
+    "user": {
+      "email": "string"
+    }
+  },
+  "school": {
+    "name": "string"
+  },
+  "subject": {
+    "name": "string"
+  }
+}
+```
+
+#### Registration Object
+
+```json
+{
+  "registration": "string"
+}
+```
+
+#### Deregistration Object
+
+```json
+{
+  "deregistration": "string"
+}
+```
+
+#### Contact Object
+
+```json
+{
+  "mailto": "string"
+}
 ```
 
 #### Multiple Associations
@@ -449,6 +524,12 @@ Query string
 
 Authentication required, returns a [profile](#profile)
 
+#### Get Tutorats Registrations from Current Profile
+
+`GET /api/v1/profiles/me/tutorats/registrations`
+
+Authentication required, returns a [cards-multiple-tutorats](#cards-multiple-tutorats)
+
 #### Get Profiles
 
 `GET /api/v1/profiles`
@@ -607,6 +688,30 @@ Body
 - `description` as string
 
 Authentication required, returns a [report](#report)
+
+#### Registration Tutorat
+
+`GET /api/v1/tutorats/:id/registrations`
+
+Authentication required, returns a [Cards Multiple Profiles](#cards-multiple-profiles)
+
+#### Registration to a Tutorat
+
+`POST /api/v1/tutorats/:id/registrations`
+
+Authentication required, returns a [registration object](#registration-object)
+
+#### Deregistration to a Tutorat
+
+`DELETE /api/v1/tutorats/:id/registrations`
+
+Authentication required, returns a [deregistration object](#deregistration-object)
+
+#### Get Contact Registrations from a Tutorat
+
+`GET /api/v1/tutorats/:id/registrations/contacts`
+
+Authentication required, returns a [contact object](#contact-object)
 
 #### Get Associations
 

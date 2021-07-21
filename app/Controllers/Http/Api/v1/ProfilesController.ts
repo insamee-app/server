@@ -25,6 +25,8 @@ import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
 import SerializationQueryValidator, {
   Serialization,
 } from 'App/Validators/SerializationQueryValidator'
+import { tutoratCardSerialize } from 'App/Services/TutoratService'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
@@ -205,5 +207,23 @@ export default class ProfilesController {
     const result = await tutorats.paginate(page ?? 1, limit ?? 5)
 
     return result
+  }
+
+  public async tutoratsRegistrations({ auth, request }: HttpContextContract) {
+    const { user } = auth
+
+    const { page } = await request.validate(ProfileQueryValidator)
+
+    const tutorats = await Tutorat.query()
+      .whereIn(
+        'id',
+        Database.from('registration_tutorat').select('tutorat_id').where('user_id', '=', user!.id)
+      )
+      .preload('profile')
+      .preload('school')
+      .preload('subject')
+      .paginate(page ?? 1, 6)
+
+    return tutorats.serialize(tutoratCardSerialize)
   }
 }

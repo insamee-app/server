@@ -1,7 +1,16 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
+import {
+  column,
+  beforeSave,
+  BaseModel,
+  hasOne,
+  HasOne,
+  manyToMany,
+  ManyToMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import Profile from 'App/Models/Profile'
+import Tutorat from './Tutorat'
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -28,6 +37,16 @@ export default class User extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @manyToMany(() => Tutorat, {
+    localKey: 'id',
+    pivotForeignKey: 'user_id',
+    pivotRelatedForeignKey: 'tutorat_id',
+    relatedKey: 'id',
+    pivotTable: 'registration_tutorat',
+    serializeAs: 'tutorats_registrations',
+  })
+  public tutoratsRegistrations: ManyToMany<typeof Tutorat>
 
   @beforeSave()
   public static async hashPassword(user: User) {

@@ -1,10 +1,8 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { tutoratQuery } from './messages'
-import { CurrentRole } from 'App/Models/Profile'
-import { TutoratType } from 'App/Models/Tutorat'
+import { Platform } from 'App/Controllers/Http/Api/v1/ReasonsController'
 
-export default class TutoratQueryValidator {
+export default class RegistrationQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -27,12 +25,7 @@ export default class TutoratQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    page: schema.number.optional(),
-    currentRole: schema.enum.optional(Object.values(CurrentRole)),
-    type: schema.enum.optional(Object.values(TutoratType)),
-    subjects: schema.array.optional().members(schema.number()),
-    schools: schema.array.optional().members(schema.number()),
-    time: schema.number.optional(),
+    platform: schema.enum(Object.values(Platform)),
   })
 
   /**
@@ -47,13 +40,7 @@ export default class TutoratQueryValidator {
    *
    */
   public messages = {
-    'page.number': tutoratQuery.page.number,
-    'currentRole.enum': tutoratQuery.currentRole.enum,
-    'type.enum': tutoratQuery.type.enum,
-    'subjects.*.array': tutoratQuery.subjects.array,
-    'subject.number': tutoratQuery.subjects.number,
-    'schools.*.array': tutoratQuery.schools.array,
-    'schools.number': tutoratQuery.schools.number,
-    'time.number': tutoratQuery.time.number,
+    'platform.required': 'Une plateforme est requise',
+    'platform.enum': 'La plateforme doit être dans la liste',
   }
 }

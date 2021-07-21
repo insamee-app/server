@@ -43,10 +43,29 @@ Route.group(() => {
 
 Route.group(() => {
   Route.resource('users', 'UsersController').only(['destroy'])
-  Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
+
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
+  Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
+  Route.get('profiles/me/tutorats/registrations', 'ProfilesController.tutoratsRegistrations').as(
+    'profiles.tutorats.registrations.index'
+  )
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
+
   Route.resource('tutorats', 'TutoratsController').apiOnly()
+  Route.group(() => {
+    Route.get('/registrations', 'TutoratsRegistrationsController.index').as('registrations.index')
+    Route.post('/registrations', 'TutoratsRegistrationsController.store').as('registrations.store')
+    Route.delete('/registrations', 'TutoratsRegistrationsController.destroy').as(
+      'registrations.destroy'
+    )
+    Route.get('/registrations/contacts', 'TutoratsRegistrationsController.contact').as(
+      'registrations.contact'
+    )
+  })
+    .prefix('tutorats/:id')
+    .as('tutorats.id')
+
+  Route.get('/registrations/:id', 'RegistrationsController.show').as('registrations.show')
 
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('associations/:id', 'AssociationsController.show').as('associations.show')

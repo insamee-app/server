@@ -1,16 +1,43 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat, { TutoratType } from 'App/Models/Tutorat'
-import { filterTutorats, getTutorat, loadTutorat } from 'App/Services/TutoratService'
+import {
+  filterTutorats,
+  getTutorat,
+  loadTutorat,
+  tutoratCardSerialize,
+} from 'App/Services/TutoratService'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 import TutoratUpdateValidator from 'App/Validators/TutoratUpdateValidator'
 import TutoratValidator from 'App/Validators/TutoratValidator'
+import SerializationQueryValidator, {
+  Serialization,
+} from 'App/Validators/SerializationQueryValidator'
+import Database from '@ioc:Adonis/Lucid/Database'
 
+const LIMIT = 20
 export default class TutoratsController {
   public async index({ request }: HttpContextContract) {
-    const tutorats = filterTutorats(request, TutoratQueryValidator)
+    const { serialize } = await request.validate(SerializationQueryValidator)
+    const { page, subjects, currentRole, schools, type, time } = await request.validate(
+      TutoratQueryValidator
+    )
 
-    return tutorats
+    const queryTutorats = Tutorat.query().preload('school').preload('subject').preload('profile')
+
+    const filteredTutorats = filterTutorats(
+      queryTutorats,
+      currentRole,
+      type,
+      subjects,
+      schools,
+      time
+    )
+
+    const result = await filteredTutorats.paginate(page ?? 1, LIMIT)
+
+    if (serialize === Serialization.CARD) return result.serialize(tutoratCardSerialize)
+    else return {}
   }
 
   public async show({ params }: HttpContextContract) {
@@ -20,7 +47,25 @@ export default class TutoratsController {
 
     await loadTutorat(tutorat)
 
-    return tutorat
+    return tutorat.serialize({
+      fields: ['type', 'text', 'time'],
+      relations: {
+        school: {
+          fields: ['name'],
+        },
+        subject: {
+          fields: ['name'],
+        },
+        profile: {
+          fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
+          relations: {
+            user: {
+              fields: ['email'],
+            },
+          },
+        },
+      },
+    })
   }
 
   public async store({ auth, request }: HttpContextContract) {

@@ -19,7 +19,7 @@ export default class NotFoundException extends Exception {
 
   public async handle(error: this) {
     return {
-      status: error.status,
+      statusCode: error.status,
       message: error.message,
     }
   }

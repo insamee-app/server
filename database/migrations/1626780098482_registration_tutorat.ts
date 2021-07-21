@@ -5,7 +5,7 @@ export default class RegistrationTutorat extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.primary(['user_id', 'tutorat_id'])
       table.integer('user_id').unsigned().notNullable().references('id').inTable('users')
       table.integer('tutorat_id').unsigned().notNullable().references('id').inTable('tutorats')
 

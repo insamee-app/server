@@ -54,6 +54,14 @@ Route.group(() => {
     'associations.profiles'
   )
 
+  Route.post('associations/:id/reports', 'AssociationsReportsController.create').as(
+    'associations.reports.create'
+  )
+  Route.post('tutorats/:id/reports', 'TutoratsReportsController.create').as(
+    'tutorats.reports.create'
+  )
+  Route.get('reasons', 'ReasonsController.index').as('reasons.index')
+
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
   Route.get('focus_interests', 'FocusInterestsController.index').as('focus_interests.index')

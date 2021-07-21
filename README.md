@@ -333,6 +333,25 @@ In order to be used this server with any of the front-end, you must create a `.e
 }
 ```
 
+#### Multiple Reasons
+
+```json
+[
+  {
+    "id": "number",
+    "name": "string"
+  }
+]
+```
+
+#### Report
+
+```json
+{
+  "reported": "string"
+}
+```
+
 ### EndPoints
 
 #### Registration
@@ -578,6 +597,17 @@ Authentication required, returns [deleted tutorat object](#deleted-tutorat-objec
 
 Authorization: only the owner
 
+#### Report a Tutorat
+
+`POST /api/v1/tutorats/:id/reports`
+
+Body
+
+- `reason` as number
+- `description` as string
+
+Authentication required, returns a [report](#report)
+
 #### Get Associations
 
 `GET /api/v1/associations`
@@ -609,6 +639,17 @@ Query string
 - `page`, as string
 
 Authentication required, returns a [multiple profiles](#multiple-profiles)
+
+#### Report an Association
+
+`POST /api/v1/associations/:id/reports`
+
+Body
+
+- `reason` as number
+- `description` as string
+
+Authentication required, returns a [report](#report)
 
 #### Get Schools
 
@@ -645,6 +686,16 @@ Authentication required, returns [multiple thematics](#multiple-thematics)
 `GET /api/v1/tags`
 
 Authentication required, returns [multiple tags](#multiple-tags)
+
+#### Get Reasons
+
+`GET /api/v1/reasons`
+
+Query string
+
+- `plateforme` as string
+
+Authentication required, returns [multiple reasons](#multiple-reasons)
 
 ### Authentication Workflow
 

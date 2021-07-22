@@ -5,7 +5,8 @@ export default class TutoratsReports extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.primary(['user_id', 'tutorat_id', 'deleted_at'])
+      table.increments('id')
+      table.unique(['user_id', 'tutorat_id', 'deleted_at'])
 
       table
         .integer('reason_id')

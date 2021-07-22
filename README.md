@@ -423,7 +423,8 @@ In order to be used this server with any of the front-end, you must create a `.e
 
 ```json
 {
-  "reported": "string"
+  "reported": "string",
+  "already": "boolean"
 }
 ```
 

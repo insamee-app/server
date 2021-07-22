@@ -1,5 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Tutorat from 'App/Models/Tutorat'
 import TutoratsReport from 'App/Models/TutoratsReport'
 import { getTutorat } from 'App/Services/TutoratService'
 import TutoratReportValidator from 'App/Validators/TutoratReportValidator'
@@ -10,17 +9,29 @@ export default class TutoratsReportsController {
     const { user } = auth
     const { reason, description } = await request.validate(TutoratReportValidator)
 
+    // Used to avoid to report an nonexisting tutorat
     await getTutorat(id)
 
-    await TutoratsReport.create({
-      userId: user!.id,
-      reasonId: reason,
-      description,
-      tutoratId: id,
-    })
+    // Used to avoid to report an already reported tutorat (same user, same tutorat)
+    // But deleted_at allow user to report a tutorat again, after a check by the admin
+    try {
+      await TutoratsReport.query().where('user_id', user!.id).where('tutorat_id', id).firstOrFail()
+      return {
+        reported: 'ok',
+        already: true,
+      }
+    } catch (error) {
+      await TutoratsReport.create({
+        userId: user!.id,
+        reasonId: reason,
+        description,
+        tutoratId: id,
+      })
+    }
 
     return {
       reported: 'ok',
+      already: false,
     }
   }
 }

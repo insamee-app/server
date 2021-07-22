@@ -9,6 +9,8 @@ export default class UserSeeder extends BaseSeeder {
     const uniqueKey = 'email'
     const password = 'azerty'
 
+    const datetime = DateTime.now()
+
     await User.updateOrCreateMany(uniqueKey, [
       {
         email: 'VirginiaBMarker@insa-cvl.fr'.toLowerCase(),
@@ -38,7 +40,7 @@ export default class UserSeeder extends BaseSeeder {
       {
         email: 'PaulDSullivan@insa-cvl.fr'.toLowerCase(),
         isVerified: true,
-        deletedAt: new DateTime(),
+        deletedAt: datetime,
         password,
       },
       {

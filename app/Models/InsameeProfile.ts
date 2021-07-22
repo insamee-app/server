@@ -3,8 +3,10 @@ import { column, BaseModel, manyToMany, ManyToMany, computed } from '@ioc:Adonis
 import Association from './Association'
 import Skill from './Skill'
 import FocusInterest from './FocusInterest'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
-export default class InsameeProfile extends BaseModel {
+export default class InsameeProfile extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public userId: number
 

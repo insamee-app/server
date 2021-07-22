@@ -16,6 +16,8 @@ import School from './School'
 import TutoratProfile from './TutoratProfile'
 import Application from '@ioc:Adonis/Core/Application'
 import Tutorat from './Tutorat'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
 export enum CurrentRole {
   STUDENT = 'étudiant',
@@ -27,7 +29,7 @@ export enum Populate {
   TUTORAT = 'tutorat',
 }
 
-export default class Profile extends BaseModel {
+export default class Profile extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public userId: number
 

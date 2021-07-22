@@ -3,8 +3,10 @@ import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import TutoratsReason from './TutoratsReason'
 import Tutorat from './Tutorat'
 import User from './User'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
-export default class TutoratsReport extends BaseModel {
+export default class TutoratsReport extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
 

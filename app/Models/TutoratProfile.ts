@@ -1,8 +1,10 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Subject from './Subject'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
-export default class TutoratProfile extends BaseModel {
+export default class TutoratProfile extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public userId: number
 

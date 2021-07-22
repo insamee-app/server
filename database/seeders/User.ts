@@ -1,5 +1,6 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import User from 'App/Models/User'
+import { DateTime } from 'luxon'
 
 export default class UserSeeder extends BaseSeeder {
   public static developmentOnly = true
@@ -37,6 +38,7 @@ export default class UserSeeder extends BaseSeeder {
       {
         email: 'PaulDSullivan@insa-cvl.fr'.toLowerCase(),
         isVerified: true,
+        deletedAt: new DateTime(),
         password,
       },
       {

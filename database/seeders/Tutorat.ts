@@ -10,7 +10,7 @@ export default class TutoratSeeder extends BaseSeeder {
 
   public async run() {
     const school = await School.findByOrFail('host', 'insa-cvl.fr')
-    const users = await User.all()
+    const users = await User.withTrashed().exec()
     const subjects = await Subject.all()
 
     for (const [index, user] of users.entries()) {
@@ -27,6 +27,7 @@ export default class TutoratSeeder extends BaseSeeder {
             text: texts[value % texts.length],
             time: type === TutoratType.OFFER ? 90 : undefined,
             type,
+            deletedAt: user.deletedAt,
           }
         )
       }

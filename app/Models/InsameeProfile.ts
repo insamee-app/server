@@ -6,9 +6,6 @@ import FocusInterest from './FocusInterest'
 
 export default class InsameeProfile extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
-
-  @column()
   public userId: number
 
   @column()

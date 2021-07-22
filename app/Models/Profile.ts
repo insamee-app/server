@@ -29,9 +29,6 @@ export enum Populate {
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
-
-  @column()
   public userId: number
 
   @belongsTo(() => User, {

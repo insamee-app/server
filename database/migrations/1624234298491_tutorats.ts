@@ -8,7 +8,9 @@ export default class Tutorats extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.integer('user_id').unsigned().notNullable().references('user_id').inTable('profiles')
+      table.integer('user_id').unsigned().notNullable()
+      table.foreign('user_id').references('tutorat_profiles.user_id').onDelete('CASCADE')
+
       table.integer('subject_id').unsigned().notNullable().references('id').inTable('subjects')
       table.integer('school_id').unsigned().notNullable().references('id').inTable('schools')
 

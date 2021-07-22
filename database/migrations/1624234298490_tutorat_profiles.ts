@@ -5,15 +5,9 @@ export default class TutoratProfiles extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
+      table.integer('user_id').primary()
+      table.foreign('user_id').references('profiles.user_id').onDelete('CASCADE')
 
-      table
-        .integer('user_id')
-        .unsigned()
-        .notNullable()
-        .unique()
-        .references('user_id')
-        .inTable('profiles')
       table.string('text', 2048).nullable()
 
       /**

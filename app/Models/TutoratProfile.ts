@@ -4,9 +4,6 @@ import Subject from './Subject'
 
 export default class TutoratProfile extends BaseModel {
   @column({ isPrimary: true })
-  public id: number
-
-  @column()
   public userId: number
 
   @column()

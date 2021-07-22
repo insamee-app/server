@@ -19,7 +19,9 @@ export default class AssociationsReports extends BaseSchema {
         .notNullable()
         .references('id')
         .inTable('associations')
-      table.integer('user_id').unsigned().notNullable().references('id').inTable('users')
+
+      table.integer('user_id').unsigned().notNullable()
+      table.foreign('user_id').references('tutorat_profiles.user_id').onDelete('CASCADE')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

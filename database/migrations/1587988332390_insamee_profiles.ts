@@ -5,10 +5,8 @@ export default class InsameeProfiles extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-
-      table.integer('user_id').notNullable().unique()
-      table.foreign('user_id').references('profiles.user_id')
+      table.integer('user_id').primary()
+      table.foreign('user_id').references('profiles.user_id').onDelete('CASCADE')
 
       table.string('text', 2048).nullable()
 

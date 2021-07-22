@@ -5,8 +5,7 @@ export default class TagAssociation extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-
+      table.primary(['tag_id', 'association_id'])
       table.integer('tag_id').unsigned().notNullable().references('id').inTable('tags')
       table
         .integer('association_id')

@@ -15,6 +15,7 @@ export default class UsersController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
+    // TODO: We need to fake the deletion of an account
     const profile = await getProfile(id)
     const insameeProfile = await getInsameeProfile(id)
     const tutoratProfile = await getTutoratProfile(id)

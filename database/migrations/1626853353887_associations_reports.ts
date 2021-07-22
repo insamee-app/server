@@ -6,6 +6,7 @@ export default class AssociationsReports extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
+
       table
         .integer('reason_id')
         .unsigned()
@@ -20,8 +21,12 @@ export default class AssociationsReports extends BaseSchema {
         .references('id')
         .inTable('associations')
 
-      table.integer('user_id').unsigned().notNullable()
-      table.foreign('user_id').references('tutorat_profiles.user_id').onDelete('CASCADE')
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('user_id')
+        .inTable('insamee_profiles')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

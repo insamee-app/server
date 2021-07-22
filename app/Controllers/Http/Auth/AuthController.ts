@@ -46,6 +46,7 @@ export default class AuthController {
       throw new BadRequestException(`L'utilisateur existe déjà`)
     }
 
+    // TODO: Check if all profiles are created
     await user.related('profile').create({ schoolId: school.id, userId: user.id })
     await InsameeProfile.create({ userId: user.id })
     await TutoratProfile.create({ userId: user.id })

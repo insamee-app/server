@@ -16,9 +16,6 @@ export default class RegistrationTutorat extends BaseSchema {
 
       table.integer('tutorat_id').unsigned().notNullable().references('id').inTable('tutorats')
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

@@ -21,7 +21,8 @@ export default class AssociationInsameeProfile extends BaseSchema {
         .references('id')
         .inTable('associations')
 
-      table.timestamps(true)
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 

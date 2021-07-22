@@ -22,9 +22,7 @@ export default class Tutorats extends BaseSchema {
       table.integer('time').unsigned().nullable()
       table.enum('type', Object.values(TutoratType))
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

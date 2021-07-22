@@ -15,9 +15,7 @@ export default class TutoratProfiles extends BaseSchema {
 
       table.string('text', 2048).nullable()
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

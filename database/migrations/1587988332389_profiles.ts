@@ -19,6 +19,7 @@ export default class Profiles extends BaseSchema {
       table.string('mobile').nullable()
       table.enu('current_role', Object.values(CurrentRole)).nullable()
 
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

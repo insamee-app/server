@@ -15,6 +15,7 @@ export default class InsameeProfiles extends BaseSchema {
 
       table.string('text', 2048).nullable()
 
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

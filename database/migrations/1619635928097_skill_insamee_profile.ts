@@ -15,7 +15,9 @@ export default class SkillInsameeProfile extends BaseSchema {
         .inTable('insamee_profiles')
 
       table.integer('skill_id').unsigned().notNullable().references('id').inTable('skills')
-      table.timestamps(true)
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 

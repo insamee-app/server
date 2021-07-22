@@ -21,7 +21,8 @@ export default class FocusInterestInsameeProfile extends BaseSchema {
         .references('id')
         .inTable('focus_interests')
 
-      table.timestamps(true)
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 

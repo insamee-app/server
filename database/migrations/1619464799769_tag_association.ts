@@ -6,6 +6,7 @@ export default class TagAssociation extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.primary(['tag_id', 'association_id'])
+
       table.integer('tag_id').unsigned().notNullable().references('id').inTable('tags')
       table
         .integer('association_id')
@@ -14,9 +15,6 @@ export default class TagAssociation extends BaseSchema {
         .references('id')
         .inTable('associations')
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

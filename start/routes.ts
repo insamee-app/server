@@ -73,6 +73,9 @@ Route.group(() => {
     'associations.profiles'
   )
 
+  Route.post('profiles/:id/reports', 'ProfilesReportsController.create').as(
+    'profiles.reports.create'
+  )
   Route.post('associations/:id/reports', 'AssociationsReportsController.create').as(
     'associations.reports.create'
   )

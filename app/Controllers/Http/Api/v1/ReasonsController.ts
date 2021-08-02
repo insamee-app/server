@@ -5,6 +5,7 @@ import TutoratsReason from 'App/Models/TutoratsReason'
 import ReasonQueryValidator from 'App/Validators/ReasonQueryValidator'
 
 export enum Platform {
+  INSAMEE = 'insamee',
   TUTORAT = 'tutorat',
   ASSOCIATIONS = 'associations',
 }
@@ -23,6 +24,8 @@ export default class ReasonsController {
     } else if (platform === Platform.TUTORAT) {
       const reasons = await TutoratsReason.all()
       return reasons.map((reason) => reason.serialize(reasonSerialize))
+    } else if (plateform === Platform.INSAMEE) {
+      // const reasons = await
     } else {
       return []
     }

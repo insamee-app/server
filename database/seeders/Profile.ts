@@ -1,7 +1,7 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import User from 'App/Models/User'
 import School from 'App/Models/School'
-import { CurrentRole } from 'App/Models/Profile'
+import Profile, { CurrentRole } from 'App/Models/Profile'
 
 export default class ProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
@@ -101,12 +101,7 @@ export default class ProfileSeeder extends BaseSeeder {
       for (let index = 0; index < profiles.length; index++) {
         const profile = profiles[index]
         if (user.email.includes(profile.lastName.toLowerCase())) {
-          await user
-            .related('profile')
-            .updateOrCreate(
-              { userId: user.id },
-              { ...profile, userId: user.id, deletedAt: user.deletedAt }
-            )
+          await Profile.create({ ...profile, userId: user.id, deletedAt: user.deletedAt })
         }
       }
     }

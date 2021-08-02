@@ -10,6 +10,8 @@ import {
   insameeProfileCardSerialize,
   insameeProfileSerialize,
   populateProfile,
+  preloadInsameeProfile,
+  preloadTutoratProfile,
   profileCardSerialize,
   profileSerialize,
 } from 'App/Services/ProfileService'
@@ -27,6 +29,8 @@ import SerializationQueryValidator, {
 } from 'App/Validators/SerializationQueryValidator'
 import { tutoratCardSerialize } from 'App/Services/TutoratService'
 import Database from '@ioc:Adonis/Lucid/Database'
+
+const LIMIT = 20
 
 export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
@@ -49,21 +53,46 @@ export default class ProfilesController {
     }
 
     const { serialize } = await request.validate(SerializationQueryValidator)
-    const { populate } = await request.validate(ProfileQueryValidator)
+    const { populate, page } = await request.validate(ProfileQueryValidator)
 
-    const profiles = await filterProfiles(
-      request,
-      ProfileQueryValidator,
+    const { currentRole, skills, focusInterests, associations } = await request.validate(
       InsameeProfilesQueryValidator
     )
+
+    const queryProfiles = Profile.query().whereNull('deleted_at')
+
+    const profiles = filterProfiles(
+      queryProfiles,
+      // text,
+      currentRole,
+      skills,
+      focusInterests,
+      associations
+    )
+
+    switch (populate) {
+      case Populate.INSAMEE:
+        profiles.preload('insameeProfile', (insameeProfilesQuery) => {
+          insameeProfilesQuery.preload('skills')
+          insameeProfilesQuery.preload('associations')
+        })
+        break
+      case Populate.TUTORAT:
+        preloadTutoratProfile(profiles)
+        break
+      default:
+        break
+    }
+
+    const result = await profiles.paginate(page ?? 1, LIMIT)
 
     if (populate === Populate.INSAMEE && serialize === Serialization.CARD) {
       const serialization: CherryPick = profileCardSerialize
       serialization.relations!.insamee_profile = insameeProfileCardSerialize
-      return profiles.serialize(serialization)
+      return result.serialize(serialization)
+    } else {
+      return []
     }
-
-    return profiles.serialize(profileSerialize)
   }
 
   public async show({ params, bouncer, request }: HttpContextContract) {
@@ -190,7 +219,7 @@ export default class ProfilesController {
   public async tutorats({ params, request }: HttpContextContract) {
     const { id } = params
 
-    const { limit, page } = await request.validate(ProfileQueryValidator)
+    const { page } = await request.validate(ProfileQueryValidator)
 
     const { type } = await request.validate(TutoratQueryValidator)
 
@@ -204,7 +233,7 @@ export default class ProfilesController {
       tutorats.where('type', '=', type)
     }
 
-    const result = await tutorats.paginate(page ?? 1, limit ?? 5)
+    const result = await tutorats.paginate(page ?? 1, LIMIT)
 
     return result
   }

@@ -26,10 +26,11 @@ export default class InsameeProfileQueryValidator {
    *    ```
    */
   public schema = schema.create({
+    // text: schema.string.optional({ trim: true }),
     currentRole: schema.enum.optional(Object.values(CurrentRole)),
-    skill: schema.number.optional(),
-    focusInterest: schema.number.optional(),
-    association: schema.number.optional(),
+    skills: schema.array.optional().members(schema.number()),
+    focusInterests: schema.array.optional().members(schema.number()),
+    associations: schema.array.optional().members(schema.number()),
   })
 
   /**
@@ -45,8 +46,11 @@ export default class InsameeProfileQueryValidator {
    */
   public messages = {
     'currentRole.enum': insameeQuery.currentRole.enum,
-    'skill.number': insameeQuery.skill.number,
-    'focusInterest.number': insameeQuery.focusInterest.number,
-    'association.number': insameeQuery.association.number,
+    'skills.*.number': insameeQuery.skills.number,
+    'skills.array': insameeQuery.skills.array,
+    'focusInterests.*.number': insameeQuery.focusInterests.number,
+    'focusInterests.array': insameeQuery.focusInterests.array,
+    'associations.*.number': insameeQuery.associations.number,
+    'associations.array': insameeQuery.associations.array,
   }
 }

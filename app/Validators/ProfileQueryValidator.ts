@@ -26,7 +26,6 @@ export default class ProfileQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    limit: schema.number.optional(),
     page: schema.number.optional(),
     populate: schema.enum.optional(Object.values(Populate)),
   })

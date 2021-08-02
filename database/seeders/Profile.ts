@@ -95,7 +95,7 @@ export default class ProfileSeeder extends BaseSeeder {
       },
     ]
 
-    const users = await User.all()
+    const users = await User.withTrashed().exec()
 
     for (const user of users) {
       for (let index = 0; index < profiles.length; index++) {
@@ -103,7 +103,10 @@ export default class ProfileSeeder extends BaseSeeder {
         if (user.email.includes(profile.lastName.toLowerCase())) {
           await user
             .related('profile')
-            .updateOrCreate({ userId: user.id }, { ...profile, userId: user.id })
+            .updateOrCreate(
+              { userId: user.id },
+              { ...profile, userId: user.id, deletedAt: user.deletedAt }
+            )
         }
       }
     }

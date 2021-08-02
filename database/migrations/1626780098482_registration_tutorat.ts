@@ -6,12 +6,16 @@ export default class RegistrationTutorat extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.primary(['user_id', 'tutorat_id'])
-      table.integer('user_id').unsigned().notNullable().references('id').inTable('users')
+
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('user_id')
+        .inTable('tutorat_profiles')
+
       table.integer('tutorat_id').unsigned().notNullable().references('id').inTable('tutorats')
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

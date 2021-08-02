@@ -14,13 +14,15 @@ import Profile from 'App/Models/Profile'
 import Subject from 'App/Models/Subject'
 import School from 'App/Models/School'
 import User from './User'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
 export enum TutoratType {
   OFFER = 'offre',
   DEMAND = 'demande',
 }
 
-export default class Tutorat extends BaseModel {
+export default class Tutorat extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
 

@@ -8,9 +8,6 @@ export default class AssociationsReasons extends BaseSchema {
       table.increments('id')
       table.string('name').notNullable()
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

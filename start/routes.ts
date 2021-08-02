@@ -44,11 +44,11 @@ Route.group(() => {
 Route.group(() => {
   Route.resource('users', 'UsersController').only(['destroy'])
 
-  Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
   Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
   Route.get('profiles/me/tutorats/registrations', 'ProfilesController.tutoratsRegistrations').as(
     'profiles.tutorats.registrations.index'
   )
+  Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
 
   Route.resource('tutorats', 'TutoratsController').apiOnly()

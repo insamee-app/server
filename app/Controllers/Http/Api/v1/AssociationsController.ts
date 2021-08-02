@@ -1,4 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from '@ioc:Adonis/Lucid/Database'
 
 import Association from 'App/Models/Association'
 import Profile from 'App/Models/Profile'
@@ -82,19 +83,15 @@ export default class AssociationsController {
     const { page } = await request.validate(AssociationQueryValidator)
 
     const profiles = await Profile.query()
-      .whereExists((query) => {
-        query
-          .from('users')
-          .whereColumn('users.id', 'profiles.user_id')
-          .where('users.is_verified', true)
-      })
       .join(
         'association_insamee_profile',
         'profiles.user_id',
         '=',
         'association_insamee_profile.user_id'
       )
+      .whereIn('profiles.user_id', Database.from('users').select('id').where('is_verified', true))
       .where('association_insamee_profile.association_id', '=', id)
+      .whereNull('profiles.deleted_at')
       .preload('insameeProfile', (insameeProfile) => {
         insameeProfile.preload('associations')
         insameeProfile.preload('focusInterests')

@@ -11,7 +11,9 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import Profile from 'App/Models/Profile'
 import Tutorat from './Tutorat'
-export default class User extends BaseModel {
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+export default class User extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
 

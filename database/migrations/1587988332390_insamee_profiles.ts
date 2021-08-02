@@ -5,13 +5,17 @@ export default class InsameeProfiles extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-
-      table.integer('user_id').notNullable().unique()
-      table.foreign('user_id').references('profiles.user_id')
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .primary()
+        .references('user_id')
+        .inTable('profiles')
 
       table.string('text', 2048).nullable()
 
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

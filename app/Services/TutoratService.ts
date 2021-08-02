@@ -1,3 +1,4 @@
+import Database from '@ioc:Adonis/Lucid/Database'
 import { CherryPick, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import { CurrentRole } from 'App/Models/Profile'
@@ -41,9 +42,12 @@ export function filterTutorats(
 
   tutorats
     .if(currentRole, (query) => {
-      query
-        .join('profiles', 'profiles.user_id', '=', 'tutorats.user_id')
-        .where('profiles.current_role', currentRole!)
+      query.whereExists((query) => {
+        query
+          .from('profiles')
+          .whereColumn('profiles.user_id', 'tutorats.user_id')
+          .where('profiles.current_role', currentRole!)
+      })
     })
     .if(time, (query) => {
       query.where('time', '<=', time!)

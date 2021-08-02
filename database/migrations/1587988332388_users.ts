@@ -11,6 +11,7 @@ export default class UsersSchema extends BaseSchema {
       table.string('remember_me_token').nullable()
       table.boolean('is_verified').defaultTo(false)
 
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

@@ -6,10 +6,7 @@ export default class Profiles extends BaseSchema {
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.increments('id')
-
-      table.integer('user_id').notNullable().unique()
-      table.foreign('user_id').references('users.id')
+      table.integer('user_id').unsigned().notNullable().primary().references('id').inTable('users')
 
       table.string('last_name', 30).nullable()
       table.string('first_name', 30).nullable()
@@ -22,6 +19,7 @@ export default class Profiles extends BaseSchema {
       table.string('mobile').nullable()
       table.enu('current_role', Object.values(CurrentRole)).nullable()
 
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

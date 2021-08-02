@@ -8,7 +8,13 @@ export default class Tutorats extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
 
-      table.integer('user_id').unsigned().notNullable().references('user_id').inTable('profiles')
+      table
+        .integer('user_id')
+        .unsigned()
+        .notNullable()
+        .references('user_id')
+        .inTable('tutorat_profiles')
+
       table.integer('subject_id').unsigned().notNullable().references('id').inTable('subjects')
       table.integer('school_id').unsigned().notNullable().references('id').inTable('schools')
 
@@ -16,9 +22,7 @@ export default class Tutorats extends BaseSchema {
       table.integer('time').unsigned().nullable()
       table.enum('type', Object.values(TutoratType))
 
-      /**
-       * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
-       */
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

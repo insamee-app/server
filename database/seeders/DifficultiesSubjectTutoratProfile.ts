@@ -4,7 +4,7 @@ import TutoratProfile from 'App/Models/TutoratProfile'
 
 export default class DifficultiesSubjectTutoratProfileSeeder extends BaseSeeder {
   public async run() {
-    const profiles = await TutoratProfile.all()
+    const profiles = await TutoratProfile.withTrashed().exec()
     const subjects = await Subject.all()
 
     for (const [index, profile] of profiles.entries()) {

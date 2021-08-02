@@ -11,7 +11,7 @@ export default class TutoratsRegistrationsController {
 
     const { page } = await request.validate(TutoratQueryValidator)
 
-    const profiles = await Profile.query()
+    const queryProfiles = Profile.query()
       .whereIn(
         'user_id',
         Database.from('registration_tutorat').select('user_id').where('tutorat_id', '=', id)
@@ -20,11 +20,13 @@ export default class TutoratsRegistrationsController {
         insameeProfile.preload('associations')
         insameeProfile.preload('focusInterests')
       })
-      .paginate(page ?? 1, 6)
+      .whereNull('profiles.deleted_at')
+
+    const result = await queryProfiles.paginate(page ?? 1, 6)
 
     const serialize = profileCardSerialize
     serialize.relations = { insamee_profile: insameeProfileCardSerialize }
-    return profiles.serialize(serialize)
+    return result.serialize(serialize)
   }
 
   public async store({ auth, params }: HttpContextContract) {

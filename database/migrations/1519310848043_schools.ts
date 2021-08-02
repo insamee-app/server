@@ -8,7 +8,9 @@ export default class Schools extends BaseSchema {
       table.increments('id').primary()
       table.string('host', 255).notNullable()
       table.string('name', 255).notNullable()
-      table.timestamps(true)
+
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 

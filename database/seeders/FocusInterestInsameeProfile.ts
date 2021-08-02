@@ -6,7 +6,7 @@ export default class FocusInterestInsameeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const profiles = await ProfileInsamee.all()
+    const profiles = await ProfileInsamee.withTrashed().exec()
     const focusInterests = await FocusInterest.all()
 
     for (const [index, profile] of profiles.entries()) {

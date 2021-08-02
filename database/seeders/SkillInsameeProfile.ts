@@ -6,7 +6,7 @@ export default class SkillInsameeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const profiles = await ProfileInsamee.all()
+    const profiles = await ProfileInsamee.withTrashed().exec()
     const skills = await Skill.all()
 
     for (const [index, profile] of profiles.entries()) {

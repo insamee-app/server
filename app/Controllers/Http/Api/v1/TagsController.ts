@@ -4,7 +4,7 @@ import Tag from 'App/Models/Tag'
 
 export default class TagsController {
   public async index() {
-    const tags = await Tag.all()
+    const tags = await Tag.query().orderBy('name')
     const tagsJSON = tags.map((tag) =>
       tag.serialize({
         fields: {

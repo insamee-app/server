@@ -86,7 +86,7 @@ Route.group(() => {
 
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
-  Route.get('focus_interests', 'FocusInterestsController.index').as('focus_interests.index')
+  Route.get('focusInterests', 'FocusInterestsController.index').as('focus_interests.index')
   Route.get('subjects', 'SubjectsController.index').as('subjects.index')
   Route.get('tags', 'TagsController.index').as('tags.index')
   Route.get('thematics', 'ThematicsController.index').as('thematics.index')

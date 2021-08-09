@@ -105,7 +105,7 @@ export function filterProfiles(
       query.whereIn('user_id', associationsQuery)
     })
     .if(currentRole, (query) => {
-      query.where('role', '=', currentRole!)
+      query.where('currentRole', '=', currentRole!)
     })
 
   return profiles

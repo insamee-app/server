@@ -596,7 +596,6 @@ Optional fields
 - `urlFacebook` as string
 - `urlInstagram` as string
 - `urlTwitter` as string
-- `avatar` as file
 
 ##### Insamee profile
 
@@ -618,6 +617,26 @@ Optional fields
 - `text` as string
 - `preferredSubjects` as array of numbers
 - `difficultiesSubjects` as array of numbers
+
+#### Update Profiles Picture
+
+`PATCH /api/v1/profiles/:id/profiles-pictures`
+
+Required fields
+
+- `avatar` as file
+
+Authentication required, returns a [profile](#profile)
+
+Authorization: only the owner
+
+#### Delete Profiles Pictures
+
+`DELETE /api/v1/profiles/:id/profiles-pictures`
+
+Authentication required, returns a [profile](#profile)
+
+Authorization: only the owner
 
 #### Get Tutorats
 

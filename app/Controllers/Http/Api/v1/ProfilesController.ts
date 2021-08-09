@@ -1,3 +1,6 @@
+import { unlink } from 'fs'
+import { promisify } from 'util'
+const unlinkAsync = promisify(unlink)
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import InsameeProfilesQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
@@ -10,7 +13,6 @@ import {
   insameeProfileCardSerialize,
   insameeProfileSerialize,
   populateProfile,
-  preloadInsameeProfile,
   preloadTutoratProfile,
   profileCardSerialize,
   profileSerialize,
@@ -131,7 +133,7 @@ export default class ProfilesController {
     }
 
     const { populate } = await request.validate(ProfileQueryValidator)
-    const { avatar, ...data } = await request.validate(ProfileValidator)
+    const { ...data } = await request.validate(ProfileValidator)
 
     if (populate === Populate.INSAMEE) {
       /**
@@ -183,23 +185,6 @@ export default class ProfilesController {
         await tutoratProfile.related('preferredSubjects').sync(preferredSubjects)
       if (difficultiesSubjects)
         await tutoratProfile.related('difficultiesSubjects').sync(difficultiesSubjects)
-    }
-
-    /*
-     * Update global profile
-     */
-    if (avatar) {
-      const filename = `${cuid()}.${avatar.extname}`
-      profile.avatar = filename
-      if (Application.inProduction) {
-        // TODO: send to s3 and remove the previous file
-      } else {
-        // in dev, not need to remove a file
-        avatar.move(Application.makePath('../storage/uploads'), {
-          name: filename,
-          overwrite: true,
-        })
-      }
     }
 
     for (const key in data) {
@@ -254,5 +239,37 @@ export default class ProfilesController {
       .paginate(page ?? 1, 6)
 
     return tutorats.serialize(tutoratCardSerialize)
+  }
+
+  public async updateProfilesPictures({ request, params, bouncer }: HttpContextContract) {
+    const id = params.id as number
+    const profile = await getProfile(id)
+
+    try {
+      await bouncer.with('ProfilePolicy').authorize('update', profile)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { avatar } = await request.validate(ProfileValidator)
+
+    if (avatar) {
+      const filename = `${cuid()}.${avatar.extname}`
+      profile.avatar = filename
+      await avatar.move(Application.makePath('../storage/uploads'), {
+        name: filename,
+      })
+    } else {
+      if (profile.avatar) {
+        await unlinkAsync(Application.makePath('../storage/uploads', profile.avatar))
+      }
+      profile.avatar = null as unknown as undefined
+    }
+
+    const updatedProfile = await profile.save()
+
+    await populateProfile(updatedProfile, Populate.INSAMEE)
+
+    return updatedProfile
   }
 }

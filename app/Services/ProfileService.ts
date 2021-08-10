@@ -1,19 +1,12 @@
 import Database from '@ioc:Adonis/Lucid/Database'
-import InsameeProfileQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
 import { DatabaseQueryBuilderContract } from '@ioc:Adonis/Lucid/Database'
-import { RequestContract } from '@ioc:Adonis/Core/Request'
-import {
-  CherryPick,
-  ModelPaginatorContract,
-  ModelQueryBuilderContract,
-} from '@ioc:Adonis/Lucid/Orm'
+import { CherryPick, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import InsameeProfile from 'App/Models/InsameeProfile'
 import Skill from 'App/Models/Skill'
 import FocusInterest from 'App/Models/FocusInterest'
 import Association from 'App/Models/Association'
-import Profile, { Populate } from 'App/Models/Profile'
-import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
+import Profile, { CurrentRole, Populate } from 'App/Models/Profile'
 import TutoratProfile from 'App/Models/TutoratProfile'
 
 /**
@@ -79,75 +72,52 @@ export async function getTutoratProfile(id: number): Promise<TutoratProfile> {
 /**
  * Used to create a query in a pivot table with a relation with insamee_profile and using the *user_id*
  */
-function queryInPivot<T>(name: string, param: string): DatabaseQueryBuilderContract<T> {
-  return Database.from(`${name}_insamee_profile`).select('user_id').where(`${name}_id`, param)
+function queryInPivot<T>(name: string, param: number[]): DatabaseQueryBuilderContract<T> {
+  return Database.from(`${name}_insamee_profile`).select('user_id').whereIn(`${name}_id`, param)
 }
 
-type TInsameeProfileValidator = typeof InsameeProfileQueryValidator
-type TProfileValidator = typeof ProfileQueryValidator
-
-export async function filterProfiles(
-  request: RequestContract,
-  profileValidator: TProfileValidator,
-  insameeValidator: TInsameeProfileValidator
-): Promise<ModelPaginatorContract<Profile>> {
-  const defaultQuery = {
-    page: 1,
-    limit: 5,
-  }
-
-  const { limit, page, populate } = await request.validate(profileValidator)
-  const { currentRole, skill, focusInterest, association } = await request.validate(
-    insameeValidator
-  )
-
-  const queryProfiles = Profile.query().whereExists((query) => {
+export function filterProfiles(
+  profiles: ModelQueryBuilderContract<typeof Profile, Profile>,
+  // text: string | undefined,
+  currentRole: CurrentRole | undefined,
+  skills: number[] | undefined,
+  focusInterests: number[] | undefined,
+  associations: number[] | undefined
+): ModelQueryBuilderContract<typeof Profile, Profile> {
+  profiles.whereExists((query) => {
     query.from('users').whereColumn('users.id', 'profiles.user_id').where('users.is_verified', true)
   })
 
-  switch (populate) {
-    case Populate.INSAMEE:
-      await preloadInsameeProfile(queryProfiles)
-      break
-    case Populate.TUTORAT:
-      await preloadTutoratProfile(queryProfiles)
-      break
-    default:
-      break
-  }
+  profiles
+    // .if(text, (query) => {
+    //   // query.whereRaw(`to_tsvector(first_name) @@ to_tsquery('${text}')`)
+    // })
+    .if(skills, (query) => {
+      const skillQuery = queryInPivot<Skill>('skill', skills!)
+      query.whereIn('user_id', skillQuery)
+    })
+    .if(focusInterests, (query) => {
+      const focusInterestsQuery = queryInPivot<FocusInterest>('focus_interest', focusInterests!)
+      query.whereIn('user_id', focusInterestsQuery)
+    })
+    .if(associations, (query) => {
+      const associationsQuery = queryInPivot<Association>('association', associations!)
+      query.whereIn('user_id', associationsQuery)
+    })
+    .if(currentRole, (query) => {
+      query.where('currentRole', '=', currentRole!)
+    })
 
-  if (skill) {
-    const skillQuery = queryInPivot<Skill>('skill', String(skill))
-    queryProfiles.whereIn('user_id', skillQuery)
-  }
-
-  if (focusInterest) {
-    const focusInterestsQuery = queryInPivot<FocusInterest>('focus_interest', String(focusInterest))
-    queryProfiles.whereIn('user_id', focusInterestsQuery)
-  }
-
-  if (association) {
-    const associationsQuery = queryInPivot<Association>('association', String(association))
-    queryProfiles.whereIn('user_id', associationsQuery)
-  }
-
-  if (currentRole) queryProfiles.where('currentRole', currentRole)
-
-  const result = await queryProfiles.paginate(
-    page ?? defaultQuery.page,
-    limit ?? defaultQuery.limit
-  )
-
-  return result
+  return profiles
 }
 
 /**
  * Preload data on insamee profile model
  */
-export async function preloadInsameeProfile(
+export function preloadInsameeProfile(
   profiles: ModelQueryBuilderContract<typeof Profile, Profile>
-): Promise<void> {
-  await profiles
+) {
+  profiles
     .preload('insameeProfile', (insameeProfilesQuery) => {
       insameeProfilesQuery.preload('skills')
       insameeProfilesQuery.preload('focusInterests')
@@ -162,10 +132,10 @@ export async function preloadInsameeProfile(
 /**
  * Preload data on tutorat profile model
  */
-export async function preloadTutoratProfile(
+export function preloadTutoratProfile(
   profiles: ModelQueryBuilderContract<typeof Profile, Profile>
-): Promise<void> {
-  await profiles
+) {
+  profiles
     .preload('tutoratProfile', (tutoratProfileQuery) => {
       tutoratProfileQuery.preload('preferredSubjects')
       tutoratProfileQuery.preload('difficultiesSubjects')
@@ -244,7 +214,7 @@ export const profileSerialize: CherryPick = {
       fields: ['email'],
     },
     school: {
-      fields: ['name'],
+      fields: ['id', 'name'],
     },
   },
 }
@@ -260,13 +230,13 @@ export const insameeProfileSerialize: CherryPick = {
   fields: ['text'],
   relations: {
     skills: {
-      fields: ['name'],
+      fields: ['id', 'name'],
     },
     focus_interests: {
-      fields: ['name'],
+      fields: ['id', 'name'],
     },
     associations: {
-      fields: ['name', 'image_url'],
+      fields: ['id', 'name', 'image_url'],
       relations: {
         school: {
           fields: ['name'],
@@ -279,7 +249,7 @@ export const insameeProfileSerialize: CherryPick = {
 export const insameeProfileCardSerialize: CherryPick = {
   fields: ['short_text'],
   relations: {
-    focus_interests: {
+    skills: {
       fields: ['name'],
     },
     associations: {

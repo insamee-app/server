@@ -1,3 +1,6 @@
+import { unlink } from 'fs'
+import { promisify } from 'util'
+const unlinkAsync = promisify(unlink)
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import InsameeProfilesQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
@@ -10,6 +13,7 @@ import {
   insameeProfileCardSerialize,
   insameeProfileSerialize,
   populateProfile,
+  preloadTutoratProfile,
   profileCardSerialize,
   profileSerialize,
 } from 'App/Services/ProfileService'
@@ -28,6 +32,8 @@ import SerializationQueryValidator, {
 import { tutoratCardSerialize } from 'App/Services/TutoratService'
 import Database from '@ioc:Adonis/Lucid/Database'
 
+const LIMIT = 20
+
 export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
     const { user } = auth
@@ -38,7 +44,13 @@ export default class ProfilesController {
 
     await populateProfile(profile, populate)
 
-    return profile
+    if (populate === Populate.INSAMEE) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.insamee_profile = insameeProfileSerialize
+      return profile.serialize(serialization)
+    } else {
+      return {}
+    }
   }
 
   public async index({ request, bouncer }: HttpContextContract) {
@@ -49,21 +61,46 @@ export default class ProfilesController {
     }
 
     const { serialize } = await request.validate(SerializationQueryValidator)
-    const { populate } = await request.validate(ProfileQueryValidator)
+    const { populate, page } = await request.validate(ProfileQueryValidator)
 
-    const profiles = await filterProfiles(
-      request,
-      ProfileQueryValidator,
+    const { currentRole, skills, focusInterests, associations } = await request.validate(
       InsameeProfilesQueryValidator
     )
+
+    const queryProfiles = Profile.query().whereNull('deleted_at')
+
+    const profiles = filterProfiles(
+      queryProfiles,
+      // text,
+      currentRole,
+      skills,
+      focusInterests,
+      associations
+    )
+
+    switch (populate) {
+      case Populate.INSAMEE:
+        profiles.preload('insameeProfile', (insameeProfilesQuery) => {
+          insameeProfilesQuery.preload('skills')
+          insameeProfilesQuery.preload('associations')
+        })
+        break
+      case Populate.TUTORAT:
+        preloadTutoratProfile(profiles)
+        break
+      default:
+        break
+    }
+
+    const result = await profiles.paginate(page ?? 1, LIMIT)
 
     if (populate === Populate.INSAMEE && serialize === Serialization.CARD) {
       const serialization: CherryPick = profileCardSerialize
       serialization.relations!.insamee_profile = insameeProfileCardSerialize
-      return profiles.serialize(serialization)
+      return result.serialize(serialization)
+    } else {
+      return []
     }
-
-    return profiles.serialize(profileSerialize)
   }
 
   public async show({ params, bouncer, request }: HttpContextContract) {
@@ -102,7 +139,7 @@ export default class ProfilesController {
     }
 
     const { populate } = await request.validate(ProfileQueryValidator)
-    const { avatar, ...data } = await request.validate(ProfileValidator)
+    const { ...data } = await request.validate(ProfileValidator)
 
     if (populate === Populate.INSAMEE) {
       /**
@@ -156,23 +193,6 @@ export default class ProfilesController {
         await tutoratProfile.related('difficultiesSubjects').sync(difficultiesSubjects)
     }
 
-    /*
-     * Update global profile
-     */
-    if (avatar) {
-      const filename = `${cuid()}.${avatar.extname}`
-      profile.avatar = filename
-      if (Application.inProduction) {
-        // TODO: send to s3 and remove the previous file
-      } else {
-        // in dev, not need to remove a file
-        avatar.move(Application.makePath('../storage/uploads'), {
-          name: filename,
-          overwrite: true,
-        })
-      }
-    }
-
     for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         const element = data[key]
@@ -190,7 +210,7 @@ export default class ProfilesController {
   public async tutorats({ params, request }: HttpContextContract) {
     const { id } = params
 
-    const { limit, page } = await request.validate(ProfileQueryValidator)
+    const { page } = await request.validate(ProfileQueryValidator)
 
     const { type } = await request.validate(TutoratQueryValidator)
 
@@ -204,7 +224,7 @@ export default class ProfilesController {
       tutorats.where('type', '=', type)
     }
 
-    const result = await tutorats.paginate(page ?? 1, limit ?? 5)
+    const result = await tutorats.paginate(page ?? 1, LIMIT)
 
     return result
   }
@@ -225,5 +245,38 @@ export default class ProfilesController {
       .paginate(page ?? 1, 6)
 
     return tutorats.serialize(tutoratCardSerialize)
+  }
+
+  public async updateProfilesPictures({ request, params, bouncer }: HttpContextContract) {
+    const id = params.id as number
+    const profile = await getProfile(id)
+
+    try {
+      await bouncer.with('ProfilePolicy').authorize('update', profile)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { avatar } = await request.validate(ProfileValidator)
+
+    if (profile.avatar) {
+      await unlinkAsync(Application.makePath('../storage/uploads', profile.avatar))
+    }
+
+    if (avatar) {
+      const filename = `${cuid()}.${avatar.extname}`
+      profile.avatar = filename
+      await avatar.move(Application.makePath('../storage/uploads'), {
+        name: filename,
+      })
+    } else {
+      profile.avatar = null as unknown as undefined
+    }
+
+    const updatedProfile = await profile.save()
+
+    await populateProfile(updatedProfile, Populate.INSAMEE)
+
+    return updatedProfile
   }
 }

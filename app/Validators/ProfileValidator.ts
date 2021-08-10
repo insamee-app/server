@@ -37,9 +37,18 @@ export default class ProfileValidator {
      * We prevent user to provide random year
      */
     graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
-    urlFacebook: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
-    urlInstagram: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
-    urlTwitter: schema.string.optional({ trim: true }, [rules.nullableUrl()]),
+    urlFacebook: schema.string.optional({ trim: true }, [
+      rules.nullableUrl(),
+      rules.regex(new RegExp('facebook', 'i')),
+    ]),
+    urlInstagram: schema.string.optional({ trim: true }, [
+      rules.nullableUrl(),
+      rules.regex(new RegExp('instagram', 'i')),
+    ]),
+    urlTwitter: schema.string.optional({ trim: true }, [
+      rules.nullableUrl(),
+      rules.regex(new RegExp('twitter', 'i')),
+    ]),
     avatar: schema.file.optional({
       size: '60kb',
       extnames: ['jpg', 'png', 'jpeg'],
@@ -69,10 +78,13 @@ export default class ProfileValidator {
     'graduationYear.range': profile.graduationYear.range,
     'urlFacebook.string': profile.urlFacebook.string,
     'urlFacebook.nullableUrl': profile.urlFacebook.nullableUrl,
+    'urlFacebook.regex': profile.urlFacebook.regex,
     'urlInstagram.string': profile.urlInstagram.string,
     'urlInstagram.nullableUrl': profile.urlInstagram.nullableUrl,
+    'urlInstagram.regex': profile.urlInstagram.regex,
     'urlTwitter.string': profile.urlTwitter.string,
     'urlTwitter.nullableUrl': profile.urlTwitter.nullableUrl,
+    'urlTwitter.regex': profile.urlTwitter.regex,
     'file.size': file.size,
   }
 }

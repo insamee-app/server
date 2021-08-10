@@ -15,26 +15,27 @@ const LIMIT = 20
 export default class AssociationsController {
   public async index({ request }: HttpContextContract) {
     const { serialize } = await request.validate(SerializationQueryValidator)
-    const { page, name, thematics, tags, schools } = await request.validate(
-      AssociationQueryValidator
-    )
 
-    const queryAssociations = Association.query()
-      .preload('school')
-      .preload('tags')
-      .preload('thematic')
+    if (serialize === Serialization.CARD) {
+      const { page, name, thematics, tags, schools } = await request.validate(
+        AssociationQueryValidator
+      )
 
-    const filteredAssociations = filterAssociations(
-      queryAssociations,
-      name,
-      thematics,
-      tags,
-      schools
-    )
+      const queryAssociations = Association.query()
+        .preload('school')
+        .preload('tags')
+        .preload('thematic')
 
-    const result = await filteredAssociations.paginate(page ?? 1, LIMIT)
+      const filteredAssociations = filterAssociations(
+        queryAssociations,
+        name,
+        thematics,
+        tags,
+        schools
+      )
 
-    if (serialize === Serialization.CARD)
+      const result = await filteredAssociations.paginate(page ?? 1, LIMIT)
+
       return result.serialize({
         fields: ['id', 'name', 'image_url', 'short_text'],
         relations: {
@@ -49,7 +50,21 @@ export default class AssociationsController {
           },
         },
       })
-    else return {}
+    } else if (serialize === Serialization.FILTER) {
+      const associations = await Association.query().orderBy('name').preload('school')
+      const associationsJSON = associations.map((association) =>
+        association.serialize({
+          fields: ['id', 'name'],
+          relations: {
+            school: {
+              fields: ['name'],
+            },
+          },
+        })
+      )
+
+      return associationsJSON
+    } else return []
   }
 
   public async show({ params }: HttpContextContract) {

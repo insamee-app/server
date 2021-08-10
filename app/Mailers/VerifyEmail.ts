@@ -23,9 +23,9 @@ export default class VerifyEmail extends BaseMailer {
    * also be async.
    */
   public prepare(message: MessageContract) {
-    const signedUrl = makeSignedUrl('verifyEmail', 'verifyEmail', { email: this.email }, '10m')
+    const signedUrl = makeSignedUrl('verify-email', 'verifyEmail', { email: this.email }, '10m')
 
-    const appName = Env.get('APP_NAME').toUpperCase()
+    const appName = 'Insamee App'
 
     message
       .from(Env.get('SMTP_USERNAME'), appName)

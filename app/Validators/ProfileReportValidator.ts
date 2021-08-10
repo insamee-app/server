@@ -1,9 +1,8 @@
-import { schema } from '@ioc:Adonis/Core/Validator'
+import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { CurrentRole } from 'App/Models/Profile'
-import { insameeQuery } from './messages'
+import ProfilesReason from 'App/Models/ProfilesReason'
 
-export default class InsameeProfileQueryValidator {
+export default class ProfileReportValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -26,11 +25,8 @@ export default class InsameeProfileQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    // text: schema.string.optional({ trim: true }),
-    currentRole: schema.enum.optional(Object.values(CurrentRole)),
-    skills: schema.array.optional().members(schema.number()),
-    focusInterests: schema.array.optional().members(schema.number()),
-    associations: schema.array.optional().members(schema.number()),
+    reason: schema.number([rules.exists({ table: ProfilesReason.table, column: 'id' })]),
+    description: schema.string.optional({ trim: true }, [rules.maxLength(255)]),
   })
 
   /**
@@ -45,12 +41,8 @@ export default class InsameeProfileQueryValidator {
    *
    */
   public messages = {
-    'currentRole.enum': insameeQuery.currentRole.enum,
-    'skills.*.number': insameeQuery.skills.number,
-    'skills.array': insameeQuery.skills.array,
-    'focusInterests.*.number': insameeQuery.focusInterests.number,
-    'focusInterests.array': insameeQuery.focusInterests.array,
-    'associations.*.number': insameeQuery.associations.number,
-    'associations.array': insameeQuery.associations.array,
+    'reason.required': 'Vous devez fournir une raison',
+    'reason.exists': 'Vous devez fournir une raison existante',
+    'description.maxLength': 'La description doit être inférieure à 255 caractères',
   }
 }

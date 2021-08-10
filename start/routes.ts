@@ -49,6 +49,9 @@ Route.group(() => {
     'profiles.tutorats.registrations.index'
   )
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
+  Route.patch('profiles/:id/profiles-pictures', 'ProfilesController.updateProfilesPictures').as(
+    'profiles.profiles_pictures.update'
+  )
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
 
   Route.resource('tutorats', 'TutoratsController').apiOnly()
@@ -73,6 +76,9 @@ Route.group(() => {
     'associations.profiles'
   )
 
+  Route.post('profiles/:id/reports', 'ProfilesReportsController.create').as(
+    'profiles.reports.create'
+  )
   Route.post('associations/:id/reports', 'AssociationsReportsController.create').as(
     'associations.reports.create'
   )
@@ -83,7 +89,7 @@ Route.group(() => {
 
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
-  Route.get('focus_interests', 'FocusInterestsController.index').as('focus_interests.index')
+  Route.get('focusInterests', 'FocusInterestsController.index').as('focus_interests.index')
   Route.get('subjects', 'SubjectsController.index').as('subjects.index')
   Route.get('tags', 'TagsController.index').as('tags.index')
   Route.get('thematics', 'ThematicsController.index').as('thematics.index')

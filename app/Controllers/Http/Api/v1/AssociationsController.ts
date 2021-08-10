@@ -51,10 +51,15 @@ export default class AssociationsController {
         },
       })
     } else if (serialize === Serialization.FILTER) {
-      const associations = await Association.query().orderBy('name')
+      const associations = await Association.query().orderBy('name').preload('school')
       const associationsJSON = associations.map((association) =>
         association.serialize({
           fields: ['id', 'name'],
+          relations: {
+            school: {
+              fields: ['name'],
+            },
+          },
         })
       )
 

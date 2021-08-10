@@ -25,7 +25,7 @@ export default class ResetPassword extends BaseMailer {
   public prepare(message: MessageContract) {
     const signedUrl = makeSignedUrl('reset-password', 'resetPassword', { email: this.email }, '10m')
 
-    const appName = Env.get('APP_NAME').toUpperCase()
+    const appName = 'Insamee App'
 
     message
       .from(Env.get('SMTP_USERNAME'), appName)

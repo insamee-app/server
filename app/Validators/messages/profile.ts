@@ -21,13 +21,16 @@ export default {
   urlFacebook: {
     string: "Cette url de facebook n'est pas valide",
     nullableUrl: "Cette url pour facebook n'est pas valide",
+    regex: "L'url doit provenir de facebook",
   },
   urlInstagram: {
     string: "Cette url de instagram n'est pas valide",
     nullableUrl: "Cette url pour instagram n'est pas valide",
+    regex: "L'url doit provenir d'instagram",
   },
   urlTwitter: {
     string: "Cette url de twitter n'est pas valide",
     nullableUrl: "Cette url pour twitter n'est pas valide",
+    regex: "L'url doit provenir de twitter",
   },
 }

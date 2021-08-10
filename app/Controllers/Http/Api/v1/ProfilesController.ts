@@ -253,6 +253,10 @@ export default class ProfilesController {
 
     const { avatar } = await request.validate(ProfileValidator)
 
+    if (profile.avatar) {
+      await unlinkAsync(Application.makePath('../storage/uploads', profile.avatar))
+    }
+
     if (avatar) {
       const filename = `${cuid()}.${avatar.extname}`
       profile.avatar = filename
@@ -260,9 +264,6 @@ export default class ProfilesController {
         name: filename,
       })
     } else {
-      if (profile.avatar) {
-        await unlinkAsync(Application.makePath('../storage/uploads', profile.avatar))
-      }
       profile.avatar = null as unknown as undefined
     }
 

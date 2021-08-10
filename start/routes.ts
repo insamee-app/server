@@ -52,9 +52,6 @@ Route.group(() => {
   Route.patch('profiles/:id/profiles-pictures', 'ProfilesController.updateProfilesPictures').as(
     'profiles.profiles_pictures.update'
   )
-  Route.delete('profiles/:id/profiles-pictures', 'ProfilesController.destroyProfilesPictures').as(
-    'profiles.profiles_pictures.destroy'
-  )
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
 
   Route.resource('tutorats', 'TutoratsController').apiOnly()

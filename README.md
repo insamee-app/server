@@ -622,17 +622,9 @@ Optional fields
 
 `PATCH /api/v1/profiles/:id/profiles-pictures`
 
-Required fields
+Optional field
 
 - `avatar` as file
-
-Authentication required, returns a [profile](#profile)
-
-Authorization: only the owner
-
-#### Delete Profiles Pictures
-
-`DELETE /api/v1/profiles/:id/profiles-pictures`
 
 Authentication required, returns a [profile](#profile)
 

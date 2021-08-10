@@ -44,7 +44,13 @@ export default class ProfilesController {
 
     await populateProfile(profile, populate)
 
-    return profile
+    if (populate === Populate.INSAMEE) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.insamee_profile = insameeProfileSerialize
+      return profile.serialize(serialization)
+    } else {
+      return {}
+    }
   }
 
   public async index({ request, bouncer }: HttpContextContract) {

@@ -214,7 +214,7 @@ export const profileSerialize: CherryPick = {
       fields: ['email'],
     },
     school: {
-      fields: ['name'],
+      fields: ['id', 'name'],
     },
   },
 }
@@ -230,13 +230,13 @@ export const insameeProfileSerialize: CherryPick = {
   fields: ['text'],
   relations: {
     skills: {
-      fields: ['name'],
+      fields: ['id', 'name'],
     },
     focus_interests: {
-      fields: ['name'],
+      fields: ['id', 'name'],
     },
     associations: {
-      fields: ['name', 'image_url'],
+      fields: ['id', 'name', 'image_url'],
       relations: {
         school: {
           fields: ['name'],

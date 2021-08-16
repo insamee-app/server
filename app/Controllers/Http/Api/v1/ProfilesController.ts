@@ -67,7 +67,7 @@ export default class ProfilesController {
       InsameeProfilesQueryValidator
     )
 
-    const queryProfiles = Profile.query().whereNull('deleted_at')
+    const queryProfiles = Profile.query()
 
     const profiles = filterProfiles(
       queryProfiles,

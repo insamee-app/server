@@ -106,7 +106,6 @@ export default class AssociationsController {
       )
       .whereIn('profiles.user_id', Database.from('users').select('id').where('is_verified', true))
       .where('association_insamee_profile.association_id', '=', id)
-      .whereNull('profiles.deleted_at')
       .preload('insameeProfile', (insameeProfile) => {
         insameeProfile.preload('associations')
         insameeProfile.preload('focusInterests')

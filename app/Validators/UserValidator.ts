@@ -1,9 +1,8 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { profileQuery } from './messages'
-import { Populate } from 'App/Models/Profile'
+import { user } from './messages'
 
-export default class ProfileQueryValidator {
+export default class UserValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -25,9 +24,12 @@ export default class ProfileQueryValidator {
    *     ])
    *    ```
    */
+  public existsStrict = true
+
   public schema = schema.create({
-    page: schema.number.optional(),
-    populate: schema.enum.optional(Object.values(Populate)),
+    isVerified: schema.boolean(),
+    isBlocked: schema.boolean(),
+    isAdmin: schema.boolean(),
   })
 
   /**
@@ -42,7 +44,8 @@ export default class ProfileQueryValidator {
    *
    */
   public messages = {
-    'page.number': profileQuery.page.number,
-    'populate': profileQuery.populate.enum,
+    'isVerified.boolean': user.isVerified.boolean,
+    'isBlocked.boolean': user.isBlocked.boolean,
+    'isAdmin.boolean': user.isAdmin.boolean,
   }
 }

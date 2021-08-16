@@ -65,7 +65,9 @@ Route.group(() => {
   /**
    * Users routes
    */
-  Route.resource('users', 'UsersController').only(['destroy'])
+  Route.resource('users', 'UsersController')
+    .apiOnly()
+    .middleware({ index: ['admin'], show: ['admin'], update: ['admin'] })
 
   /**
    * Profiles routes

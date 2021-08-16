@@ -13,60 +13,86 @@ import TutoratProfile from 'App/Models/TutoratProfile'
  * Get a profile by id
  * @throws {NotFoundException} Will throw an error if a profile is not found
  */
-export async function getProfile(id: number): Promise<Profile> {
-  const profile = await Profile.query()
-    .whereExists((query) => {
-      query
-        .from('users')
-        .whereColumn('users.id', 'profiles.user_id')
-        .where('users.is_verified', true)
-    })
-    .where('user_id', '=', id)
-    .limit(1)
+export async function getProfile(id: number, isAdmin: boolean = false): Promise<Profile> {
+  let profile: Profile
+  try {
+    const profileQuery = Profile.query().where('user_id', '=', id)
+    // Admins can get a trashed profile
+    if (isAdmin) profileQuery.withTrashed()
+    // Non-admins can only get a verified profile
+    else
+      profileQuery.whereExists((query) => {
+        query
+          .from('users')
+          .whereColumn('users.id', 'profiles.user_id')
+          .where('users.is_verified', true)
+      })
 
-  if (!profile[0]) throw new NotFoundException(`Utilisateur introuvable`)
+    profile = await profileQuery.firstOrFail()
+  } catch (error) {
+    throw new NotFoundException('Utilisateur introuvable')
+  }
 
-  return profile[0]
+  return profile
 }
 
 /**
  * Get an insamee profile by id
  * @throws {NotFoundException} Will throw an error if a profile is not found
  */
-export async function getInsameeProfile(id: number): Promise<InsameeProfile> {
-  const insameeProfile = await InsameeProfile.query()
-    .whereExists((query) => {
-      query
-        .from('users')
-        .whereColumn('users.id', 'insamee_profiles.user_id')
-        .where('users.is_verified', true)
-    })
-    .where('user_id', '=', id)
-    .limit(1)
+export async function getInsameeProfile(
+  id: number,
+  isAdmin: boolean = false
+): Promise<InsameeProfile> {
+  let insameeProfile: InsameeProfile
+  try {
+    const insameeProfileQuery = InsameeProfile.query().where('user_id', '=', id)
+    // Admins can get a trashed profile
+    if (isAdmin) insameeProfileQuery.withTrashed()
+    // Non-admins can only get a verified profile
+    else
+      insameeProfileQuery.whereExists((query) => {
+        query
+          .from('users')
+          .whereColumn('users.id', 'insamee_profiles.user_id')
+          .where('users.is_verified', true)
+      })
 
-  if (!insameeProfile[0]) throw new NotFoundException(`Utilisateur introuvable`)
-
-  return insameeProfile[0]
+    insameeProfile = await insameeProfileQuery.firstOrFail()
+  } catch (error) {
+    throw new NotFoundException('Utilisateur introuvable')
+  }
+  return insameeProfile
 }
 
 /**
  * Get a tutorat profile by id
  * @throws {NotFoundException} Will throw an error if a profile is not found
  */
-export async function getTutoratProfile(id: number): Promise<TutoratProfile> {
-  const tutoratProfile = await TutoratProfile.query()
-    .whereExists((query) => {
-      query
-        .from('users')
-        .whereColumn('users.id', 'tutorat_profiles.user_id')
-        .where('users.is_verified', true)
-    })
-    .where('user_id', '=', id)
-    .limit(1)
+export async function getTutoratProfile(
+  id: number,
+  isAdmin: boolean = false
+): Promise<TutoratProfile> {
+  let tutoratProfile: TutoratProfile
+  try {
+    const tutoratProfileQuery = TutoratProfile.query().where('user_id', '=', id)
+    // Admins can get trashed a tutorat profile
+    if (isAdmin) tutoratProfileQuery.withTrashed()
+    // Non-admins can only get a verified tutorat profile
+    else
+      tutoratProfileQuery.whereExists((query) => {
+        query
+          .from('users')
+          .whereColumn('users.id', 'tutorat_profiles.user_id')
+          .where('users.is_verified', true)
+      })
 
-  if (!tutoratProfile[0]) throw new NotFoundException(`Utilisateur introuvable`)
+    tutoratProfile = await tutoratProfileQuery.firstOrFail()
+  } catch (error) {
+    throw new NotFoundException('Utilisateur introuvable')
+  }
 
-  return tutoratProfile[0]
+  return tutoratProfile
 }
 
 /**

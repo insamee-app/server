@@ -23,11 +23,7 @@ export default class TutoratsController {
       TutoratQueryValidator
     )
 
-    const queryTutorats = Tutorat.query()
-      .preload('school')
-      .preload('subject')
-      .preload('profile')
-      .whereNull('tutorats.deleted_at')
+    const queryTutorats = Tutorat.query().preload('school').preload('subject').preload('profile')
 
     const filteredTutorats = filterTutorats(
       queryTutorats,

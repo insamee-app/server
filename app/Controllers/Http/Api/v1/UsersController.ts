@@ -22,6 +22,7 @@ export default class UsersController {
 
     const users = await User.query()
       .withTrashed()
+      .orderBy('id', 'asc')
       .paginate(page ?? 1, 20)
 
     return users

@@ -34,6 +34,12 @@ export default class User extends compose(BaseModel, SoftDeletes) {
   @column()
   public isVerified: boolean
 
+  @column()
+  public isAdmin: boolean
+
+  @column()
+  public isBlocked: boolean
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

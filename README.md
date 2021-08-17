@@ -98,6 +98,51 @@ In order to be used this server with any of the front-end, you must create a `.e
 }
 ```
 
+#### Multiple users
+
+```json
+{
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
+  "data": [
+    {
+      "id": "number",
+      "email": "string",
+      "is_verified": "boolean",
+      "is_admin": "boolean",
+      "is_blocked": "boolean",
+      "deleted_at": "string | null",
+      "created_at": "string",
+      "updated_at": "string"
+    }
+  ]
+}
+```
+
+#### user
+
+```json
+{
+  "id": "number",
+  "email": "string",
+  "is_verified": "boolean",
+  "is_admin": "boolean",
+  "is_blocked": "boolean",
+  "deleted_at": "string | null",
+  "created_at": "string",
+  "updated_at": "string"
+}
+```
+
 #### Delete user object
 
 ```json
@@ -507,13 +552,43 @@ Required fields
 
 No authentication required, returns a [sendResetPassword object](#sendResetPassword-object)
 
+#### Get Users
+
+`GET /api/v1/users`
+
+Authentication required, returns a [multiple-users](#multiple-users)
+
+Authorization: admin
+
+#### Get User
+
+`GET /api/v1/users/:id`
+
+Authentication required, returns a [user](#user)
+
+Authorization: admin
+
+#### Update User
+
+`PATCH /api/v1/users/:id`
+
+Authentication required, returns a [user](#user)
+
+Body:
+
+- `isVerified` as boolean
+- `isAdmin` as boolean
+- `isBlocked` as boolean
+
+Authorization: admin
+
 #### Delete User
 
 `DELETE /api/v1/users/:id`
 
 Authentication required, returns a [deleted user object](#deleted-user-object)
 
-Authorization: only the owner
+Authorization: the owner and admin
 
 #### Get Current Profile
 

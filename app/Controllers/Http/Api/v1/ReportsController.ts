@@ -24,31 +24,30 @@ export default class ReportsController {
     const { resource } = params as { resource: Resource }
     const { page } = await request.validate(ReportValidator)
 
+    let reportsQuery: ModelQueryBuilderContract<
+      typeof ProfilesReport | typeof TutoratsReport | typeof AssociationsReport,
+      ProfilesReport | TutoratsReport | AssociationsReport
+    >
     switch (resource) {
       case Resource.PROFILES:
-        const profileReports = await ProfilesReport.query()
-          .preload('profile')
-          .preload('user')
-          .preload('reason')
-          .paginate(page ?? 1, 20)
-        return profileReports
+        reportsQuery = ProfilesReport.query().preload('profile').preload('user').preload('reason')
+        break
       case Resource.TUTORATS:
-        const tutoratsReports = await TutoratsReport.query()
-          .preload('tutorat')
-          .preload('user')
-          .preload('reason')
-          .paginate(page ?? 1, 20)
-        return tutoratsReports
+        reportsQuery = TutoratsReport.query().preload('tutorat').preload('user').preload('reason')
+        break
       case Resource.ASSOCIATIONS:
-        const associationsReports = await AssociationsReport.query()
+        reportsQuery = AssociationsReport.query()
           .preload('association')
           .preload('user')
           .preload('reason')
-          .paginate(page ?? 1, 20)
-        return associationsReports
+        break
       default:
         throw new Error(`Resource ${resource} not found`)
     }
+
+    const reports = await reportsQuery.withTrashed().paginate(page ?? 1, 20)
+
+    return reports
   }
 
   public async show({ params, bouncer }: HttpContextContract) {
@@ -84,6 +83,45 @@ export default class ReportsController {
     } catch (error) {
       throw new NotFoundException('Signalement introuvable')
     }
+    return report
+  }
+
+  public async destroy({ params, request, bouncer }: HttpContextContract) {
+    try {
+      await bouncer.with('ReportPolicy').authorize('destroy')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { resource, id } = params as { resource: Resource; id: number }
+
+    let reportQuery: ModelQueryBuilderContract<
+      typeof ProfilesReport | typeof TutoratsReport | typeof AssociationsReport,
+      ProfilesReport | TutoratsReport | AssociationsReport
+    >
+    switch (resource) {
+      case Resource.PROFILES:
+        reportQuery = ProfilesReport.query()
+        break
+      case Resource.TUTORATS:
+        reportQuery = TutoratsReport.query()
+        break
+      case Resource.ASSOCIATIONS:
+        reportQuery = AssociationsReport.query()
+        break
+      default:
+        throw new Error(`Resource ${resource} not found`)
+    }
+
+    let report: ProfilesReport | TutoratsReport | AssociationsReport
+    try {
+      report = await reportQuery.where('id', id).firstOrFail()
+    } catch (error) {
+      throw new NotFoundException('Signalement introuvable')
+    }
+
+    await report.delete()
+
     return report
   }
 }

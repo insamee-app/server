@@ -8,6 +8,7 @@ export { default as userQuery } from './userQuery'
 export { default as profile } from './profile'
 export { default as profileQuery } from './profileQuery'
 export { default as tutorat } from './tutorat'
+export { default as reportQuery } from './reportQuery'
 
 // insamee
 export { default as insameeQuery } from './insamee/query'

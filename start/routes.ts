@@ -20,6 +20,7 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import Application from '@ioc:Adonis/Core/Application'
+import { Resource } from 'App/Controllers/Http/Api/v1/ReportsController'
 
 /**
  * All params named ":id" should be valid numbers
@@ -66,7 +67,7 @@ Route.group(() => {
    * Users routes
    */
   Route.resource('users', 'UsersController')
-    .apiOnly()
+    .only(['index', 'show', 'update', 'destroy'])
     .middleware({ index: ['admin'], show: ['admin'], update: ['admin'] })
 
   /**
@@ -113,6 +114,14 @@ Route.group(() => {
   /**
    * Reports management routes
    */
+  Route.resource('reports/:resource', 'ReportsController')
+    .where('resource', new RegExp(Object.values(Resource).join('|')))
+    .only(['index', 'show', 'destroy'])
+    .middleware({
+      index: ['admin'],
+      show: ['admin'],
+      destroy: ['admin'],
+    })
   Route.post('profiles/:id/reports', 'ProfilesReportsController.create').as(
     'profiles.reports.create'
   )

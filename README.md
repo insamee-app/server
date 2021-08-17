@@ -556,7 +556,7 @@ No authentication required, returns a [sendResetPassword object](#sendResetPassw
 
 `GET /api/v1/users`
 
-Authentication required, returns a [multiple-users](#multiple-users)
+Authentication required, returns [multiple-users](#multiple-users)
 
 Authorization: admin
 

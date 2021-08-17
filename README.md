@@ -843,6 +843,90 @@ Body
 
 Authentication required, returns a [report](#report)
 
+#### Get Profiles Reports
+
+`GET /api/v1/reports/profiles`
+
+Query string
+
+- `page`, as string
+
+Authentication required, returns [multiple-profiles-reports](#multiple-profiles-reports)
+
+Authorization: admin
+
+#### Get Profile Report
+
+`GET /api/v1/reports/profiles/:id`
+
+Authentication required, returns a [profile-report](#profile-report)
+
+Authorization: admin
+
+#### Destroy Profile Report
+
+`DELETE /api/v1/reports/profiles/:id`
+
+Authentication required, returns a [profile-report](#profile-report)
+
+Authorization: admin
+
+#### Get Tutorats Reports
+
+`GET /api/v1/reports/tutorats`
+
+Query string
+
+- `page`, as string
+
+Authentication required, returns [multiple-tutorats-reports](#multiple-tutorats-reports)
+
+Authorization: admin
+
+#### Get Tutorat Report
+
+`GET /api/v1/reports/tutorats/:id`
+
+Authentication required, returns a [tutorat-report](#tutorat-report)
+
+Authorization: admin
+
+#### Destroy Tutorat Report
+
+`DELETE /api/v1/reports/tutorats/:id`
+
+Authentication required, returns a [tutorat-report](#tutorat-report)
+
+Authorization: admin
+
+#### Get Associations Reports
+
+`GET /api/v1/reports/associations`
+
+Query string
+
+- `page`, as string
+
+Authentication required, returns [multiple-associations-reports](#multiple-associations-reports)
+
+Authorization: admin
+
+#### Get Association Report
+
+`GET /api/v1/reports/associations/:id`
+
+Authentication required, returns a [association-report](#association-report)
+
+Authorization: admin
+
+#### Destroy Association Report
+
+`DELETE /api/v1/reports/associations/:id`
+
+Authentication required, returns a [association-report](#association-report)
+
+Authorization: admin
+
 #### Get Schools
 
 `GET /api/v1/schools`

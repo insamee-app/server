@@ -32,6 +32,9 @@ export default class Tutorat extends compose(BaseModel, SoftDeletes) {
   @belongsTo(() => Profile, { foreignKey: 'userId', localKey: 'userId' })
   public profile: BelongsTo<typeof Profile>
 
+  @belongsTo(() => User, { foreignKey: 'userId', localKey: 'id' })
+  public user: BelongsTo<typeof User>
+
   @column()
   public subjectId: number
 

@@ -36,7 +36,10 @@ export default class ReportsController {
           .preload('reason')
         break
       case Resource.TUTORATS:
-        reportsQuery = TutoratsReport.query().preload('tutorat').preload('user').preload('reason')
+        reportsQuery = TutoratsReport.query()
+          .preload('tutorat', (query) => query.preload('user'))
+          .preload('user')
+          .preload('reason')
         break
       case Resource.ASSOCIATIONS:
         reportsQuery = AssociationsReport.query()
@@ -67,7 +70,7 @@ export default class ReportsController {
           fields: ['id', 'description', 'created_at', 'deleted_at'],
           relations: {
             profile_user: {
-              fields: ['email'],
+              fields: ['id', 'email'],
             },
             user: {
               fields: ['email'],
@@ -79,7 +82,25 @@ export default class ReportsController {
         })
         break
       case Resource.TUTORATS:
-        serializedReports = reports.serialize()
+        serializedReports = reports.serialize({
+          fields: ['id', 'description', 'created_at', 'deleted_at'],
+          relations: {
+            tutorat: {
+              fields: ['id'],
+              relations: {
+                user: {
+                  fields: ['email'],
+                },
+              },
+            },
+            user: {
+              fields: ['email'],
+            },
+            reason: {
+              fields: ['name'],
+            },
+          },
+        })
         break
       case Resource.ASSOCIATIONS:
         serializedReports = reports.serialize()

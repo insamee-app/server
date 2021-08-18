@@ -35,6 +35,13 @@ export default class ProfilesReport extends compose(BaseModel, SoftDeletes) {
   public profile: BelongsTo<typeof Profile>
 
   @belongsTo(() => User, {
+    foreignKey: 'profileId',
+    localKey: 'id',
+    serializeAs: 'profile_user',
+  })
+  public profileUser: BelongsTo<typeof User>
+
+  @belongsTo(() => User, {
     foreignKey: 'userId',
     localKey: 'id',
   })

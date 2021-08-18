@@ -4,7 +4,7 @@ import AssociationsReport from 'App/Models/AssociationsReport'
 import ProfilesReport from 'App/Models/ProfilesReport'
 import TutoratsReport from 'App/Models/TutoratsReport'
 import ReportValidator from 'App/Validators/ReportValidator'
-import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 
 export enum Resource {
@@ -30,7 +30,10 @@ export default class ReportsController {
     >
     switch (resource) {
       case Resource.PROFILES:
-        reportsQuery = ProfilesReport.query().preload('profile').preload('user').preload('reason')
+        reportsQuery = ProfilesReport.query()
+          .preload('profileUser')
+          .preload('user')
+          .preload('reason')
         break
       case Resource.TUTORATS:
         reportsQuery = TutoratsReport.query().preload('tutorat').preload('user').preload('reason')
@@ -47,7 +50,38 @@ export default class ReportsController {
 
     const reports = await reportsQuery.withTrashed().paginate(page ?? 1, 20)
 
-    return reports
+    let serializedReports: {
+      meta: any
+      data: ModelObject[]
+    }
+    switch (resource) {
+      case Resource.PROFILES:
+        serializedReports = reports.serialize({
+          fields: ['id', 'description', 'created_at', 'deleted_at'],
+          relations: {
+            profile_user: {
+              fields: ['email'],
+            },
+            user: {
+              fields: ['email'],
+            },
+            reason: {
+              fields: ['name'],
+            },
+          },
+        })
+        break
+      case Resource.TUTORATS:
+        serializedReports = reports.serialize()
+        break
+      case Resource.ASSOCIATIONS:
+        serializedReports = reports.serialize()
+        break
+      default:
+        throw new Error(`Resource ${resource} not found`)
+    }
+
+    return serializedReports
   }
 
   public async show({ params, bouncer }: HttpContextContract) {

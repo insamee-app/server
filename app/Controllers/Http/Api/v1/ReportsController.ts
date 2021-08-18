@@ -22,7 +22,7 @@ export default class ReportsController {
     }
 
     const { resource } = params as { resource: Resource }
-    const { page } = await request.validate(ReportValidator)
+    const { page, withTrashed, orderBy, sortBy } = await request.validate(ReportValidator)
 
     let reportsQuery: ModelQueryBuilderContract<
       typeof ProfilesReport | typeof TutoratsReport | typeof AssociationsReport,
@@ -48,7 +48,14 @@ export default class ReportsController {
         throw new Error(`Resource ${resource} not found`)
     }
 
-    const reports = await reportsQuery.withTrashed().paginate(page ?? 1, 20)
+    reportsQuery
+      .if(withTrashed, (query) => {
+        query.withTrashed()
+      })
+      .if(sortBy, (query) => {
+        query.orderBy(sortBy!, (orderBy as 'asc' | 'desc')!)
+      })
+    const reports = await reportsQuery.paginate(page ?? 1, 20)
 
     let serializedReports: {
       meta: any

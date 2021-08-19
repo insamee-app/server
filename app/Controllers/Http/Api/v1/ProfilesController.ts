@@ -246,37 +246,4 @@ export default class ProfilesController {
 
     return tutorats.serialize(tutoratCardSerialize)
   }
-
-  public async updateProfilesPictures({ request, params, bouncer }: HttpContextContract) {
-    const id = params.id as number
-    const profile = await getProfile(id)
-
-    try {
-      await bouncer.with('ProfilePolicy').authorize('update', profile)
-    } catch (error) {
-      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-    }
-
-    const { avatar } = await request.validate(ProfileValidator)
-
-    if (profile.avatar) {
-      await unlinkAsync(Application.makePath('../storage/uploads', profile.avatar))
-    }
-
-    if (avatar) {
-      const filename = `${cuid()}.${avatar.extname}`
-      profile.avatar = filename
-      await avatar.move(Application.makePath('../storage/uploads'), {
-        name: filename,
-      })
-    } else {
-      profile.avatar = null as unknown as undefined
-    }
-
-    const updatedProfile = await profile.save()
-
-    await populateProfile(updatedProfile, Populate.INSAMEE)
-
-    return updatedProfile
-  }
 }

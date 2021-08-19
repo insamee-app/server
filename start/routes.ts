@@ -21,18 +21,35 @@
 import Route from '@ioc:Adonis/Core/Route'
 import Application from '@ioc:Adonis/Core/Application'
 
+/**
+ * All params named ":id" should be valid numbers
+ */
+Route.where('id', Route.matchers.number())
+
 Route.get('/', async () => {
   return { message: 'API from INSAMEE' }
 })
 
+/**
+ * Auth routes
+ */
 Route.group(() => {
+  /**
+   * Register, login and logout routes
+   */
   Route.post('register', 'AuthController.register')
   Route.post('login', 'AuthController.login')
   Route.post('logout', 'AuthController.logout').middleware('auth')
 
+  /**
+   * Email confirmation and password reset routes
+   */
   Route.post('verify/:email', 'AuthController.verifyEmail').as('verifyEmail')
   Route.post('resetPassword/:email', 'AuthController.resetPassword').as('resetPassword')
 
+  /**
+   * Send email confirmation and password reset routes
+   */
   Route.group(() => {
     Route.post('verifyEmail', 'AuthController.sendVerifyEmail').as('sendVerifyEmail')
     Route.post('resetPassword', 'AuthController.sendResetPassword').as('sendResetPassword')
@@ -41,19 +58,31 @@ Route.group(() => {
   .prefix('auth')
   .namespace('App/Controllers/Http/Auth')
 
+/**
+ * Api v1 routes
+ */
 Route.group(() => {
+  /**
+   * Users routes
+   */
   Route.resource('users', 'UsersController').only(['destroy'])
 
+  /**
+   * Profiles routes
+   */
   Route.get('profiles/me', 'ProfilesController.me').as('profiles.me')
   Route.get('profiles/me/tutorats/registrations', 'ProfilesController.tutoratsRegistrations').as(
     'profiles.tutorats.registrations.index'
   )
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
-  Route.patch('profiles/:id/profiles-pictures', 'ProfilesController.updateProfilesPictures').as(
-    'profiles.profiles_pictures.update'
+  Route.patch('profiles/:id/profiles-pictures', 'ProfilesPicturesController.update').as(
+    'profilesPicture.update'
   )
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
 
+  /**
+   * Tutorats routes
+   */
   Route.resource('tutorats', 'TutoratsController').apiOnly()
   Route.group(() => {
     Route.get('/registrations', 'TutoratsRegistrationsController.index').as('registrations.index')
@@ -70,12 +99,18 @@ Route.group(() => {
 
   Route.get('/registrations/:id', 'RegistrationsController.show').as('registrations.show')
 
+  /**
+   * Associations routes
+   */
   Route.get('associations', 'AssociationsController.index').as('associations.index')
   Route.get('associations/:id', 'AssociationsController.show').as('associations.show')
   Route.get('associations/:id/profiles', 'AssociationsController.profiles').as(
     'associations.profiles'
   )
 
+  /**
+   * Reports management routes
+   */
   Route.post('profiles/:id/reports', 'ProfilesReportsController.create').as(
     'profiles.reports.create'
   )
@@ -87,6 +122,9 @@ Route.group(() => {
   )
   Route.get('reasons', 'ReasonsController.index').as('reasons.index')
 
+  /**
+   * Schools, skills, focus of interests, subjects, tags and thematics routes
+   */
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
   Route.get('focusInterests', 'FocusInterestsController.index').as('focus_interests.index')

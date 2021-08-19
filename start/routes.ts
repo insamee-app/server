@@ -75,8 +75,8 @@ Route.group(() => {
     'profiles.tutorats.registrations.index'
   )
   Route.resource('profiles', 'ProfilesController').only(['index', 'show', 'update'])
-  Route.patch('profiles/:id/profiles-pictures', 'ProfilesController.updateProfilesPictures').as(
-    'profiles.profiles_pictures.update'
+  Route.patch('profiles/:id/profiles-pictures', 'ProfilesPicturesController.update').as(
+    'profilesPicture.update'
   )
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
 

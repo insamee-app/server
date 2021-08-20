@@ -1,6 +1,12 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { Platform } from 'App/Controllers/Http/Api/v1/ReasonsController'
+
+export enum Platform {
+  INSAMEE = 'insamee',
+  TUTORAT = 'tutorat',
+  ASSOCIATIONS = 'associations',
+  ADMIN = 'admin',
+}
 
 export default class PlatformValidator {
   constructor(protected ctx: HttpContextContract) {}

@@ -3,13 +3,7 @@ import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
 import AssociationsReason from 'App/Models/AssociationsReason'
 import ProfilesReason from 'App/Models/ProfilesReason'
 import TutoratsReason from 'App/Models/TutoratsReason'
-import PlatformValidator from 'App/Validators/PlatformValidator'
-
-export enum Platform {
-  INSAMEE = 'insamee',
-  TUTORAT = 'tutorat',
-  ASSOCIATIONS = 'associations',
-}
+import PlatformValidator, { Platform } from 'App/Validators/PlatformValidator'
 
 const reasonSerialize: CherryPick = {
   fields: ['name', 'id'],

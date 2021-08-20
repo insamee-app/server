@@ -67,7 +67,8 @@ export default class ProfilesController {
       currentRole,
       skills,
       focusInterests,
-      associations
+      associations,
+      platform
     )
 
     switch (populate) {
@@ -87,13 +88,12 @@ export default class ProfilesController {
         break
     }
 
-    const result = await profiles.paginate(page, LIMIT)
-
     if (
       platform === Platform.INSAMEE &&
       populate === Populate.INSAMEE &&
       serialize === Serialization.CARD
     ) {
+      const result = await profiles.paginate(page, LIMIT)
       const serialization: CherryPick = profileCardSerialize
       serialization.relations!.insamee_profile = insameeProfileCardSerialize
       return result.serialize(serialization)
@@ -103,7 +103,7 @@ export default class ProfilesController {
       } catch (error) {
         throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
       }
-
+      const result = await profiles.withTrashed().paginate(page, LIMIT)
       return result
     } else {
       return []

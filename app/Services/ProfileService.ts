@@ -8,6 +8,7 @@ import FocusInterest from 'App/Models/FocusInterest'
 import Association from 'App/Models/Association'
 import Profile, { CurrentRole, Populate } from 'App/Models/Profile'
 import TutoratProfile from 'App/Models/TutoratProfile'
+import { Platform } from 'App/Validators/PlatformQueryValidator'
 
 /**
  * Get a profile by id
@@ -108,11 +109,17 @@ export function filterProfiles(
   currentRole: CurrentRole | undefined,
   skills: number[] | undefined,
   focusInterests: number[] | undefined,
-  associations: number[] | undefined
+  associations: number[] | undefined,
+  platform: Platform
 ): ModelQueryBuilderContract<typeof Profile, Profile> {
-  profiles.whereExists((query) => {
-    query.from('users').whereColumn('users.id', 'profiles.user_id').where('users.is_verified', true)
-  })
+  if (platform !== Platform.ADMIN) {
+    profiles.whereExists((query) => {
+      query
+        .from('users')
+        .whereColumn('users.id', 'profiles.user_id')
+        .where('users.is_verified', true)
+    })
+  }
 
   profiles
     // .if(text, (query) => {

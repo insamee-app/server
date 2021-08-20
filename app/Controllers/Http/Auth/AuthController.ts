@@ -69,6 +69,10 @@ export default class AuthController {
      */
     await auth.attempt(email, password, rememberMe ?? false)
 
+    const { user } = auth
+
+    if (user?.isBlocked) throw new ForbiddenException('Votre compte est bloqué')
+
     return {
       login: 'ok',
     }

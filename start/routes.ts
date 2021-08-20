@@ -148,7 +148,7 @@ Route.group(() => {
       response.download(Application.makePath('../storage/uploads', params.filename))
     }).as('getFile')
 })
-  .middleware('auth')
+  .middleware(['auth', 'blocked'])
   .prefix('api/v1')
   .namespace('App/Controllers/Http/Api/v1')
   .as('api.v1')

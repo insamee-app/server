@@ -2,7 +2,6 @@ import User from 'App/Models/User'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import School from 'App/Models/School'
-import InternalServerErrorException from 'App/Exceptions/InternalServerErrorException'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
 import SendVerifyEmailValidator from 'App/Validators/SendVerifyEmailValidator'
 import SendResetPasswordValidator from 'App/Validators/SendResetPasswordValidator'
@@ -29,9 +28,7 @@ export default class AuthController {
 
     const school = await School.findBy('host', host)
     if (!school)
-      throw new InternalServerErrorException(
-        `Impossible de trouver l'école correspondante à ${host}`
-      )
+      throw new BadRequestException(`Impossible de trouver l'école correspondante à ${host}`)
 
     /**
      * Create a new user
@@ -46,7 +43,6 @@ export default class AuthController {
       throw new BadRequestException(`L'utilisateur existe déjà`)
     }
 
-    // TODO: Check if all profiles are created
     await user.related('profile').create({ schoolId: school.id, userId: user.id })
     await InsameeProfile.create({ userId: user.id })
     await TutoratProfile.create({ userId: user.id })

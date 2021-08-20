@@ -6,6 +6,10 @@ export default class ProfilePolicy extends BasePolicy {
   public async viewList() {
     return true
   }
+  public async viewListAdmin(user: User) {
+    return user.isAdmin
+  }
+
   public async view() {
     return true
   }

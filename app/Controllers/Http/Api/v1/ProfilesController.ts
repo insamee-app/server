@@ -31,6 +31,7 @@ import SerializationQueryValidator, {
 } from 'App/Validators/SerializationQueryValidator'
 import { tutoratCardSerialize } from 'App/Services/TutoratService'
 import Database from '@ioc:Adonis/Lucid/Database'
+import PlatformValidator, { Platform } from 'App/Validators/PlatformValidator'
 
 const LIMIT = 20
 
@@ -38,7 +39,7 @@ export default class ProfilesController {
   public async me({ auth, request }: HttpContextContract) {
     const { user } = auth
 
-    const profile = await Profile.findByOrFail('userId', user!.id)
+    const profile = await getProfile(user!.id)
 
     const { populate } = await request.validate(ProfileQueryValidator)
 
@@ -53,7 +54,7 @@ export default class ProfilesController {
     }
   }
 
-  public async index({ request, bouncer }: HttpContextContract) {
+  public async index({ request, bouncer, auth }: HttpContextContract) {
     try {
       await bouncer.with('ProfilePolicy').authorize('viewList')
     } catch (error) {
@@ -61,6 +62,7 @@ export default class ProfilesController {
     }
 
     const { serialize } = await request.validate(SerializationQueryValidator)
+    const { platform } = await request.validate(PlatformValidator)
     const { populate, page } = await request.validate(ProfileQueryValidator)
 
     const { currentRole, skills, focusInterests, associations } = await request.validate(
@@ -98,6 +100,14 @@ export default class ProfilesController {
       const serialization: CherryPick = profileCardSerialize
       serialization.relations!.insamee_profile = insameeProfileCardSerialize
       return result.serialize(serialization)
+    } else if (platform === Platform.ADMIN) {
+      try {
+        await bouncer.with('ProfilePolicy').authorize('viewListAdmin')
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+
+      return 'admin'
     } else {
       return []
     }

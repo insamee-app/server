@@ -5,6 +5,7 @@ export enum Serialization {
   CARD = 'card',
   FULL = 'full',
   FILTER = 'filter',
+  NONE = 'none',
 }
 
 export default class SerializationQueryValidator {

@@ -50,12 +50,6 @@ export default class ProfilesController {
   }
 
   public async index({ request, bouncer }: HttpContextContract) {
-    try {
-      await bouncer.with('ProfilePolicy').authorize('viewList')
-    } catch (error) {
-      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-    }
-
     const { platform } = await request.validate(PlatformQueryValidator)
     const { populate } = await request.validate(PopulateQueryValidator)
     const { page } = await request.validate(PaginateQueryValidator)
@@ -117,25 +111,33 @@ export default class ProfilesController {
   }
 
   public async show({ params, bouncer, request }: HttpContextContract) {
-    const id = params.id as number
+    const { id } = params
 
     const profile = await getProfile(id)
 
-    try {
-      await bouncer.with('ProfilePolicy').authorize('view')
-    } catch (error) {
-      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-    }
-
+    const { platform } = await request.validate(PlatformQueryValidator)
     const { populate } = await request.validate(PopulateQueryValidator)
+    const { serialize } = await request.validate(SerializationQueryValidator)
 
     await populateProfile(profile, populate)
 
-    if (populate === Populate.INSAMEE) {
+    if (
+      platform === Platform.INSAMEE &&
+      serialize === Serialization.FULL &&
+      populate === Populate.INSAMEE
+    ) {
       const serialization: CherryPick = profileSerialize
       serialization.relations!.insamee_profile = insameeProfileSerialize
 
       return profile.serialize(serialization)
+    } else if (platform === Platform.ADMIN) {
+      try {
+        await bouncer.with('ProfilePolicy').authorize('showAdmin')
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+
+      return profile
     }
 
     return profile.serialize(profileSerialize)

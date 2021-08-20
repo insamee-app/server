@@ -217,6 +217,11 @@ export async function populateProfile(
     case Populate.TUTORAT:
       await loadTutoratProfile(profile)
       break
+    case Populate.FULL:
+      await profile.load((loader) => {
+        loader.load('tutoratProfile').load('insameeProfile')
+      })
+      break
     default:
       break
   }

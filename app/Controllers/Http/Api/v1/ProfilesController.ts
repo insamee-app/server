@@ -1,10 +1,5 @@
-import { unlink } from 'fs'
-import { promisify } from 'util'
-const unlinkAsync = promisify(unlink)
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import InsameeProfilesQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
-import { cuid } from '@ioc:Adonis/Core/Helpers'
-import Application from '@ioc:Adonis/Core/Application'
 import {
   filterProfiles,
   getInsameeProfile,
@@ -21,7 +16,6 @@ import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Profile, { Populate } from 'App/Models/Profile'
 import InsameeProfileValidator from 'App/Validators/InsameeProfileValidator'
 import ProfileValidator from 'App/Validators/ProfileValidator'
-import ProfileQueryValidator from 'App/Validators/ProfileQueryValidator'
 import TutoratProfileValidator from 'App/Validators/TutoratProfileValidator'
 import Tutorat from 'App/Models/Tutorat'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
@@ -32,6 +26,8 @@ import SerializationQueryValidator, {
 import { tutoratCardSerialize } from 'App/Services/TutoratService'
 import Database from '@ioc:Adonis/Lucid/Database'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
+import PopulateQueryValidator from 'App/Validators/PopulateQueryValidator'
+import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 
 const LIMIT = 20
 
@@ -41,7 +37,7 @@ export default class ProfilesController {
 
     const profile = await getProfile(user!.id)
 
-    const { populate } = await request.validate(ProfileQueryValidator)
+    const { populate } = await request.validate(PopulateQueryValidator)
 
     await populateProfile(profile, populate)
 
@@ -49,9 +45,8 @@ export default class ProfilesController {
       const serialization: CherryPick = profileSerialize
       serialization.relations!.insamee_profile = insameeProfileSerialize
       return profile.serialize(serialization)
-    } else {
-      return {}
     }
+    return {}
   }
 
   public async index({ request, bouncer, auth }: HttpContextContract) {
@@ -61,9 +56,10 @@ export default class ProfilesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { serialize } = await request.validate(SerializationQueryValidator)
     const { platform } = await request.validate(PlatformQueryValidator)
-    const { populate, page } = await request.validate(ProfileQueryValidator)
+    const { populate } = await request.validate(PopulateQueryValidator)
+    const { page } = await request.validate(PaginateQueryValidator)
+    const { serialize } = await request.validate(SerializationQueryValidator)
 
     const { currentRole, skills, focusInterests, associations } = await request.validate(
       InsameeProfilesQueryValidator
@@ -124,7 +120,7 @@ export default class ProfilesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { populate } = await request.validate(ProfileQueryValidator)
+    const { populate } = await request.validate(PopulateQueryValidator)
 
     await populateProfile(profile, populate)
 
@@ -148,7 +144,7 @@ export default class ProfilesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { populate } = await request.validate(ProfileQueryValidator)
+    const { populate } = await request.validate(PopulateQueryValidator)
     const { ...data } = await request.validate(ProfileValidator)
 
     if (populate === Populate.INSAMEE) {
@@ -220,7 +216,7 @@ export default class ProfilesController {
   public async tutorats({ params, request }: HttpContextContract) {
     const { id } = params
 
-    const { page } = await request.validate(ProfileQueryValidator)
+    const { page } = await request.validate(PaginateQueryValidator)
 
     const { type } = await request.validate(TutoratQueryValidator)
 
@@ -242,7 +238,7 @@ export default class ProfilesController {
   public async tutoratsRegistrations({ auth, request }: HttpContextContract) {
     const { user } = auth
 
-    const { page } = await request.validate(ProfileQueryValidator)
+    const { page } = await request.validate(PaginateQueryValidator)
 
     const tutorats = await Tutorat.query()
       .whereIn(

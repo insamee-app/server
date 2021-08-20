@@ -27,6 +27,8 @@ export enum CurrentRole {
 export enum Populate {
   INSAMEE = 'insamee',
   TUTORAT = 'tutorat',
+  FULL = 'full',
+  NONE = 'none',
 }
 
 export default class Profile extends compose(BaseModel, SoftDeletes) {

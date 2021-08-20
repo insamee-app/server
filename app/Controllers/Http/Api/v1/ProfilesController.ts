@@ -49,7 +49,7 @@ export default class ProfilesController {
     return {}
   }
 
-  public async index({ request, bouncer, auth }: HttpContextContract) {
+  public async index({ request, bouncer }: HttpContextContract) {
     try {
       await bouncer.with('ProfilePolicy').authorize('viewList')
     } catch (error) {
@@ -86,13 +86,20 @@ export default class ProfilesController {
       case Populate.TUTORAT:
         preloadTutoratProfile(profiles)
         break
+      case Populate.FULL:
+        profiles.preload('insameeProfile').preload('tutoratProfile')
+        break
       default:
         break
     }
 
-    const result = await profiles.paginate(page ?? 1, LIMIT)
+    const result = await profiles.paginate(page, LIMIT)
 
-    if (populate === Populate.INSAMEE && serialize === Serialization.CARD) {
+    if (
+      platform === Platform.INSAMEE &&
+      populate === Populate.INSAMEE &&
+      serialize === Serialization.CARD
+    ) {
       const serialization: CherryPick = profileCardSerialize
       serialization.relations!.insamee_profile = insameeProfileCardSerialize
       return result.serialize(serialization)
@@ -103,7 +110,7 @@ export default class ProfilesController {
         throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
       }
 
-      return 'admin'
+      return result
     } else {
       return []
     }

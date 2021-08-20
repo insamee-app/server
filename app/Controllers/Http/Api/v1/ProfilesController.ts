@@ -143,9 +143,10 @@ export default class ProfilesController {
     return profile.serialize(profileSerialize)
   }
 
-  public async update({ request, params, bouncer }: HttpContextContract) {
+  public async update({ request, params, bouncer, auth }: HttpContextContract) {
     const { id } = params
-    const profile = await getProfile(id)
+    const { user } = auth
+    const profile = await getProfile(id, user!.isAdmin)
 
     try {
       await bouncer.with('ProfilePolicy').authorize('update', profile)

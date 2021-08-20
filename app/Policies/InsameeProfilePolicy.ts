@@ -4,6 +4,6 @@ import InsameeProfile from 'App/Models/InsameeProfile'
 
 export default class InsameeProfilePolicy extends BasePolicy {
   public async update(user: User, insameeProfile: InsameeProfile) {
-    return user.id === insameeProfile.userId
+    return user.id === insameeProfile.userId || user.isAdmin
   }
 }

@@ -144,7 +144,7 @@ export default class ProfilesController {
   }
 
   public async update({ request, params, bouncer }: HttpContextContract) {
-    const id = params.id as number
+    const { id } = params
     const profile = await getProfile(id)
 
     try {

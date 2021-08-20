@@ -8,7 +8,7 @@ export enum Platform {
   ADMIN = 'admin',
 }
 
-export default class PlatformValidator {
+export default class PlatformQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*

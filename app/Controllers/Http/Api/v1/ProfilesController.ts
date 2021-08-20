@@ -31,7 +31,7 @@ import SerializationQueryValidator, {
 } from 'App/Validators/SerializationQueryValidator'
 import { tutoratCardSerialize } from 'App/Services/TutoratService'
 import Database from '@ioc:Adonis/Lucid/Database'
-import PlatformValidator, { Platform } from 'App/Validators/PlatformValidator'
+import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 
 const LIMIT = 20
 
@@ -62,7 +62,7 @@ export default class ProfilesController {
     }
 
     const { serialize } = await request.validate(SerializationQueryValidator)
-    const { platform } = await request.validate(PlatformValidator)
+    const { platform } = await request.validate(PlatformQueryValidator)
     const { populate, page } = await request.validate(ProfileQueryValidator)
 
     const { currentRole, skills, focusInterests, associations } = await request.validate(

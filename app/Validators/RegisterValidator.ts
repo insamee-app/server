@@ -31,6 +31,9 @@ export default class RegisterValidator {
       rules.unique({
         table: User.table,
         column: 'email',
+        where: {
+          deleted_at: null,
+        },
       }),
       rules.school(),
     ]),

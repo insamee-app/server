@@ -2,7 +2,7 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { Platform } from 'App/Controllers/Http/Api/v1/ReasonsController'
 
-export default class ReasonQueryValidator {
+export default class PlatformValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*

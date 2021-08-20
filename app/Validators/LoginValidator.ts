@@ -31,6 +31,9 @@ export default class LoginValidator {
       rules.exists({
         table: User.table,
         column: 'email',
+        where: {
+          deleted_at: null,
+        },
       }),
       rules.isUserVerified({ verified: true }),
     ]),

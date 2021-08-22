@@ -110,10 +110,11 @@ export default class ProfilesController {
     }
   }
 
-  public async show({ params, bouncer, request }: HttpContextContract) {
+  public async show({ params, bouncer, request, auth }: HttpContextContract) {
     const { id } = params
+    const { user } = auth
 
-    const profile = await getProfile(id)
+    const profile = await getProfile(id, user!.isAdmin)
 
     const { platform } = await request.validate(PlatformQueryValidator)
     const { populate } = await request.validate(PopulateQueryValidator)

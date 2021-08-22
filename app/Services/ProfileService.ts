@@ -226,7 +226,13 @@ export async function populateProfile(
       break
     case Populate.FULL:
       await profile.load((loader) => {
-        loader.load('tutoratProfile').load('insameeProfile')
+        loader
+          .load('tutoratProfile', (query) => {
+            query.withTrashed()
+          })
+          .load('insameeProfile', (query) => {
+            query.withTrashed()
+          })
       })
       break
     default:

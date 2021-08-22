@@ -169,7 +169,7 @@ export default class ProfilesController {
         associations,
       } = await request.validate(InsameeProfileValidator)
 
-      const insameeProfile = await getInsameeProfile(id)
+      const insameeProfile = await getInsameeProfile(id, user!.isAdmin)
 
       try {
         await bouncer.with('InsameeProfilePolicy').authorize('update', insameeProfile)
@@ -193,7 +193,7 @@ export default class ProfilesController {
         difficultiesSubjects,
       } = await request.validate(TutoratProfileValidator)
 
-      const tutoratProfile = await getTutoratProfile(id)
+      const tutoratProfile = await getTutoratProfile(id, user!.isAdmin)
 
       try {
         await bouncer.with('TutoratProfilePolicy').authorize('update', tutoratProfile)
@@ -221,6 +221,7 @@ export default class ProfilesController {
 
     await populateProfile(updatedProfile, populate)
 
+    // TODO: Need serialization
     return updatedProfile
   }
 

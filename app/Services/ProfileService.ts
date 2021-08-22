@@ -189,6 +189,7 @@ export async function loadInsameeProfile(profile: Profile): Promise<void> {
         insameeProfile.preload('associations', (association) => {
           association.preload('school')
         })
+        insameeProfile.withTrashed()
       })
       .load('school')
       .load('user')
@@ -204,6 +205,7 @@ export async function loadTutoratProfile(profile: Profile): Promise<void> {
       .load('tutoratProfile', (tutoratProfile) => {
         tutoratProfile.preload('difficultiesSubjects')
         tutoratProfile.preload('preferredSubjects')
+        tutoratProfile.withTrashed()
       })
       .load('school')
       .load('user')

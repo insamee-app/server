@@ -49,10 +49,6 @@ export default class ProfileValidator {
       rules.nullableUrl(),
       rules.regex(new RegExp('twitter', 'i')),
     ]),
-    avatar: schema.file.optional({
-      size: '60kb',
-      extnames: ['jpg', 'png', 'jpeg'],
-    }),
   })
 
   /**

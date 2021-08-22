@@ -50,6 +50,7 @@ export default class Profile extends compose(BaseModel, SoftDeletes) {
   @hasOne(() => TutoratProfile, {
     localKey: 'userId',
     foreignKey: 'userId',
+    serializeAs: 'tutorat_profile',
   })
   public tutoratProfile: HasOne<typeof TutoratProfile>
 

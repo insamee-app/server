@@ -138,7 +138,13 @@ Route.group(() => {
    */
   Route.get('schools', 'SchoolsController.index').as('schools.index')
   Route.get('skills', 'SkillsController.index').as('skills.index')
-  Route.get('focusInterests', 'FocusInterestsController.index').as('focus_interests.index')
+  Route.resource('focus_interests', 'FocusInterestsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
   Route.resource('subjects', 'SubjectsController')
     .apiOnly()
     .middleware({

@@ -9,6 +9,7 @@ export default class FocusInterests extends BaseSchema {
 
       table.string('name').notNullable().unique()
 
+      table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
     })

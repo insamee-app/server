@@ -6,7 +6,7 @@ export async function getTag(id: number): Promise<Tag> {
   try {
     tag = await Tag.withTrashed().where('id', id).firstOrFail()
   } catch (error) {
-    throw new NotFoundException('Thématique introuvable')
+    throw new NotFoundException('Tag introuvable')
   }
 
   return tag

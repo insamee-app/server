@@ -1,18 +1,9 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import AssociationsReport from 'App/Models/AssociationsReport'
-import ProfilesReport from 'App/Models/ProfilesReport'
-import TutoratsReport from 'App/Models/TutoratsReport'
 import ReportValidator from 'App/Validators/ReportValidator'
-import { ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
-import NotFoundException from 'App/Exceptions/NotFoundException'
+import { ModelObject } from '@ioc:Adonis/Lucid/Orm'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
-
-export enum Resource {
-  PROFILES = 'profiles',
-  TUTORATS = 'tutorats',
-  ASSOCIATIONS = 'associations',
-}
+import { getReport, load, preload, query, Resource } from 'App/Services/ReportService'
 
 export default class ReportsController {
   private LIMITE = 20
@@ -28,32 +19,8 @@ export default class ReportsController {
     const { page } = await request.validate(PaginateQueryValidator)
     const { withTrashed, orderBy, sortBy } = await request.validate(ReportValidator)
 
-    let reportsQuery: ModelQueryBuilderContract<
-      typeof ProfilesReport | typeof TutoratsReport | typeof AssociationsReport,
-      ProfilesReport | TutoratsReport | AssociationsReport
-    >
-    switch (resource) {
-      case Resource.PROFILES:
-        reportsQuery = ProfilesReport.query()
-          .preload('profileUser', (query) => query.withTrashed())
-          .preload('user', (query) => query.withTrashed())
-          .preload('reason')
-        break
-      case Resource.TUTORATS:
-        reportsQuery = TutoratsReport.query()
-          .preload('tutorat', (query) => query.preload('user'))
-          .preload('user', (query) => query.withTrashed())
-          .preload('reason')
-        break
-      case Resource.ASSOCIATIONS:
-        reportsQuery = AssociationsReport.query()
-          .preload('association', (query) => query.withTrashed())
-          .preload('user', (query) => query.withTrashed())
-          .preload('reason')
-        break
-      default:
-        throw new Error(`Resource ${resource} not found`)
-    }
+    const reportsQuery = query(resource)
+    preload(reportsQuery, resource)
 
     reportsQuery
       .if(withTrashed, (query) => {
@@ -138,30 +105,10 @@ export default class ReportsController {
 
     const { resource, id } = params as { resource: Resource; id: number }
 
-    let reportQuery: ModelQueryBuilderContract<
-      typeof ProfilesReport | typeof TutoratsReport | typeof AssociationsReport,
-      ProfilesReport | TutoratsReport | AssociationsReport
-    >
-    switch (resource) {
-      case Resource.PROFILES:
-        reportQuery = ProfilesReport.query()
-        break
-      case Resource.TUTORATS:
-        reportQuery = TutoratsReport.query()
-        break
-      case Resource.ASSOCIATIONS:
-        reportQuery = AssociationsReport.query()
-        break
-      default:
-        throw new Error(`Resource ${resource} not found`)
-    }
+    const reportsQuery = query(resource)
+    const report = await getReport(reportsQuery, id)
+    await load(report, resource)
 
-    let report: ProfilesReport | TutoratsReport | AssociationsReport
-    try {
-      report = await reportQuery.withTrashed().where('id', id).firstOrFail()
-    } catch (error) {
-      throw new NotFoundException('Signalement introuvable')
-    }
     return report
   }
 
@@ -174,30 +121,9 @@ export default class ReportsController {
 
     const { resource, id } = params as { resource: Resource; id: number }
 
-    let reportQuery: ModelQueryBuilderContract<
-      typeof ProfilesReport | typeof TutoratsReport | typeof AssociationsReport,
-      ProfilesReport | TutoratsReport | AssociationsReport
-    >
-    switch (resource) {
-      case Resource.PROFILES:
-        reportQuery = ProfilesReport.query()
-        break
-      case Resource.TUTORATS:
-        reportQuery = TutoratsReport.query()
-        break
-      case Resource.ASSOCIATIONS:
-        reportQuery = AssociationsReport.query()
-        break
-      default:
-        throw new Error(`Resource ${resource} not found`)
-    }
-
-    let report: ProfilesReport | TutoratsReport | AssociationsReport
-    try {
-      report = await reportQuery.where('id', id).firstOrFail()
-    } catch (error) {
-      throw new NotFoundException('Signalement introuvable')
-    }
+    const reportsQuery = query(resource)
+    const report = await getReport(reportsQuery, id)
+    await load(report, resource)
 
     await report.delete()
 

@@ -20,7 +20,7 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import Application from '@ioc:Adonis/Core/Application'
-import { Resource } from 'App/Controllers/Http/Api/v1/ReportsController'
+import { Resource } from 'App/Services/ReportService'
 
 /**
  * All params named ":id" should be valid numbers

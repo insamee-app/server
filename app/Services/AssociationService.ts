@@ -3,6 +3,26 @@ import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import { DatabaseQueryBuilderContract } from '@ioc:Adonis/Lucid/Database'
 import Database from '@ioc:Adonis/Lucid/Database'
 import Tag from 'App/Models/Tag'
+import NotFoundException from 'App/Exceptions/NotFoundException'
+
+/**
+ * Get an association by id
+ * @throws {NotFoundException} Will throw an error if an association is not found
+ */
+export async function getAssociation(id: number, isAdmin: boolean = false): Promise<Association> {
+  let association: Association
+  try {
+    const associationQuery = Association.query().where('id', id)
+
+    if (isAdmin) associationQuery.withTrashed()
+
+    association = await associationQuery.firstOrFail()
+  } catch (error) {
+    throw new NotFoundException('Association introuvable')
+  }
+
+  return association
+}
 
 /**
  * Used to create a query in a pivot table with a relation with association and using the *id*
@@ -41,4 +61,13 @@ export function filterAssociations(
   }
 
   return associations
+}
+
+/**
+ * Load data for an association instance
+ */
+export async function loadAssociation(association: Association): Promise<void> {
+  await association.load((loader) => {
+    loader.load('thematic').load('school').load('tags')
+  })
 }

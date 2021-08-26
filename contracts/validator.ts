@@ -8,5 +8,6 @@ declare module '@ioc:Adonis/Core/Validator' {
     isPasswordValid(): Rule
     nullableUrl(): Rule
     nullableMobile(): Rule
+    nullableEmail(): Rule
   }
 }

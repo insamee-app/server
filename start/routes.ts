@@ -105,8 +105,14 @@ Route.group(() => {
   /**
    * Associations routes
    */
-  Route.get('associations', 'AssociationsController.index').as('associations.index')
-  Route.get('associations/:id', 'AssociationsController.show').as('associations.show')
+
+  // CRUD operations for associations
+  Route.resource('associations', 'AssociationsController')
+  // Used to restore an association
+  Route.patch('associations/:id/restore', 'AssociationsController.restore')
+    .middleware('admin')
+    .as('associations.restore')
+
   Route.get('associations/:id/profiles', 'AssociationsController.profiles').as(
     'associations.profiles'
   )

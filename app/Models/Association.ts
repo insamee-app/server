@@ -14,8 +14,10 @@ import School from './School'
 import Thematic from './Thematic'
 import Tag from './Tag'
 import Application from '@ioc:Adonis/Core/Application'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
-export default class Association extends BaseModel {
+export default class Association extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
 
@@ -54,6 +56,7 @@ export default class Association extends BaseModel {
     pivotForeignKey: 'association_id',
     pivotRelatedForeignKey: 'tag_id',
     pivotTable: 'tag_association',
+    pivotTimestamps: true,
   })
   public tags: ManyToMany<typeof Tag>
 

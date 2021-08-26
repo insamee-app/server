@@ -931,7 +931,49 @@ Authorization: admin
 
 `GET /api/v1/schools`
 
+Query string
+
+- `platform` as enum
+
 Authentication required, returns [multiple schools](#multiple-schools)
+
+#### Create a School
+
+`POST /api/v1/schools`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [school](#school)
+Authorization: admin
+
+#### Update a School
+
+`PATCH /api/v1/schools/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [school](#school)
+Authorization: admin
+
+#### Destroy a School
+
+`DELETE /api/v1/schools/:id`
+
+Authentication required, returns a [school](#school)
+Authorization: admin
+
+#### Restore a School
+
+`PATCH /api/v1/schools/:id/restore`
+
+Authentication required, returns a [school](#school)
+Authorization: admin
 
 #### Get Skills
 
@@ -939,11 +981,85 @@ Authentication required, returns [multiple schools](#multiple-schools)
 
 Authentication required, returns [multiple skills](#multiple-skills)
 
+#### Create a Skill
+
+`POST /api/v1/skills`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
+#### Update a Skill
+
+`PATCH /api/v1/skills/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
+#### Destroy a Skill
+
+`DELETE /api/v1/skills/:id`
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
+#### Restore a Skill
+
+`PATCH /api/v1/skills/:id/restore`
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
 #### Get Focus of Interests
 
 `GET /api/v1/focus_interests`
 
 Authentication required, returns [multiple focus of interests](#multiple-focus-of-interests)
+
+#### Create a Focus of Interests
+
+`POST /api/v1/focus_interests`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
+
+#### Update a Focus of Interests
+
+`PATCH /api/v1/focus_interests/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
+
+#### Destroy a Focus of Interests
+
+`DELETE /api/v1/focus_interests/:id`
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
+
+#### Restore a Focus of Interests
+
+`PATCH /api/v1/focus_interests/:id/restore`
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
 
 #### Get Subjects
 
@@ -951,17 +1067,128 @@ Authentication required, returns [multiple focus of interests](#multiple-focus-o
 
 Authentication required, returns [multiple subjects](#multiple-subjects)
 
+#### Create a Subjects
+
+`POST /api/v1/subjects`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
+#### Update a Subjects
+
+`PATCH /api/v1/subjects/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
+#### Destroy a Subjects
+
+`DELETE /api/v1/subjects/:id`
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
+#### Restore a Subjects
+
+`PATCH /api/v1/subjects/:id/restore`
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
 #### Get Thematics
 
 `GET /api/v1/thematics`
 
 Authentication required, returns [multiple thematics](#multiple-thematics)
 
+#### Create a Thematic
+
+`POST /api/v1/thematics`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
+#### Update a Thematic
+
+`PATCH /api/v1/thematics/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
+#### Destroy a Thematic
+
+`DELETE /api/v1/thematics/:id`
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
+#### Restore a Thematic
+
+`PATCH /api/v1/thematics/:id/restore`
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
 #### Get Tags
 
 `GET /api/v1/tags`
 
 Authentication required, returns [multiple tags](#multiple-tags)
+
+#### Create a Tag
+
+`POST /api/v1/tags`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
+
+#### Update a Tag
+
+`PATCH /api/v1/tags/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
+
+#### Destroy a Tag
+
+`DELETE /api/v1/tags/:id`
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
+
+#### Restore a Tag
+
+`PATCH /api/v1/tags/:id/restore`
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
 
 #### Get Reasons
 

@@ -107,7 +107,20 @@ export default class ReportsController {
         })
         break
       case Resource.ASSOCIATIONS:
-        serializedReports = reports.serialize()
+        serializedReports = reports.serialize({
+          fields: ['id', 'description', 'created_at', 'deleted_at'],
+          relations: {
+            association: {
+              fields: ['id', 'name'],
+            },
+            user: {
+              fields: ['email'],
+            },
+            reason: {
+              fields: ['name'],
+            },
+          },
+        })
         break
       default:
         throw new Error(`Resource ${resource} not found`)

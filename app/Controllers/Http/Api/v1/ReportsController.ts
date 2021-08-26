@@ -6,6 +6,7 @@ import TutoratsReport from 'App/Models/TutoratsReport'
 import ReportValidator from 'App/Validators/ReportValidator'
 import { ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
+import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 
 export enum Resource {
   PROFILES = 'profiles',
@@ -14,6 +15,8 @@ export enum Resource {
 }
 
 export default class ReportsController {
+  private LIMITE = 20
+
   public async index({ params, request, bouncer }: HttpContextContract) {
     try {
       await bouncer.with('ReportPolicy').authorize('view')
@@ -22,7 +25,8 @@ export default class ReportsController {
     }
 
     const { resource } = params as { resource: Resource }
-    const { page, withTrashed, orderBy, sortBy } = await request.validate(ReportValidator)
+    const { page } = await request.validate(PaginateQueryValidator)
+    const { withTrashed, orderBy, sortBy } = await request.validate(ReportValidator)
 
     let reportsQuery: ModelQueryBuilderContract<
       typeof ProfilesReport | typeof TutoratsReport | typeof AssociationsReport,
@@ -58,7 +62,7 @@ export default class ReportsController {
       .if(sortBy, (query) => {
         query.orderBy(sortBy!, (orderBy as 'asc' | 'desc')!)
       })
-    const reports = await reportsQuery.paginate(page ?? 1, 20)
+    const reports = await reportsQuery.paginate(page, this.LIMITE)
 
     let serializedReports: {
       meta: any
@@ -148,7 +152,7 @@ export default class ReportsController {
     return report
   }
 
-  public async destroy({ params, request, bouncer }: HttpContextContract) {
+  public async destroy({ params, bouncer }: HttpContextContract) {
     try {
       await bouncer.with('ReportPolicy').authorize('destroy')
     } catch (error) {

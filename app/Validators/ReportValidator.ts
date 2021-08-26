@@ -1,6 +1,5 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { reportQuery } from './messages'
 
 export default class ReportValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -25,7 +24,6 @@ export default class ReportValidator {
    *    ```
    */
   public schema = schema.create({
-    page: schema.number.optional(),
     withTrashed: schema.boolean.optional(),
     sortBy: schema.string.optional(),
     orderBy: schema.enum.optional(['asc', 'desc'], [rules.requiredIfExists('sortBy')]),
@@ -42,7 +40,5 @@ export default class ReportValidator {
    * }
    *
    */
-  public messages = {
-    'page.number': reportQuery.page.number,
-  }
+  public messages = {}
 }

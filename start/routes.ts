@@ -137,7 +137,18 @@ Route.group(() => {
    * Schools, skills, focus of interests, subjects, tags and thematics routes
    */
   Route.get('schools', 'SchoolsController.index').as('schools.index')
-  Route.get('skills', 'SkillsController.index').as('skills.index')
+  // CRUD operations for skills
+  Route.resource('skills', 'SkillsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
+  // Used to restore a skill
+  Route.patch('skills/:id/restore', 'SkillsController.restore')
+    .middleware('admin')
+    .as('skills.restore')
   Route.resource('focus_interests', 'FocusInterestsController')
     .apiOnly()
     .middleware({

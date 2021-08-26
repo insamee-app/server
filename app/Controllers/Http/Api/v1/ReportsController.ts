@@ -31,20 +31,20 @@ export default class ReportsController {
     switch (resource) {
       case Resource.PROFILES:
         reportsQuery = ProfilesReport.query()
-          .preload('profileUser')
-          .preload('user')
+          .preload('profileUser', (query) => query.withTrashed())
+          .preload('user', (query) => query.withTrashed())
           .preload('reason')
         break
       case Resource.TUTORATS:
         reportsQuery = TutoratsReport.query()
           .preload('tutorat', (query) => query.preload('user'))
-          .preload('user')
+          .preload('user', (query) => query.withTrashed())
           .preload('reason')
         break
       case Resource.ASSOCIATIONS:
         reportsQuery = AssociationsReport.query()
-          .preload('association')
-          .preload('user')
+          .preload('association', (query) => query.withTrashed())
+          .preload('user', (query) => query.withTrashed())
           .preload('reason')
         break
       default:

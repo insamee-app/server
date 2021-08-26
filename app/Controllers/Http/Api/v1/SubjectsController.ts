@@ -1,7 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
-
 import Subject from 'App/Models/Subject'
 import { getSubject } from 'App/Services/SubjectService'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
@@ -79,6 +77,22 @@ export default class SubjectsController {
     const subject = await getSubject(id)
 
     subject.delete()
+
+    return subject
+  }
+
+  public async restore({ bouncer, params }: HttpContextContract) {
+    try {
+      await bouncer.with('SubjectPolicy').authorize('restore')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { id } = params
+
+    const subject = await getSubject(id)
+
+    subject.restore()
 
     return subject
   }

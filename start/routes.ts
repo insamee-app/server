@@ -149,6 +149,8 @@ Route.group(() => {
   Route.patch('skills/:id/restore', 'SkillsController.restore')
     .middleware('admin')
     .as('skills.restore')
+
+  // CRUD operations for focus of interests
   Route.resource('focus_interests', 'FocusInterestsController')
     .apiOnly()
     .middleware({
@@ -156,6 +158,12 @@ Route.group(() => {
       update: ['admin'],
       destroy: ['admin'],
     })
+  // Used to restore a focus of interest
+  Route.patch('focus_interests/:id/restore', 'FocusInterestsController.restore')
+    .middleware('admin')
+    .as('focus_interests.restore')
+
+  // CRUD operations for subjects
   Route.resource('subjects', 'SubjectsController')
     .apiOnly()
     .middleware({
@@ -163,6 +171,12 @@ Route.group(() => {
       update: ['admin'],
       destroy: ['admin'],
     })
+  // Used to restore a subject
+  Route.patch('subjects/:id/restore', 'SubjectsController.restore')
+    .middleware('admin')
+    .as('subjects.restore')
+
+  // CRUD operations for tags
   Route.resource('tags', 'TagsController')
     .apiOnly()
     .middleware({
@@ -170,6 +184,10 @@ Route.group(() => {
       update: ['admin'],
       destroy: ['admin'],
     })
+  // Used to restore a tag
+  Route.patch('tags/:id/restore', 'TagsController.restore').middleware('admin').as('tags.restore')
+
+  // CRUD operations for thematics
   Route.resource('thematics', 'ThematicsController')
     .apiOnly()
     .middleware({
@@ -177,6 +195,10 @@ Route.group(() => {
       update: ['admin'],
       destroy: ['admin'],
     })
+  // Used to restore a thematic
+  Route.patch('thematics/:id/restore', 'ThematicsController.restore')
+    .middleware('admin')
+    .as('thematics.restore')
 
   if (process.env.NODE_ENV === 'development')
     Route.get('uploads/:filename', async ({ response, params }) => {

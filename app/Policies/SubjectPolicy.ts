@@ -27,4 +27,8 @@ export default class SubjectPolicy extends BasePolicy {
   public async destroy() {
     return false
   }
+
+  public async restore() {
+    return false
+  }
 }

@@ -1,7 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
-
 import Thematic from 'App/Models/Thematic'
 import { getThematic } from 'App/Services/ThematicService'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
@@ -79,6 +77,22 @@ export default class ThematicsController {
     const thematic = await getThematic(id)
 
     thematic.delete()
+
+    return thematic
+  }
+
+  public async restore({ bouncer, params }: HttpContextContract) {
+    try {
+      await bouncer.with('ThematicPolicy').authorize('restore')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { id } = params
+
+    const thematic = await getThematic(id)
+
+    thematic.restore()
 
     return thematic
   }

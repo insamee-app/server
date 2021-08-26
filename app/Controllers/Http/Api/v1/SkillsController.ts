@@ -1,7 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
-
 import Skill from 'App/Models/Skill'
 import { getSkill } from 'App/Services/SkillService'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'

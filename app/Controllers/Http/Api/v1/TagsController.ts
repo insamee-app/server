@@ -1,7 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
-
 import Tag from 'App/Models/Tag'
 import { getTag } from 'App/Services/TagService'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
@@ -79,6 +77,22 @@ export default class TagsController {
     const tag = await getTag(id)
 
     tag.delete()
+
+    return tag
+  }
+
+  public async restore({ bouncer, params }: HttpContextContract) {
+    try {
+      await bouncer.with('TagPolicy').authorize('restore')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { id } = params
+
+    const tag = await getTag(id)
+
+    tag.restore()
 
     return tag
   }

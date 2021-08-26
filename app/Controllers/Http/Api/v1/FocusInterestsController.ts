@@ -1,7 +1,5 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import NotFoundException from 'App/Exceptions/NotFoundException'
-
 import FocusInterest from 'App/Models/FocusInterest'
 import { getFocusInterest } from 'App/Services/FocusInterestService'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
@@ -79,6 +77,22 @@ export default class FocusInterestsController {
     const focusInterest = await getFocusInterest(id)
 
     focusInterest.delete()
+
+    return focusInterest
+  }
+
+  public async restore({ bouncer, params }: HttpContextContract) {
+    try {
+      await bouncer.with('FocusInterestPolicy').authorize('restore')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { id } = params
+
+    const focusInterest = await getFocusInterest(id)
+
+    focusInterest.restore()
 
     return focusInterest
   }

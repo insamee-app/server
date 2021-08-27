@@ -3,7 +3,14 @@ import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import ReportValidator from 'App/Validators/ReportValidator'
 import { ModelObject } from '@ioc:Adonis/Lucid/Orm'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
-import { getReport, load, preload, query, Resource } from 'App/Services/ReportService'
+import {
+  getReport,
+  load,
+  preload,
+  query,
+  Resource,
+  serializeReport,
+} from 'App/Services/ReportService'
 
 export default class ReportsController {
   private LIMITE = 20
@@ -109,7 +116,7 @@ export default class ReportsController {
     const report = await getReport(reportsQuery, id)
     await load(report, resource)
 
-    return report
+    return serializeReport(report, resource)
   }
 
   public async destroy({ params, bouncer }: HttpContextContract) {
@@ -127,6 +134,6 @@ export default class ReportsController {
 
     await report.delete()
 
-    return report
+    return serializeReport(report, resource)
   }
 }

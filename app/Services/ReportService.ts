@@ -1,4 +1,4 @@
-import { ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
+import { ModelObject, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import AssociationsReport from 'App/Models/AssociationsReport'
 import ProfilesReport from 'App/Models/ProfilesReport'
@@ -77,7 +77,13 @@ export async function load(report: Report, resource: Resource): Promise<void> {
     case Resource.PROFILES:
       await (report as unknown as ProfilesReport).load((loader) => {
         loader
-          .load('profileUser', (query) => query.withTrashed())
+          .load('profileUser', (query) =>
+            query
+              .withTrashed()
+              .preload('profile', (query) =>
+                query.preload('insameeProfile').preload('tutoratProfile')
+              )
+          )
           .load('user', (query) => query.withTrashed())
           .load('reason')
       })
@@ -85,7 +91,9 @@ export async function load(report: Report, resource: Resource): Promise<void> {
     case Resource.TUTORATS:
       await (report as unknown as TutoratsReport).load((loader) => {
         loader
-          .load('tutorat', (query) => query.withTrashed().preload('user'))
+          .load('tutorat', (query) =>
+            query.withTrashed().preload('user').preload('school').preload('subject')
+          )
           .load('user', (query) => query.withTrashed())
           .load('reason')
       })
@@ -101,4 +109,78 @@ export async function load(report: Report, resource: Resource): Promise<void> {
     default:
       throw new Error(`Resource ${resource} not found`)
   }
+}
+
+export function serializeReport(report: Report, resource: Resource) {
+  let serializedReport: ModelObject
+
+  switch (resource) {
+    case Resource.PROFILES:
+      serializedReport = report
+        // TODO: serialize profile and add more data to the loader
+        .serialize
+        //   {
+        //   fields: ['id', 'description', 'created_at', 'deleted_at'],
+        //   relations: {
+        //     profile_user: {
+        //       fields: ['id', 'email'],
+        //     },
+        //     user: {
+        //       fields: ['email'],
+        //     },
+        //     reason: {
+        //       fields: ['name'],
+        //     },
+        //   },
+        // }
+        ()
+      break
+    case Resource.TUTORATS:
+      serializedReport = report.serialize({
+        fields: ['id', 'description', 'created_at', 'updated_at', 'deleted_at'],
+        relations: {
+          tutorat: {
+            fields: ['text', 'type', 'created_at', 'updated_at', 'deleted_at'],
+            relations: {
+              user: {
+                fields: ['email'],
+              },
+              school: {
+                fields: ['name'],
+              },
+              subject: {
+                fields: ['name'],
+              },
+            },
+          },
+          user: {
+            fields: ['email', 'created_at', 'updated_at', 'deleted_at'],
+          },
+          reason: {
+            fields: ['name'],
+          },
+        },
+      })
+      break
+    case Resource.ASSOCIATIONS:
+      serializedReport = report.serialize({
+        fields: ['id', 'description', 'created_at', 'updated_at', 'deleted_at'],
+        relations: {
+          association: {
+            fields: ['id', 'name', 'text', 'email', 'created_at', 'updated_at', 'deleted_at'],
+          },
+          user: {
+            fields: ['email', 'created_at', 'updated_at', 'deleted_at'],
+          },
+          reason: {
+            fields: ['name'],
+          },
+        },
+      })
+      break
+    default:
+      throw new Error(`Resource ${resource} not found`)
+  }
+
+  return serializedReport
 }

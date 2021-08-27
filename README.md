@@ -819,7 +819,60 @@ Authentication required, returns [multiple associations](#multiple-associations)
 
 `GET /api/v1/associations/:id`
 
+Query string
+
+- `platform`, as enum
+
 Authentication required, returns an [association](#association)
+
+#### Store Association
+
+`POST /api/v1/associations`
+
+Body
+
+- `name` as string
+- `text` as string
+- `email` as string
+- `schoolId` as number
+- `thematicId` as number
+- `tags` as array of number
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
+
+#### Update Association
+
+`PATCH /api/v1/associations/:id`
+
+Body
+
+- `name` as string
+- `text` as string
+- `email` as string
+- `schoolId` as number
+- `tags` as array of number
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
+
+#### Destroy Association
+
+`DELETE /api/v1/associations/:id`
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
+
+#### Restore Association
+
+`PATCH /api/v1/association/:id/restore`
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
 
 #### Get Profiles for One Association
 

@@ -1,4 +1,3 @@
-import Database from '@ioc:Adonis/Lucid/Database'
 import { CherryPick, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import { CurrentRole } from 'App/Models/Profile'

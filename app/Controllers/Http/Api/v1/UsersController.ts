@@ -2,12 +2,9 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { getUser } from 'App/Services/UserService'
 import { getProfile, getInsameeProfile, getTutoratProfile } from 'App/Services/ProfileService'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import AssociationsReport from 'App/Models/AssociationsReport'
-import TutoratsReport from 'App/Models/TutoratsReport'
 import Tutorat from 'App/Models/Tutorat'
 import User from 'App/Models/User'
 import UserQueryValidator from 'App/Validators/UserQueryValidator'
-import NotFoundException from 'App/Exceptions/NotFoundException'
 import UserValidator from 'App/Validators/UserValidator'
 
 export default class UsersController {

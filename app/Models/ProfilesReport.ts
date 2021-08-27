@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 import ProfilesReason from './ProfilesReason'

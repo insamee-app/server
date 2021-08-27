@@ -13,7 +13,6 @@ import TutoratValidator from 'App/Validators/TutoratValidator'
 import SerializationQueryValidator, {
   Serialization,
 } from 'App/Validators/SerializationQueryValidator'
-import Database from '@ioc:Adonis/Lucid/Database'
 
 const LIMIT = 20
 export default class TutoratsController {

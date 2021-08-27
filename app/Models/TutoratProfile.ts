@@ -17,6 +17,7 @@ export default class TutoratProfile extends compose(BaseModel, SoftDeletes) {
     relatedKey: 'id',
     pivotRelatedForeignKey: 'subject_id',
     pivotTable: 'preferred_subject_tutorat_profile',
+    serializeAs: 'preferred_subjects',
   })
   public preferredSubjects: ManyToMany<typeof Subject>
 
@@ -26,6 +27,7 @@ export default class TutoratProfile extends compose(BaseModel, SoftDeletes) {
     relatedKey: 'id',
     pivotRelatedForeignKey: 'subject_id',
     pivotTable: 'difficulties_subject_tutorat_profile',
+    serializeAs: 'difficulties_subjects',
   })
   public difficultiesSubjects: ManyToMany<typeof Subject>
 

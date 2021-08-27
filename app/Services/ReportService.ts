@@ -78,11 +78,15 @@ export async function load(report: Report, resource: Resource): Promise<void> {
       await (report as unknown as ProfilesReport).load((loader) => {
         loader
           .load('profileUser', (query) =>
-            query
-              .withTrashed()
-              .preload('profile', (query) =>
-                query.preload('insameeProfile').preload('tutoratProfile')
-              )
+            query.withTrashed().preload('profile', (profile) =>
+              profile
+                .preload('insameeProfile', (insameeProfile) => {
+                  insameeProfile.preload('associations').preload('skills').preload('focusInterests')
+                })
+                .preload('tutoratProfile', (tutoratProfile) => {
+                  tutoratProfile.preload('difficultiesSubjects').preload('preferredSubjects')
+                })
+            )
           )
           .load('user', (query) => query.withTrashed())
           .load('reason')
@@ -116,24 +120,61 @@ export function serializeReport(report: Report, resource: Resource) {
 
   switch (resource) {
     case Resource.PROFILES:
-      serializedReport = report
-        // TODO: serialize profile and add more data to the loader
-        .serialize
-        //   {
-        //   fields: ['id', 'description', 'created_at', 'deleted_at'],
-        //   relations: {
-        //     profile_user: {
-        //       fields: ['id', 'email'],
-        //     },
-        //     user: {
-        //       fields: ['email'],
-        //     },
-        //     reason: {
-        //       fields: ['name'],
-        //     },
-        //   },
-        // }
-        ()
+      serializedReport = report.serialize({
+        fields: ['id', 'description', 'created_at', 'updated_at', 'deleted_at'],
+        relations: {
+          profile_user: {
+            fields: ['id', 'email', 'created_at', 'updated_at', 'deleted_at'],
+            relations: {
+              profile: {
+                fields: [
+                  'id',
+                  'first_name',
+                  'last_name',
+                  'url_facebook',
+                  'url_instagram',
+                  'url_twitter',
+                  'mobile',
+                ],
+                relations: {
+                  insamee_profile: {
+                    fields: ['text'],
+                    relations: {
+                      associations: {
+                        fields: ['name'],
+                      },
+                      skills: {
+                        fields: ['name'],
+                      },
+                      focus_interests: {
+                        fields: ['name'],
+                      },
+                    },
+                  },
+                  tutorat_profile: {
+                    fields: ['text'],
+                    relations: {
+                      difficulties_subjects: {
+                        fields: ['name'],
+                      },
+                      preferred_subjects: {
+                        fields: ['name'],
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          user: {
+            fields: ['email', 'created_at', 'updated_at', 'deleted_at'],
+          },
+          reason: {
+            fields: ['name'],
+          },
+        },
+      })
+
       break
     case Resource.TUTORATS:
       serializedReport = report.serialize({

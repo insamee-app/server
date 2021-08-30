@@ -82,7 +82,29 @@ export default class AssociationsController {
         .preload('thematic')
         .paginate(page, this.LIMITE)
 
-      return associations
+      return associations.serialize({
+        fields: [
+          'id',
+          'name',
+          'image_url',
+          'email',
+          'text',
+          'created_at',
+          'updated_at',
+          'deleted_at',
+        ],
+        relations: {
+          school: {
+            fields: ['name'],
+          },
+          thematic: {
+            fields: ['id', 'name'],
+          },
+          tags: {
+            fields: ['id', 'name'],
+          },
+        },
+      })
     } else return []
   }
 

@@ -98,6 +98,51 @@ In order to be used this server with any of the front-end, you must create a `.e
 }
 ```
 
+#### Multiple users
+
+```json
+{
+  "meta": {
+    "total": "number",
+    "per_page": "number",
+    "current_page": "number",
+    "last_page": "number",
+    "first_page": "number",
+    "first_page_url": "string",
+    "last_page_url": "string",
+    "next_page_url": "string",
+    "previous_page_url": "string"
+  },
+  "data": [
+    {
+      "id": "number",
+      "email": "string",
+      "is_verified": "boolean",
+      "is_admin": "boolean",
+      "is_blocked": "boolean",
+      "deleted_at": "string | null",
+      "created_at": "string",
+      "updated_at": "string"
+    }
+  ]
+}
+```
+
+#### user
+
+```json
+{
+  "id": "number",
+  "email": "string",
+  "is_verified": "boolean",
+  "is_admin": "boolean",
+  "is_blocked": "boolean",
+  "deleted_at": "string | null",
+  "created_at": "string",
+  "updated_at": "string"
+}
+```
+
 #### Delete user object
 
 ```json
@@ -507,13 +552,43 @@ Required fields
 
 No authentication required, returns a [sendResetPassword object](#sendResetPassword-object)
 
+#### Get Users
+
+`GET /api/v1/users`
+
+Authentication required, returns [multiple-users](#multiple-users)
+
+Authorization: admin
+
+#### Get User
+
+`GET /api/v1/users/:id`
+
+Authentication required, returns a [user](#user)
+
+Authorization: admin
+
+#### Update User
+
+`PATCH /api/v1/users/:id`
+
+Authentication required, returns a [user](#user)
+
+Body:
+
+- `isVerified` as boolean
+- `isAdmin` as boolean
+- `isBlocked` as boolean
+
+Authorization: admin
+
 #### Delete User
 
 `DELETE /api/v1/users/:id`
 
 Authentication required, returns a [deleted user object](#deleted-user-object)
 
-Authorization: only the owner
+Authorization: the owner and admin
 
 #### Get Current Profile
 
@@ -744,7 +819,60 @@ Authentication required, returns [multiple associations](#multiple-associations)
 
 `GET /api/v1/associations/:id`
 
+Query string
+
+- `platform`, as enum
+
 Authentication required, returns an [association](#association)
+
+#### Store Association
+
+`POST /api/v1/associations`
+
+Body
+
+- `name` as string
+- `text` as string
+- `email` as string
+- `schoolId` as number
+- `thematicId` as number
+- `tags` as array of number
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
+
+#### Update Association
+
+`PATCH /api/v1/associations/:id`
+
+Body
+
+- `name` as string
+- `text` as string
+- `email` as string
+- `schoolId` as number
+- `tags` as array of number
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
+
+#### Destroy Association
+
+`DELETE /api/v1/associations/:id`
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
+
+#### Restore Association
+
+`PATCH /api/v1/association/:id/restore`
+
+Authentication required, returns an [association](#association)
+
+Authorization: admin
 
 #### Get Profiles for One Association
 
@@ -768,11 +896,137 @@ Body
 
 Authentication required, returns a [report](#report)
 
+#### Get Profiles Reports
+
+`GET /api/v1/reports/profiles`
+
+Query string
+
+- `page`, as string
+
+Authentication required, returns [multiple-profiles-reports](#multiple-profiles-reports)
+
+Authorization: admin
+
+#### Get Profile Report
+
+`GET /api/v1/reports/profiles/:id`
+
+Authentication required, returns a [profile-report](#profile-report)
+
+Authorization: admin
+
+#### Destroy Profile Report
+
+`DELETE /api/v1/reports/profiles/:id`
+
+Authentication required, returns a [profile-report](#profile-report)
+
+Authorization: admin
+
+#### Get Tutorats Reports
+
+`GET /api/v1/reports/tutorats`
+
+Query string
+
+- `page`, as string
+
+Authentication required, returns [multiple-tutorats-reports](#multiple-tutorats-reports)
+
+Authorization: admin
+
+#### Get Tutorat Report
+
+`GET /api/v1/reports/tutorats/:id`
+
+Authentication required, returns a [tutorat-report](#tutorat-report)
+
+Authorization: admin
+
+#### Destroy Tutorat Report
+
+`DELETE /api/v1/reports/tutorats/:id`
+
+Authentication required, returns a [tutorat-report](#tutorat-report)
+
+Authorization: admin
+
+#### Get Associations Reports
+
+`GET /api/v1/reports/associations`
+
+Query string
+
+- `page`, as string
+
+Authentication required, returns [multiple-associations-reports](#multiple-associations-reports)
+
+Authorization: admin
+
+#### Get Association Report
+
+`GET /api/v1/reports/associations/:id`
+
+Authentication required, returns a [association-report](#association-report)
+
+Authorization: admin
+
+#### Destroy Association Report
+
+`DELETE /api/v1/reports/associations/:id`
+
+Authentication required, returns a [association-report](#association-report)
+
+Authorization: admin
+
 #### Get Schools
 
 `GET /api/v1/schools`
 
+Query string
+
+- `platform` as enum
+
 Authentication required, returns [multiple schools](#multiple-schools)
+
+#### Create a School
+
+`POST /api/v1/schools`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [school](#school)
+Authorization: admin
+
+#### Update a School
+
+`PATCH /api/v1/schools/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [school](#school)
+Authorization: admin
+
+#### Destroy a School
+
+`DELETE /api/v1/schools/:id`
+
+Authentication required, returns a [school](#school)
+Authorization: admin
+
+#### Restore a School
+
+`PATCH /api/v1/schools/:id/restore`
+
+Authentication required, returns a [school](#school)
+Authorization: admin
 
 #### Get Skills
 
@@ -780,11 +1034,85 @@ Authentication required, returns [multiple schools](#multiple-schools)
 
 Authentication required, returns [multiple skills](#multiple-skills)
 
+#### Create a Skill
+
+`POST /api/v1/skills`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
+#### Update a Skill
+
+`PATCH /api/v1/skills/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
+#### Destroy a Skill
+
+`DELETE /api/v1/skills/:id`
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
+#### Restore a Skill
+
+`PATCH /api/v1/skills/:id/restore`
+
+Authentication required, returns a [skill](#skill)
+Authorization: admin
+
 #### Get Focus of Interests
 
 `GET /api/v1/focus_interests`
 
 Authentication required, returns [multiple focus of interests](#multiple-focus-of-interests)
+
+#### Create a Focus of Interests
+
+`POST /api/v1/focus_interests`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
+
+#### Update a Focus of Interests
+
+`PATCH /api/v1/focus_interests/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
+
+#### Destroy a Focus of Interests
+
+`DELETE /api/v1/focus_interests/:id`
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
+
+#### Restore a Focus of Interests
+
+`PATCH /api/v1/focus_interests/:id/restore`
+
+Authentication required, returns a [focus_interest](#focus_interest)
+Authorization: admin
 
 #### Get Subjects
 
@@ -792,17 +1120,128 @@ Authentication required, returns [multiple focus of interests](#multiple-focus-o
 
 Authentication required, returns [multiple subjects](#multiple-subjects)
 
+#### Create a Subjects
+
+`POST /api/v1/subjects`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
+#### Update a Subjects
+
+`PATCH /api/v1/subjects/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
+#### Destroy a Subjects
+
+`DELETE /api/v1/subjects/:id`
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
+#### Restore a Subjects
+
+`PATCH /api/v1/subjects/:id/restore`
+
+Authentication required, returns a [Subject](#Subject)
+Authorization: admin
+
 #### Get Thematics
 
 `GET /api/v1/thematics`
 
 Authentication required, returns [multiple thematics](#multiple-thematics)
 
+#### Create a Thematic
+
+`POST /api/v1/thematics`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
+#### Update a Thematic
+
+`PATCH /api/v1/thematics/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
+#### Destroy a Thematic
+
+`DELETE /api/v1/thematics/:id`
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
+#### Restore a Thematic
+
+`PATCH /api/v1/thematics/:id/restore`
+
+Authentication required, returns a [thematic](#thematic)
+Authorization: admin
+
 #### Get Tags
 
 `GET /api/v1/tags`
 
 Authentication required, returns [multiple tags](#multiple-tags)
+
+#### Create a Tag
+
+`POST /api/v1/tags`
+
+Body
+
+- `name` as string
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
+
+#### Update a Tag
+
+`PATCH /api/v1/tags/:id`
+
+Body
+
+- `name` as string
+- `host` as string
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
+
+#### Destroy a Tag
+
+`DELETE /api/v1/tags/:id`
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
+
+#### Restore a Tag
+
+`PATCH /api/v1/tags/:id/restore`
+
+Authentication required, returns a [tag](#tag)
+Authorization: admin
 
 #### Get Reasons
 

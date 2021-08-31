@@ -1,8 +1,8 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { Platform } from 'App/Controllers/Http/Api/v1/ReasonsController'
+import { userQuery } from './messages'
 
-export default class ReasonQueryValidator {
+export default class UserQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -25,7 +25,7 @@ export default class ReasonQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    platform: schema.enum(Object.values(Platform)),
+    page: schema.number.optional(),
   })
 
   /**
@@ -40,7 +40,6 @@ export default class ReasonQueryValidator {
    *
    */
   public messages = {
-    'platform.required': 'Une plateforme est requise',
-    'platform.enum': 'La plateforme doit être dans la liste',
+    'page.number': userQuery.page.number,
   }
 }

@@ -3,13 +3,7 @@ import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
 import AssociationsReason from 'App/Models/AssociationsReason'
 import ProfilesReason from 'App/Models/ProfilesReason'
 import TutoratsReason from 'App/Models/TutoratsReason'
-import ReasonQueryValidator from 'App/Validators/ReasonQueryValidator'
-
-export enum Platform {
-  INSAMEE = 'insamee',
-  TUTORAT = 'tutorat',
-  ASSOCIATIONS = 'associations',
-}
+import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 
 const reasonSerialize: CherryPick = {
   fields: ['name', 'id'],
@@ -17,7 +11,7 @@ const reasonSerialize: CherryPick = {
 
 export default class ReasonsController {
   public async index({ request }: HttpContextContract) {
-    const { platform } = await request.validate(ReasonQueryValidator)
+    const { platform } = await request.validate(PlatformQueryValidator)
 
     if (platform === Platform.ASSOCIATIONS) {
       const reasons = await AssociationsReason.all()

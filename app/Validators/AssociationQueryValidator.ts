@@ -25,7 +25,6 @@ export default class AssociationQueryValidator {
    *    ```
    */
   public schema = schema.create({
-    page: schema.number.optional(),
     name: schema.string.optional(),
     thematics: schema.array.optional().members(schema.number()),
     tags: schema.array.optional().members(schema.number()),
@@ -44,7 +43,6 @@ export default class AssociationQueryValidator {
    *
    */
   public messages = {
-    'page.number': associationsQuery.page.number,
     'name.string': associationsQuery.name,
     'thematics.array': associationsQuery.thematics.array,
     'thematics.*.number': associationsQuery.thematics.number,

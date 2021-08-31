@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+import { compose } from '@ioc:Adonis/Core/Helpers'
 
-export default class FocusInterest extends BaseModel {
+export default class FocusInterest extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
 

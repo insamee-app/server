@@ -1,14 +1,13 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
 import NotFoundException from 'App/Exceptions/NotFoundException'
-import RegistrationQueryValidator from 'App/Validators/RegistrationQueryValidator'
-import { Platform } from './ReasonsController'
+import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 
 export default class RegistrationsController {
   public async show({ params, auth, request }: HttpContextContract) {
     const { id } = params
     const { user } = auth
-    const { platform } = await request.validate(RegistrationQueryValidator)
+    const { platform } = await request.validate(PlatformQueryValidator)
 
     if (platform === Platform.TUTORAT) {
       try {

@@ -4,6 +4,6 @@ import TutoratProfile from 'App/Models/TutoratProfile'
 
 export default class TutoratProfilePolicy extends BasePolicy {
   public async update(user: User, tutoratProfile: TutoratProfile) {
-    return user.id === tutoratProfile.userId
+    return user.id === tutoratProfile.userId || user.isAdmin
   }
 }

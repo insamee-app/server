@@ -28,7 +28,7 @@ export default class SendVerifyEmailValidator {
   public schema = schema.create({
     email: schema.string({ trim: true }, [
       rules.email({ sanitize: true }),
-      rules.exists({ table: User.table, column: 'email' }),
+      rules.exists({ table: User.table, column: 'email', where: { deleted_at: null } }),
       rules.isUserVerified({ verified: false }),
     ]),
   })

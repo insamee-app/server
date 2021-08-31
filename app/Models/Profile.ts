@@ -27,6 +27,8 @@ export enum CurrentRole {
 export enum Populate {
   INSAMEE = 'insamee',
   TUTORAT = 'tutorat',
+  FULL = 'full',
+  NONE = 'none',
 }
 
 export default class Profile extends compose(BaseModel, SoftDeletes) {
@@ -48,6 +50,7 @@ export default class Profile extends compose(BaseModel, SoftDeletes) {
   @hasOne(() => TutoratProfile, {
     localKey: 'userId',
     foreignKey: 'userId',
+    serializeAs: 'tutorat_profile',
   })
   public tutoratProfile: HasOne<typeof TutoratProfile>
 

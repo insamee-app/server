@@ -10,6 +10,7 @@
 import { ValidationRuntimeOptions, validator } from '@ioc:Adonis/Core/Validator'
 import isUrl from 'validator/lib/isUrl'
 import isMobilePhone from 'validator/lib/isMobilePhone'
+import isEmail from 'validator/lib/isEmail'
 import School from 'App/Models/School'
 import User from 'App/Models/User'
 
@@ -159,6 +160,7 @@ validator.rule('nullableUrl', validateNullableUrl)
 
 async function validateNullableMobile(
   value: string,
+  _,
   { pointer, arrayExpressionPointer, errorReporter }: ValidationRuntimeOptions
 ) {
   /**
@@ -191,3 +193,39 @@ async function validateNullableMobile(
 }
 
 validator.rule('nullableMobile', validateNullableMobile)
+
+async function validateNullableEmail(
+  value: string,
+  _,
+  { pointer, arrayExpressionPointer, errorReporter }: ValidationRuntimeOptions
+) {
+  /**
+   * Ignore non-string values. The user must apply string rule
+   * to validate string.
+   */
+  if (typeof value !== 'string') {
+    return
+  }
+
+  /**
+   * Allow value to be empty
+   */
+  if (value.length === 0) {
+    return
+  }
+
+  /**
+   * Invalid email
+   */
+  if (!isEmail(value)) {
+    errorReporter.report(
+      pointer,
+      'nullableEmail',
+      "Cet email n'est pas valide",
+      arrayExpressionPointer
+    )
+    return
+  }
+}
+
+validator.rule('nullableEmail', validateNullableEmail)

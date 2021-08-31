@@ -20,6 +20,7 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 import Application from '@ioc:Adonis/Core/Application'
+import { Resource } from 'App/Services/ReportService'
 
 /**
  * All params named ":id" should be valid numbers
@@ -65,7 +66,9 @@ Route.group(() => {
   /**
    * Users routes
    */
-  Route.resource('users', 'UsersController').only(['destroy'])
+  Route.resource('users', 'UsersController')
+    .only(['index', 'show', 'update', 'destroy'])
+    .middleware({ index: ['admin'], show: ['admin'], update: ['admin'] })
 
   /**
    * Profiles routes
@@ -102,8 +105,14 @@ Route.group(() => {
   /**
    * Associations routes
    */
-  Route.get('associations', 'AssociationsController.index').as('associations.index')
-  Route.get('associations/:id', 'AssociationsController.show').as('associations.show')
+
+  // CRUD operations for associations
+  Route.resource('associations', 'AssociationsController')
+  // Used to restore an association
+  Route.patch('associations/:id/restore', 'AssociationsController.restore')
+    .middleware('admin')
+    .as('associations.restore')
+
   Route.get('associations/:id/profiles', 'AssociationsController.profiles').as(
     'associations.profiles'
   )
@@ -111,6 +120,14 @@ Route.group(() => {
   /**
    * Reports management routes
    */
+  Route.resource('reports/:resource', 'ReportsController')
+    .where('resource', new RegExp(Object.values(Resource).join('|')))
+    .only(['index', 'show', 'destroy'])
+    .middleware({
+      index: ['admin'],
+      show: ['admin'],
+      destroy: ['admin'],
+    })
   Route.post('profiles/:id/reports', 'ProfilesReportsController.create').as(
     'profiles.reports.create'
   )
@@ -125,19 +142,89 @@ Route.group(() => {
   /**
    * Schools, skills, focus of interests, subjects, tags and thematics routes
    */
-  Route.get('schools', 'SchoolsController.index').as('schools.index')
-  Route.get('skills', 'SkillsController.index').as('skills.index')
-  Route.get('focusInterests', 'FocusInterestsController.index').as('focus_interests.index')
-  Route.get('subjects', 'SubjectsController.index').as('subjects.index')
-  Route.get('tags', 'TagsController.index').as('tags.index')
-  Route.get('thematics', 'ThematicsController.index').as('thematics.index')
+
+  // CRUD operations for schools
+  Route.resource('schools', 'SchoolsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
+  // Used to restore a school
+  Route.patch('schools/:id/restore', 'SchoolsController.restore')
+    .middleware('admin')
+    .as('schools.restore')
+
+  // CRUD operations for skills
+  Route.resource('skills', 'SkillsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
+  // Used to restore a skill
+  Route.patch('skills/:id/restore', 'SkillsController.restore')
+    .middleware('admin')
+    .as('skills.restore')
+
+  // CRUD operations for focus of interests
+  Route.resource('focus_interests', 'FocusInterestsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
+  // Used to restore a focus of interest
+  Route.patch('focus_interests/:id/restore', 'FocusInterestsController.restore')
+    .middleware('admin')
+    .as('focus_interests.restore')
+
+  // CRUD operations for subjects
+  Route.resource('subjects', 'SubjectsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
+  // Used to restore a subject
+  Route.patch('subjects/:id/restore', 'SubjectsController.restore')
+    .middleware('admin')
+    .as('subjects.restore')
+
+  // CRUD operations for tags
+  Route.resource('tags', 'TagsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
+  // Used to restore a tag
+  Route.patch('tags/:id/restore', 'TagsController.restore').middleware('admin').as('tags.restore')
+
+  // CRUD operations for thematics
+  Route.resource('thematics', 'ThematicsController')
+    .apiOnly()
+    .middleware({
+      create: ['admin'],
+      update: ['admin'],
+      destroy: ['admin'],
+    })
+  // Used to restore a thematic
+  Route.patch('thematics/:id/restore', 'ThematicsController.restore')
+    .middleware('admin')
+    .as('thematics.restore')
 
   if (process.env.NODE_ENV === 'development')
     Route.get('uploads/:filename', async ({ response, params }) => {
       response.download(Application.makePath('../storage/uploads', params.filename))
     }).as('getFile')
 })
-  .middleware('auth')
+  .middleware(['auth', 'blocked'])
   .prefix('api/v1')
   .namespace('App/Controllers/Http/Api/v1')
   .as('api.v1')

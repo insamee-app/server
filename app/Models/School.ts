@@ -2,8 +2,10 @@ import { DateTime } from 'luxon'
 import { BaseModel, column, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import Association from './Association'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
-export default class School extends BaseModel {
+export default class School extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
 

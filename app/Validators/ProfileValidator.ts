@@ -1,7 +1,7 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { CurrentRole } from 'App/Models/Profile'
-import { file, profile } from './messages'
+import { profile } from './messages'
 
 export default class ProfileValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -49,10 +49,6 @@ export default class ProfileValidator {
       rules.nullableUrl(),
       rules.regex(new RegExp('twitter', 'i')),
     ]),
-    avatar: schema.file.optional({
-      size: '60kb',
-      extnames: ['jpg', 'png', 'jpeg'],
-    }),
   })
 
   /**
@@ -85,6 +81,5 @@ export default class ProfileValidator {
     'urlTwitter.string': profile.urlTwitter.string,
     'urlTwitter.nullableUrl': profile.urlTwitter.nullableUrl,
     'urlTwitter.regex': profile.urlTwitter.regex,
-    'file.size': file.size,
   }
 }

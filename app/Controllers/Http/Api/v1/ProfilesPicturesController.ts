@@ -5,9 +5,9 @@ import Application from '@ioc:Adonis/Core/Application'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import ProfileValidator from 'App/Validators/ProfileValidator'
 import { Populate } from 'App/Models/Profile'
 import { getProfile, populateProfile } from 'App/Services/ProfileService'
+import ProfilePictureValidator from 'App/Validators/ProfilePictureValidator'
 
 export default class ProfilesPicturesController {
   public async update({ request, params, bouncer }: HttpContextContract) {
@@ -20,7 +20,7 @@ export default class ProfilesPicturesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { avatar } = await request.validate(ProfileValidator)
+    const { avatar } = await request.validate(ProfilePictureValidator)
 
     if (profile.avatar) {
       await unlinkAsync(Application.makePath('../storage/uploads', profile.avatar))

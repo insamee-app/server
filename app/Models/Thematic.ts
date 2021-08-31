@@ -1,7 +1,9 @@
 import { DateTime } from 'luxon'
 import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { compose } from '@ioc:Adonis/Core/Helpers'
+import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 
-export default class Thematic extends BaseModel {
+export default class Thematic extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
 

@@ -6,4 +6,3 @@ coverage
 .env
 .env.testing
 tmp
-uploads

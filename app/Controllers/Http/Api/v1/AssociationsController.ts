@@ -86,7 +86,7 @@ export default class AssociationsController {
         fields: [
           'id',
           'name',
-          'image_url',
+          'url_picture',
           'email',
           'text',
           'created_at',
@@ -127,7 +127,7 @@ export default class AssociationsController {
     }
 
     return association.serialize({
-      fields: ['id', 'name', 'image_url', 'text', 'email'],
+      fields: ['id', 'name', 'url_picture', 'text', 'email'],
       relations: {
         school: {
           fields: ['name'],

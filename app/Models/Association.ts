@@ -34,13 +34,13 @@ export default class Association extends compose(BaseModel, SoftDeletes) {
   public thematic: HasOne<typeof Thematic>
 
   @column()
-  public image: string
+  public picture?: string
 
   @column()
-  public text: string
+  public text?: string
 
   @column()
-  public email: string
+  public email?: string
 
   @column()
   public schoolId: number
@@ -60,12 +60,12 @@ export default class Association extends compose(BaseModel, SoftDeletes) {
   })
   public tags: ManyToMany<typeof Tag>
 
-  @computed({ serializeAs: 'image_url' })
-  public get avatarUrl(): string | null {
-    if (!this.image) return null
+  @computed({ serializeAs: 'url_picture' })
+  public get urlPicture(): string | null {
+    if (!this.picture) return null
 
     if (Application.inDev) {
-      return `${process.env.BACK_HOST}/api/v1/uploads/${this.image}`
+      return `${process.env.BACK_HOST}/uploads/associations/${this.picture}`
     } else return null
   }
 

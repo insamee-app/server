@@ -11,7 +11,7 @@ export default class Profiles extends BaseSchema {
       table.string('last_name', 30).nullable()
       table.string('first_name', 30).nullable()
       table.integer('graduation_year').nullable()
-      table.string('avatar', 40).nullable()
+      table.string('picture', 40).nullable()
       table.integer('school_id').unsigned().notNullable().references('id').inTable('schools')
       table.string('url_facebook').nullable()
       table.string('url_instagram').nullable()

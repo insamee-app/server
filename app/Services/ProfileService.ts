@@ -245,7 +245,7 @@ export async function populateProfile(
 export const profileSerialize: CherryPick = {
   fields: [
     'user_id',
-    'avatar_url',
+    'url_picture',
     'last_name',
     'first_name',
     'graduation_year',
@@ -267,7 +267,7 @@ export const profileSerialize: CherryPick = {
 
 export const profileCardSerialize: CherryPick = {
   fields: {
-    pick: ['user_id', 'avatar_url', 'last_name', 'first_name', 'current_role'],
+    pick: ['user_id', 'url_picture', 'last_name', 'first_name', 'current_role'],
   },
   relations: {},
 }

@@ -64,9 +64,7 @@ export default class Association extends compose(BaseModel, SoftDeletes) {
   public get urlPicture(): string | null {
     if (!this.picture) return null
 
-    if (Application.inDev) {
-      return `${process.env.BACK_HOST}/uploads/associations/${this.picture}`
-    } else return null
+    return `${process.env.BACK_HOST}/uploads/associations/${this.picture}`
   }
 
   @computed({ serializeAs: 'short_text' })

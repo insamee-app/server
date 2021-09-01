@@ -61,7 +61,7 @@ export default class Profile extends compose(BaseModel, SoftDeletes) {
   public firstName?: string
 
   @column()
-  public avatar?: string
+  public picture?: string
 
   @column()
   public graduationYear?: number
@@ -99,20 +99,11 @@ export default class Profile extends compose(BaseModel, SoftDeletes) {
   })
   public tutoratsRegistrations: ManyToMany<typeof Tutorat>
 
-  // @hasManyThrough([() => Skill, () => InsameeProfile], {
-  //   localKey: 'userId',
-  //   foreignKey: 'userId',
-  //   throughForeignKey: 'id',
-  // })
-  // public skills: HasManyThrough<typeof Skill>
+  @computed({ serializeAs: 'url_picture' })
+  public get urlPicture(): string | null {
+    if (!this.picture) return null
 
-  @computed({ serializeAs: 'avatar_url' })
-  public get avatarUrl(): string | null {
-    if (!this.avatar) return null
-
-    if (Application.inDev) {
-      return `${process.env.BACK_HOST}/api/v1/uploads/${this.avatar}`
-    } else return null
+    return `${process.env.BACK_HOST}/uploads/profiles/${this.picture}`
   }
 
   @column.dateTime({ autoCreate: true })

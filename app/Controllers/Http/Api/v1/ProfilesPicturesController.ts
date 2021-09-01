@@ -1,17 +1,22 @@
-import { unlink } from 'fs'
-import { promisify } from 'util'
-const unlinkAsync = promisify(unlink)
-import Application from '@ioc:Adonis/Core/Application'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import { Populate } from 'App/Models/Profile'
-import { getProfile, populateProfile } from 'App/Services/ProfileService'
+import {
+  getProfile,
+  insameeProfileSerialize,
+  populateProfile,
+  profileSerialize,
+} from 'App/Services/ProfileService'
 import ProfilePictureValidator from 'App/Validators/ProfilePictureValidator'
+import Drive from '@ioc:Adonis/Core/Drive'
+import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
 
 export default class ProfilesPicturesController {
+  private FOLDER = 'profiles'
+
   public async update({ request, params, bouncer }: HttpContextContract) {
-    const id = params.id as number
+    const { id } = params
     const profile = await getProfile(id)
 
     try {
@@ -20,26 +25,28 @@ export default class ProfilesPicturesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { avatar } = await request.validate(ProfilePictureValidator)
+    const { picture } = await request.validate(ProfilePictureValidator)
 
-    if (profile.avatar) {
-      await unlinkAsync(Application.makePath('../storage/uploads', profile.avatar))
-    }
+    const filename = profile.picture
+    if (filename) await Drive.delete(`${this.FOLDER}/${filename}`)
 
-    if (avatar) {
-      const filename = `${cuid()}.${avatar.extname}`
-      profile.avatar = filename
-      await avatar.move(Application.makePath('../storage/uploads'), {
-        name: filename,
+    profile.picture = undefined
+
+    if (picture) {
+      const newFilename = `${cuid()}.${picture.extname}`
+      await picture.moveToDisk(this.FOLDER, {
+        name: newFilename,
       })
-    } else {
-      profile.avatar = null as unknown as undefined
+
+      profile.picture = newFilename
     }
 
-    const updatedProfile = await profile.save()
+    await profile.save()
 
-    await populateProfile(updatedProfile, Populate.INSAMEE)
+    await populateProfile(profile, Populate.INSAMEE)
 
-    return updatedProfile
+    const serialization: CherryPick = profileSerialize
+    serialization.relations!.insamee_profile = insameeProfileSerialize
+    return profile.serialize(serialization)
   }
 }

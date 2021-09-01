@@ -27,7 +27,7 @@ export default class ProfilePictureValidator {
   public existsStrict = true
 
   public schema = schema.create({
-    avatar: schema.file.optional({
+    picture: schema.file.optional({
       size: '60kb',
       extnames: ['jpg', 'png', 'jpeg'],
     }),

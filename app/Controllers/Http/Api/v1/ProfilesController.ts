@@ -123,7 +123,7 @@ export default class ProfilesController {
     await populateProfile(profile, populate)
 
     if (
-      platform === Platform.INSAMEE &&
+      (platform === Platform.INSAMEE || platform === Platform.ASSOCIATIONS) &&
       serialize === Serialization.FULL &&
       populate === Populate.INSAMEE
     ) {
@@ -139,9 +139,9 @@ export default class ProfilesController {
       }
 
       return profile
+    } else {
+      return {}
     }
-
-    return profile.serialize(profileSerialize)
   }
 
   public async update({ request, params, bouncer, auth }: HttpContextContract) {

@@ -113,7 +113,7 @@ Route.group(() => {
     .middleware('admin')
     .as('associations.restore')
   // Used to add a picture to an association
-  Route.patch('associations/:id/pictures', 'AssociationsPicturesController.update')
+  Route.patch('associations/:id/picture', 'AssociationsPicturesController.update')
     .middleware('admin')
     .as('associationsPicture.update')
 

@@ -693,17 +693,17 @@ Optional fields
 - `preferredSubjects` as array of numbers
 - `difficultiesSubjects` as array of numbers
 
-#### Update Profiles Picture
+#### Update a Profile Picture
 
-`PATCH /api/v1/profiles/:id/profiles-pictures`
+`PATCH /api/v1/profiles/:id/picture`
 
 Optional field
 
-- `avatar` as file
+- `picture` as file
 
 Authentication required, returns a [profile](#profile)
 
-Authorization: only the owner
+Authorization: only the owner or an admin
 
 #### Get Tutorats
 
@@ -855,6 +855,18 @@ Body
 - `tags` as array of number
 
 Authentication required, returns an [association](#association)
+
+Authorization: admin
+
+#### Update an Association Picture
+
+`PATCH /api/v1/associations/:id/picture`
+
+Optional field
+
+- `picture` as file
+
+Authentication required, returns a [profile](#profile)
 
 Authorization: admin
 

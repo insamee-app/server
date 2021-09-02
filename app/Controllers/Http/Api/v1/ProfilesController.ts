@@ -246,7 +246,7 @@ export default class ProfilesController {
       tutorats.where('type', '=', type)
     }
 
-    const result = await tutorats.paginate(page ?? 1, LIMIT)
+    const result = await tutorats.paginate(page, LIMIT)
 
     return result
   }
@@ -264,7 +264,7 @@ export default class ProfilesController {
       .preload('profile')
       .preload('school')
       .preload('subject')
-      .paginate(page ?? 1, 6)
+      .paginate(page, 6)
 
     return tutorats.serialize(tutoratCardSerialize)
   }

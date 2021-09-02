@@ -1,5 +1,4 @@
 export default {
-  page: { number: 'La page doit être un nombre' },
   name: 'Le nom doit être une chaîne de caractères',
   thematics: {
     array: 'Les thématiques doivent être un tableau',

@@ -1,5 +1,4 @@
 export default {
-  page: { number: 'La page doit être un nombre' },
   currentRole: { enum: "Ce rôle n'est pas valide" },
   type: { enum: "Ce type n'est pas valide" },
   subjects: {

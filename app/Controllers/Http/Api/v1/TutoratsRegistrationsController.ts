@@ -3,13 +3,13 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Profile from 'App/Models/Profile'
 import { insameeProfileCardSerialize, profileCardSerialize } from 'App/Services/ProfileService'
 import { getTutorat } from 'App/Services/TutoratService'
-import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
+import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 
 export default class TutoratsRegistrationsController {
   public async index({ params, request }: HttpContextContract) {
     const { id } = params
 
-    const { page } = await request.validate(TutoratQueryValidator)
+    const { page } = await request.validate(PaginateQueryValidator)
 
     const queryProfiles = Profile.query()
       .whereIn(
@@ -22,7 +22,7 @@ export default class TutoratsRegistrationsController {
       })
       .whereNull('profiles.deleted_at')
 
-    const result = await queryProfiles.paginate(page ?? 1, 6)
+    const result = await queryProfiles.paginate(page, 6)
 
     const serialize = profileCardSerialize
     serialize.relations = { insamee_profile: insameeProfileCardSerialize }

@@ -13,7 +13,6 @@ import {
 import School from './School'
 import Thematic from './Thematic'
 import Tag from './Tag'
-import Application from '@ioc:Adonis/Core/Application'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 

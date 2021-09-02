@@ -13,12 +13,15 @@ import TutoratValidator from 'App/Validators/TutoratValidator'
 import SerializationQueryValidator, {
   Serialization,
 } from 'App/Validators/SerializationQueryValidator'
+import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 
-const LIMIT = 20
 export default class TutoratsController {
+  private LIMIT = 20
+
   public async index({ request }: HttpContextContract) {
     const { serialize } = await request.validate(SerializationQueryValidator)
-    const { page, subjects, currentRole, schools, type, time } = await request.validate(
+    const { page } = await request.validate(PaginateQueryValidator)
+    const { subjects, currentRole, schools, type, time } = await request.validate(
       TutoratQueryValidator
     )
 
@@ -33,7 +36,7 @@ export default class TutoratsController {
       time
     )
 
-    const result = await filteredTutorats.paginate(page ?? 1, LIMIT)
+    const result = await filteredTutorats.paginate(page, this.LIMIT)
 
     if (serialize === Serialization.CARD) return result.serialize(tutoratCardSerialize)
     else return {}

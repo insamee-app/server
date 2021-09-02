@@ -30,7 +30,7 @@ export default class ProfilesPicturesController {
     const filename = profile.picture
     if (filename) await Drive.delete(`${this.FOLDER}/${filename}`)
 
-    profile.picture = undefined
+    profile.picture = null as unknown as undefined
 
     if (picture) {
       const newFilename = `${cuid()}.${picture.extname}`

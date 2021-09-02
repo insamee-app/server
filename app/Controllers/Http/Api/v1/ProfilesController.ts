@@ -104,7 +104,11 @@ export default class ProfilesController {
         throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
       }
       const result = await profiles.withTrashed().paginate(page, LIMIT)
-      return result
+      return result.serialize({
+        fields: {
+          omit: ['picture'],
+        },
+      })
     } else {
       return []
     }

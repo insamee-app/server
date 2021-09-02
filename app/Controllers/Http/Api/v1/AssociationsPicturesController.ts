@@ -24,7 +24,7 @@ export default class AssociationsPicturesController {
     const filename = association.picture
     if (filename) await Drive.delete(`${this.FOLDER}/${filename}`)
 
-    association.picture = undefined
+    association.picture = null as unknown as undefined
 
     if (picture) {
       const newFilename = `${cuid()}.${picture.extname}`

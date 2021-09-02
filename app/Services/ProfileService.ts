@@ -282,7 +282,7 @@ export const insameeProfileSerialize: CherryPick = {
       fields: ['id', 'name'],
     },
     associations: {
-      fields: ['id', 'name', 'image_url'],
+      fields: ['id', 'name', 'url_picture'],
       relations: {
         school: {
           fields: ['name'],
@@ -299,7 +299,7 @@ export const insameeProfileCardSerialize: CherryPick = {
       fields: ['name'],
     },
     associations: {
-      fields: ['name', 'image_url'],
+      fields: ['name', 'url_picture'],
     },
   },
 }

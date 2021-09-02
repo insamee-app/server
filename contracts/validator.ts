@@ -9,5 +9,6 @@ declare module '@ioc:Adonis/Core/Validator' {
     nullableUrl(): Rule
     nullableMobile(): Rule
     nullableEmail(): Rule
+    nullableRegex(option: RegExp): Rule
   }
 }

@@ -229,3 +229,40 @@ async function validateNullableEmail(
 }
 
 validator.rule('nullableEmail', validateNullableEmail)
+
+async function validateNullableRegex(
+  value: string,
+  [option],
+  { pointer, arrayExpressionPointer, errorReporter }: ValidationRuntimeOptions
+) {
+  const regex = new RegExp(option)
+  /**
+   * Ignore non-string values. The user must apply string rule
+   * to validate string.
+   */
+  if (typeof value !== 'string') {
+    return
+  }
+
+  /**
+   * Allow value to be empty
+   */
+  if (value.length === 0) {
+    return
+  }
+
+  /**
+   * Invalid value
+   */
+  if (!regex.test(value)) {
+    errorReporter.report(
+      pointer,
+      'nullableRegex',
+      "Cet valeur n'est pas valable",
+      arrayExpressionPointer
+    )
+    return
+  }
+}
+
+validator.rule('nullableRegex', validateNullableRegex)

@@ -39,15 +39,15 @@ export default class ProfileValidator {
     graduationYear: schema.number.optional([rules.range(1957, this.date.getFullYear() + 5)]),
     urlFacebook: schema.string.optional({ trim: true }, [
       rules.nullableUrl(),
-      rules.regex(new RegExp('facebook', 'i')),
+      rules.nullableRegex(new RegExp('facebook', 'i')),
     ]),
     urlInstagram: schema.string.optional({ trim: true }, [
       rules.nullableUrl(),
-      rules.regex(new RegExp('instagram', 'i')),
+      rules.nullableRegex(new RegExp('instagram', 'i')),
     ]),
     urlTwitter: schema.string.optional({ trim: true }, [
       rules.nullableUrl(),
-      rules.regex(new RegExp('twitter', 'i')),
+      rules.nullableRegex(new RegExp('twitter', 'i')),
     ]),
   })
 
@@ -74,12 +74,12 @@ export default class ProfileValidator {
     'graduationYear.range': profile.graduationYear.range,
     'urlFacebook.string': profile.urlFacebook.string,
     'urlFacebook.nullableUrl': profile.urlFacebook.nullableUrl,
-    'urlFacebook.regex': profile.urlFacebook.regex,
+    'urlFacebook.nullableRegex': profile.urlFacebook.regex,
     'urlInstagram.string': profile.urlInstagram.string,
     'urlInstagram.nullableUrl': profile.urlInstagram.nullableUrl,
-    'urlInstagram.regex': profile.urlInstagram.regex,
+    'urlInstagram.nullableRegex': profile.urlInstagram.regex,
     'urlTwitter.string': profile.urlTwitter.string,
     'urlTwitter.nullableUrl': profile.urlTwitter.nullableUrl,
-    'urlTwitter.regex': profile.urlTwitter.regex,
+    'urlTwitter.nullableRegex': profile.urlTwitter.regex,
   }
 }

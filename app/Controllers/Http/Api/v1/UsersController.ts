@@ -4,10 +4,12 @@ import { getProfile, getInsameeProfile, getTutoratProfile } from 'App/Services/P
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat from 'App/Models/Tutorat'
 import User from 'App/Models/User'
-import UserQueryValidator from 'App/Validators/UserQueryValidator'
 import UserValidator from 'App/Validators/UserValidator'
+import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 
 export default class UsersController {
+  private LIMITE = 20
+
   public async index({ request, bouncer }: HttpContextContract) {
     try {
       await bouncer.with('UserPolicy').authorize('view')
@@ -15,12 +17,9 @@ export default class UsersController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { page } = await request.validate(UserQueryValidator)
+    const { page } = await request.validate(PaginateQueryValidator)
 
-    const users = await User.query()
-      .withTrashed()
-      .orderBy('id', 'asc')
-      .paginate(page ?? 1, 20)
+    const users = await User.query().withTrashed().orderBy('id', 'asc').paginate(page, this.LIMITE)
 
     return users
   }

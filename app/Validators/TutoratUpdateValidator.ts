@@ -28,7 +28,7 @@ export default class TutoratUpdateValidator {
   public schema = schema.create({
     text: schema.string.optional({ trim: true }, [rules.maxLength(2048)]),
     time: schema.number.optional([rules.range(30, 180)]),
-    type: schema.enum.optional(Object.values(TutoratSiting)),
+    siting: schema.enum.optional(Object.values(TutoratSiting)),
   })
 
   /**

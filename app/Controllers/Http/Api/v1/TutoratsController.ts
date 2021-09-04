@@ -6,6 +6,7 @@ import {
   getTutorat,
   loadTutorat,
   tutoratCardSerialize,
+  tutoratSerialize,
 } from 'App/Services/TutoratService'
 import TutoratQueryValidator from 'App/Validators/TutoratQueryValidator'
 import TutoratUpdateValidator from 'App/Validators/TutoratUpdateValidator'
@@ -14,12 +15,14 @@ import SerializationQueryValidator, {
   Serialization,
 } from 'App/Validators/SerializationQueryValidator'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
+import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 
 export default class TutoratsController {
   private LIMIT = 20
 
-  public async index({ request }: HttpContextContract) {
+  public async index({ request, bouncer }: HttpContextContract) {
     const { serialize } = await request.validate(SerializationQueryValidator)
+    const { platform } = await request.validate(PlatformQueryValidator)
     const { page } = await request.validate(PaginateQueryValidator)
     const { subjects, currentRole, schools, type, time } = await request.validate(
       TutoratQueryValidator
@@ -36,38 +39,46 @@ export default class TutoratsController {
       time
     )
 
-    const result = await filteredTutorats.paginate(page, this.LIMIT)
+    if (serialize === Serialization.CARD && platform === Platform.TUTORAT) {
+      const result = await filteredTutorats.paginate(page, this.LIMIT)
 
-    if (serialize === Serialization.CARD) return result.serialize(tutoratCardSerialize)
-    else return {}
+      return result.serialize(tutoratCardSerialize)
+    } else if (platform === Platform.ADMIN) {
+      const result = await filteredTutorats.withTrashed().paginate(page, this.LIMIT)
+
+      try {
+        await bouncer.with('TutoratPolicy').authorize('viewListAdmin')
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+      return result
+    } else return []
   }
 
-  public async show({ params }: HttpContextContract) {
+  public async show({ params, bouncer, request, auth }: HttpContextContract) {
     const { id } = params
+    const { user } = auth
 
-    const tutorat = await getTutorat(id)
+    const { platform } = await request.validate(PlatformQueryValidator)
+    const { serialize } = await request.validate(SerializationQueryValidator)
+
+    const tutorat = await getTutorat(id, user!.isAdmin)
 
     await loadTutorat(tutorat)
 
-    return tutorat.serialize({
-      fields: ['type', 'text', 'time', 'siting'],
-      relations: {
-        school: {
-          fields: ['name'],
-        },
-        subject: {
-          fields: ['name'],
-        },
-        profile: {
-          fields: ['url_picture', 'last_name', 'first_name', 'current_role'],
-          relations: {
-            user: {
-              fields: ['email'],
-            },
-          },
-        },
-      },
-    })
+    if (platform === Platform.TUTORAT && serialize === Serialization.FULL) {
+      return tutorat.serialize(tutoratSerialize)
+    } else if (platform === Platform.ADMIN) {
+      try {
+        await bouncer.with('TutoratPolicy').authorize('showAdmin')
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+
+      return tutorat
+    } else {
+      return {}
+    }
   }
 
   public async store({ auth, request }: HttpContextContract) {
@@ -82,13 +93,14 @@ export default class TutoratsController {
       time: data.type === TutoratType.OFFER ? data.time : (null as unknown as undefined),
       type: data.type ?? (null as unknown as undefined),
       text: data.text,
+      siting: data.type === TutoratType.OFFER ? data.siting : (null as unknown as undefined),
     }
 
     const tutorat = await Tutorat.create(rawTutorat)
 
     await loadTutorat(tutorat)
 
-    return tutorat
+    return tutorat.serialize(tutoratSerialize)
   }
 
   public async update({ params, request, bouncer }: HttpContextContract) {
@@ -102,7 +114,8 @@ export default class TutoratsController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { text, time } = await request.validate(TutoratUpdateValidator)
+    const { text, time, siting } = await request.validate(TutoratUpdateValidator)
+    const { platform } = await request.validate(PlatformQueryValidator)
 
     // We need to always send text and time for an offer. Optional allow us to remove data from a field
     tutorat.merge({
@@ -111,13 +124,27 @@ export default class TutoratsController {
         tutorat.type === TutoratType.OFFER
           ? time || (null as unknown as undefined)
           : (null as unknown as undefined),
+      siting:
+        tutorat.type === TutoratType.OFFER
+          ? siting || (null as unknown as undefined)
+          : (null as unknown as undefined),
     })
 
     await tutorat.save()
 
     await loadTutorat(tutorat)
 
-    return tutorat
+    if (platform === Platform.TUTORAT) {
+      return tutorat.serialize(tutoratSerialize)
+    } else if (platform === Platform.ADMIN) {
+      try {
+        await bouncer.with('TutoratPolicy').authorize('showAdmin')
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+
+      return tutorat
+    }
   }
 
   public async destroy({ params, bouncer }: HttpContextContract) {
@@ -133,8 +160,6 @@ export default class TutoratsController {
 
     await tutorat.delete()
 
-    return {
-      destroy: 'ok',
-    }
+    return tutorat.serialize(tutoratSerialize)
   }
 }

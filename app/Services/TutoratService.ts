@@ -98,8 +98,8 @@ export async function loadTutorat(tutorat: Tutorat): Promise<void> {
   await tutorat.load('subject')
 }
 
-export const tutoratCardSerialize: CherryPick = {
-  fields: ['type', 'short_text', 'time', 'id'],
+export const tutoratSerialize: CherryPick = {
+  fields: ['type', 'text', 'time', 'siting', 'id'],
   relations: {
     school: {
       fields: ['name'],
@@ -108,7 +108,27 @@ export const tutoratCardSerialize: CherryPick = {
       fields: ['name'],
     },
     profile: {
-      fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
+      fields: ['url_picture', 'last_name', 'first_name', 'current_role'],
+      relations: {
+        user: {
+          fields: ['email'],
+        },
+      },
+    },
+  },
+}
+
+export const tutoratCardSerialize: CherryPick = {
+  fields: ['type', 'short_text', 'time', 'id', 'siting'],
+  relations: {
+    school: {
+      fields: ['name'],
+    },
+    subject: {
+      fields: ['name'],
+    },
+    profile: {
+      fields: ['url_picture', 'last_name', 'first_name', 'current_role'],
     },
   },
 }

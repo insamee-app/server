@@ -222,11 +222,6 @@ Route.group(() => {
   Route.patch('thematics/:id/restore', 'ThematicsController.restore')
     .middleware('admin')
     .as('thematics.restore')
-
-  if (process.env.NODE_ENV === 'development')
-    Route.get('uploads/:filename', async ({ response, params }) => {
-      response.download(Application.makePath('../storage/uploads', params.filename))
-    }).as('getFile')
 })
   .middleware(['auth', 'blocked'])
   .prefix('api/v1')

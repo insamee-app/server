@@ -22,6 +22,10 @@ export enum TutoratType {
   DEMAND = 'demande',
 }
 
+export enum TutoratSiting {
+  ONLINE = 'à distance',
+  IN_PERSON = 'en présence',
+}
 export default class Tutorat extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
@@ -58,6 +62,9 @@ export default class Tutorat extends compose(BaseModel, SoftDeletes) {
 
   @column()
   public type: TutoratType
+
+  @column()
+  public siting: TutoratSiting
 
   @manyToMany(() => User, {
     localKey: 'id',

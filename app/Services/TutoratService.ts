@@ -5,22 +5,29 @@ import Tutorat, { TutoratType } from 'App/Models/Tutorat'
 
 /**
  * Get a tutorat by id
- * @throws {NotFoundException} Will thow an error if profil is not found
+ * @throws {NotFoundException} Will throw an error if a tutorat is not found
  */
-export async function getTutorat(id: number): Promise<Tutorat> {
-  const tutorat = await Tutorat.query()
-    .whereExists((query) => {
-      query
-        .from('users')
-        .whereColumn('users.id', 'tutorats.user_id')
-        .where('users.is_verified', true)
-    })
-    .where('id', '=', id)
-    .limit(1)
+export async function getTutorat(id: number, isAdmin: boolean = false): Promise<Tutorat> {
+  let tutorat: Tutorat
+  try {
+    const tutoratQuery = Tutorat.query().where('id', '=', id)
+    // Admins can get a trashed tutorat
+    if (isAdmin) tutoratQuery.withTrashed()
+    // Non-admins can only get a verified tutorat
+    else
+      tutoratQuery.whereExists((query) => {
+        query
+          .from('users')
+          .whereColumn('users.id', 'tutorats.user_id')
+          .where('users.is_verified', true)
+      })
 
-  if (!tutorat[0]) throw new NotFoundException('Tutorat introuvable')
+    tutorat = await tutoratQuery.firstOrFail()
+  } catch (error) {
+    throw new NotFoundException('Tutorat introuvable')
+  }
 
-  return tutorat[0]
+  return tutorat
 }
 
 /**

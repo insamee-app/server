@@ -43,14 +43,14 @@ export default class TutoratsController {
   }
 
   public async show({ params }: HttpContextContract) {
-    const id = params.id as number
+    const { id } = params
 
     const tutorat = await getTutorat(id)
 
     await loadTutorat(tutorat)
 
     return tutorat.serialize({
-      fields: ['type', 'text', 'time'],
+      fields: ['type', 'text', 'time', 'siting'],
       relations: {
         school: {
           fields: ['name'],
@@ -59,7 +59,7 @@ export default class TutoratsController {
           fields: ['name'],
         },
         profile: {
-          fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
+          fields: ['url_picture', 'last_name', 'first_name', 'current_role'],
           relations: {
             user: {
               fields: ['email'],

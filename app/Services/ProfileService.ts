@@ -189,7 +189,7 @@ export async function loadInsameeProfile(profile: Profile): Promise<void> {
         insameeProfile.preload('associations', (association) => {
           association.preload('school')
         })
-        insameeProfile.withTrashed()
+        insameeProfile.withTrashed() // TODO: check for an issue (set admin platform with full)
       })
       .load('school')
       .load('user')
@@ -205,7 +205,7 @@ export async function loadTutoratProfile(profile: Profile): Promise<void> {
       .load('tutoratProfile', (tutoratProfile) => {
         tutoratProfile.preload('difficultiesSubjects')
         tutoratProfile.preload('preferredSubjects')
-        tutoratProfile.withTrashed()
+        tutoratProfile.withTrashed() // TODO: check for an issue (set admin platform with full)
       })
       .load('school')
       .load('user')
@@ -230,9 +230,14 @@ export async function populateProfile(
       await profile.load((loader) => {
         loader
           .load('tutoratProfile', (query) => {
+            query.preload('difficultiesSubjects')
+            query.preload('preferredSubjects')
             query.withTrashed()
           })
           .load('insameeProfile', (query) => {
+            query.preload('skills')
+            query.preload('focusInterests')
+            query.preload('associations')
             query.withTrashed()
           })
       })

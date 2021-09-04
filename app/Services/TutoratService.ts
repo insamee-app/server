@@ -119,7 +119,7 @@ export const tutoratSerialize: CherryPick = {
 }
 
 export const tutoratCardSerialize: CherryPick = {
-  fields: ['type', 'short_text', 'time', 'id', 'siting'],
+  fields: ['type', 'short_text', 'time', 'id', 'siting', 'users_interested_count'],
   relations: {
     school: {
       fields: ['name'],

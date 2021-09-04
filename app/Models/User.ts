@@ -51,10 +51,11 @@ export default class User extends compose(BaseModel, SoftDeletes) {
     pivotForeignKey: 'user_id',
     pivotRelatedForeignKey: 'tutorat_id',
     relatedKey: 'id',
-    pivotTable: 'registration_tutorat',
-    serializeAs: 'tutorats_registrations',
+    pivotTable: 'interest_tutorat',
+    serializeAs: 'tutorat_interested',
+    pivotTimestamps: true,
   })
-  public tutoratsRegistrations: ManyToMany<typeof Tutorat>
+  public tutoratsInterested: ManyToMany<typeof Tutorat>
 
   @beforeSave()
   public static async hashPassword(user: User) {

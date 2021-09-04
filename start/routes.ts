@@ -95,20 +95,22 @@ Route.group(() => {
     .middleware('admin')
     .as('tutorats.restore')
 
+  // Used to manage the interest of tutorials
   Route.group(() => {
-    Route.get('/registrations', 'TutoratsRegistrationsController.index').as('registrations.index')
-    Route.post('/registrations', 'TutoratsRegistrationsController.store').as('registrations.store')
-    Route.delete('/registrations', 'TutoratsRegistrationsController.destroy').as(
-      'registrations.destroy'
-    )
-    Route.get('/registrations/contacts', 'TutoratsRegistrationsController.contact').as(
-      'registrations.contact'
+    // Used to manage the user's interest in a tutorat
+    Route.get('/interested', 'TutoratsInterestsController.index').as('interested.index')
+    Route.post('/interested', 'TutoratsInterestsController.store').as('interested.store')
+    Route.delete('/interested', 'TutoratsInterestsController.destroy').as('interested.destroy')
+
+    // Used to get all emails of users who are interested in a tutorat
+    Route.get('/interested/contacts', 'TutoratsInterestsController.contact').as(
+      'interested.contact'
     )
   })
     .prefix('tutorats/:id')
     .as('tutorats.id')
 
-  Route.get('/registrations/:id', 'RegistrationsController.show').as('registrations.show')
+  // Route.get('/registrations/:id', 'RegistrationsController.show').as('registrations.show')
 
   /**
    * Associations routes

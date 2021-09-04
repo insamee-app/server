@@ -5,10 +5,11 @@ import { insameeProfileCardSerialize, profileCardSerialize } from 'App/Services/
 import { getTutorat } from 'App/Services/TutoratService'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 
-export default class TutoratsRegistrationsController {
+export default class TutoratsInterestsController {
   public async index({ params, request }: HttpContextContract) {
     const { id } = params
 
+    // TODO: Only for creator
     const { page } = await request.validate(PaginateQueryValidator)
 
     const queryProfiles = Profile.query()
@@ -36,7 +37,7 @@ export default class TutoratsRegistrationsController {
     const related = await Database.from('registration_tutorat').where('user_id', user!.id)
     const relatedIds = related.map((r) => r.tutorat_id)
 
-    if (!relatedIds.includes(+id)) await user!.related('tutoratsRegistrations').attach([id])
+    if (!relatedIds.includes(+id)) await user!.related('tutoratsInterested').attach([id])
 
     return {
       registration: 'ok',
@@ -47,7 +48,7 @@ export default class TutoratsRegistrationsController {
     const { user } = auth
     const { id } = params
 
-    await user!.related('tutoratsRegistrations').detach([id])
+    await user!.related('tutoratsInterested').detach([id])
 
     return {
       deregistration: 'ok',
@@ -58,7 +59,7 @@ export default class TutoratsRegistrationsController {
     const { id } = params
 
     const tutorat = await getTutorat(id)
-    const users = await tutorat.related('usersRegistrations').query().select('email')
+    const users = await tutorat.related('usersInterested').query().select('email')
 
     return {
       mailto: `mailto:${users.map((user) => user.email).join(';')}`,

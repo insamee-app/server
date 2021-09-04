@@ -71,10 +71,11 @@ export default class Tutorat extends compose(BaseModel, SoftDeletes) {
     pivotForeignKey: 'tutorat_id',
     pivotRelatedForeignKey: 'user_id',
     relatedKey: 'id',
-    pivotTable: 'registration_tutorat',
-    serializeAs: 'users_registrations',
+    pivotTable: 'interest_tutorat',
+    serializeAs: 'users_interested',
+    pivotTimestamps: true,
   })
-  public usersRegistrations: ManyToMany<typeof User>
+  public usersInterested: ManyToMany<typeof User>
 
   @computed({ serializeAs: 'short_text' })
   public get shortText(): string | null {
@@ -88,4 +89,10 @@ export default class Tutorat extends compose(BaseModel, SoftDeletes) {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  public serializeExtras() {
+    return {
+      users_interested_count: Number(this.$extras.usersInterested_count),
+    }
+  }
 }

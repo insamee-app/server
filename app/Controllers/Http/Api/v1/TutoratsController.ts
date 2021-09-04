@@ -29,6 +29,7 @@ export default class TutoratsController {
     )
 
     const queryTutorats = Tutorat.query()
+      .withCount('usersInterested')
       .preload('school')
       .preload('subject')
       .preload('profile', (profile) => {

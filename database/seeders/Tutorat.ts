@@ -1,7 +1,7 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import School from 'App/Models/School'
 import Subject from 'App/Models/Subject'
-import Tutorat, { TutoratType } from 'App/Models/Tutorat'
+import Tutorat, { TutoratSiting, TutoratType } from 'App/Models/Tutorat'
 import User from 'App/Models/User'
 import { texts } from './utils'
 
@@ -15,7 +15,8 @@ export default class TutoratSeeder extends BaseSeeder {
 
     for (const [index, user] of users.entries()) {
       const type = index % 2 ? TutoratType.OFFER : TutoratType.DEMAND
-      for (let i = 0; i < 3; i++) {
+      const siting = index % 2 ? TutoratSiting.ONLINE : TutoratSiting.IN_PERSON
+      for (let i = 0; i < 4; i++) {
         const value = index + i
         const subjectId = subjects[value % subjects.length].id
         await Tutorat.updateOrCreate(
@@ -27,6 +28,7 @@ export default class TutoratSeeder extends BaseSeeder {
             text: texts[value % texts.length],
             time: type === TutoratType.OFFER ? 90 : undefined,
             type,
+            siting,
             deletedAt: user.deletedAt,
           }
         )

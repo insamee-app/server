@@ -147,8 +147,10 @@ export default class TutoratsController {
     }
   }
 
-  public async destroy({ params, bouncer }: HttpContextContract) {
+  public async destroy({ params, bouncer, request }: HttpContextContract) {
     const { id } = params
+
+    const { platform } = await request.validate(PlatformQueryValidator)
 
     const tutorat = await getTutorat(id)
 
@@ -160,6 +162,18 @@ export default class TutoratsController {
 
     await tutorat.delete()
 
-    return tutorat.serialize(tutoratSerialize)
+    await loadTutorat(tutorat)
+
+    if (platform === Platform.TUTORAT) {
+      return tutorat.serialize(tutoratSerialize)
+    } else if (platform === Platform.ADMIN) {
+      try {
+        await bouncer.with('TutoratPolicy').authorize('showAdmin')
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+
+      return tutorat
+    }
   }
 }

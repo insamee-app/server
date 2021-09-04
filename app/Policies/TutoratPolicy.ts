@@ -20,7 +20,12 @@ export default class TutoratPolicy extends BasePolicy {
   public async update(user: User, tutorat: Tutorat) {
     return user.id === tutorat.userId
   }
+
   public async delete(user: User, tutorat: Tutorat) {
     return user.id === tutorat.userId
+  }
+
+  public async restore() {
+    return false
   }
 }

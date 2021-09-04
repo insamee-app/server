@@ -9,6 +9,7 @@ import {
   profileSerialize,
 } from 'App/Services/ProfileService'
 import ProfilePictureValidator from 'App/Validators/ProfilePictureValidator'
+import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 import Drive from '@ioc:Adonis/Core/Drive'
 import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
 
@@ -26,6 +27,7 @@ export default class ProfilesPicturesController {
     }
 
     const { picture } = await request.validate(ProfilePictureValidator)
+    const { platform } = await request.validate(PlatformQueryValidator)
 
     const filename = profile.picture
     if (filename) await Drive.delete(`${this.FOLDER}/${filename}`)
@@ -44,6 +46,15 @@ export default class ProfilesPicturesController {
     await profile.save()
 
     await populateProfile(profile, Populate.INSAMEE)
+
+    if (platform === Platform.ADMIN) {
+      try {
+        await bouncer.with('ProfilePolicy').authorize('showAdmin')
+      } catch (error) {
+        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+      }
+      return profile
+    }
 
     const serialization: CherryPick = profileSerialize
     serialization.relations!.insamee_profile = insameeProfileSerialize

@@ -87,7 +87,14 @@ Route.group(() => {
   /**
    * Tutorats routes
    */
+
+  // CRUD operations for tutorats
   Route.resource('tutorats', 'TutoratsController').apiOnly()
+  // Used to restore a tutorat
+  Route.patch('tutorats/:id/restore', 'TutoratsController.restore')
+    .middleware('admin')
+    .as('tutorats.restore')
+
   Route.group(() => {
     Route.get('/registrations', 'TutoratsRegistrationsController.index').as('registrations.index')
     Route.post('/registrations', 'TutoratsRegistrationsController.store').as('registrations.store')

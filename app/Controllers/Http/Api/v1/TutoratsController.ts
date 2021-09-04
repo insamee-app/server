@@ -28,7 +28,12 @@ export default class TutoratsController {
       TutoratQueryValidator
     )
 
-    const queryTutorats = Tutorat.query().preload('school').preload('subject').preload('profile')
+    const queryTutorats = Tutorat.query()
+      .preload('school')
+      .preload('subject')
+      .preload('profile', (profile) => {
+        profile.withTrashed()
+      })
 
     const filteredTutorats = filterTutorats(
       queryTutorats,
@@ -103,10 +108,11 @@ export default class TutoratsController {
     return tutorat.serialize(tutoratSerialize)
   }
 
-  public async update({ params, request, bouncer }: HttpContextContract) {
+  public async update({ params, request, bouncer, auth }: HttpContextContract) {
     const { id } = params
+    const { user } = auth
 
-    const tutorat = await getTutorat(id)
+    const tutorat = await getTutorat(id, user!.isAdmin)
 
     try {
       await bouncer.with('TutoratPolicy').authorize('update', tutorat)
@@ -175,5 +181,24 @@ export default class TutoratsController {
 
       return tutorat
     }
+  }
+
+  public async restore({ bouncer, params, auth }: HttpContextContract) {
+    try {
+      await bouncer.with('TutoratPolicy').authorize('restore')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { id } = params
+    const { user } = auth
+
+    const tutorat = await getTutorat(id, user!.isAdmin)
+
+    tutorat.restore()
+
+    await loadTutorat(tutorat)
+
+    return tutorat
   }
 }

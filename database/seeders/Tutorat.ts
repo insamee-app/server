@@ -28,7 +28,7 @@ export default class TutoratSeeder extends BaseSeeder {
             text: texts[value % texts.length],
             time: type === TutoratType.OFFER ? 90 : undefined,
             type,
-            siting,
+            siting: type === TutoratType.OFFER ? siting : undefined,
             deletedAt: user.deletedAt,
           }
         )

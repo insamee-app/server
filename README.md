@@ -920,17 +920,23 @@ Authentication required, returns [multiple-profiles-reports](#multiple-profiles-
 
 Authorization: admin
 
-#### Get Profile Report
+#### Get Report by profile's id
 
 `GET /api/v1/reports/profiles/:id`
+
+Authentication required, returns [reports](#reports)
+
+#### Get Profile Report by report's id
+
+`GET /api/v1/reports/:id/profiles`
 
 Authentication required, returns a [profile-report](#profile-report)
 
 Authorization: admin
 
-#### Destroy Profile Report
+#### Destroy Profile Report by report's id
 
-`DELETE /api/v1/reports/profiles/:id`
+`DELETE /api/v1/reports/:id/profiles`
 
 Authentication required, returns a [profile-report](#profile-report)
 
@@ -948,17 +954,23 @@ Authentication required, returns [multiple-tutorats-reports](#multiple-tutorats-
 
 Authorization: admin
 
-#### Get Tutorat Report
+#### Get Report by tutorat's id
 
 `GET /api/v1/reports/tutorats/:id`
+
+Authentication required, returns [reports](#reports)
+
+#### Get Tutorat Report by report's id
+
+`GET /api/v1/reports/:id/tutorats`
 
 Authentication required, returns a [tutorat-report](#tutorat-report)
 
 Authorization: admin
 
-#### Destroy Tutorat Report
+#### Destroy Tutorat Report by report's id
 
-`DELETE /api/v1/reports/tutorats/:id`
+`DELETE /api/v1/reports/:id/tutorats`
 
 Authentication required, returns a [tutorat-report](#tutorat-report)
 
@@ -976,17 +988,23 @@ Authentication required, returns [multiple-associations-reports](#multiple-assoc
 
 Authorization: admin
 
-#### Get Association Report
+#### Get Report by association's id
 
 `GET /api/v1/reports/associations/:id`
+
+Authentication required, returns [reports](#reports)
+
+#### Get Association Report by report's id
+
+`GET /api/v1/reports/:id/associations`
 
 Authentication required, returns a [association-report](#association-report)
 
 Authorization: admin
 
-#### Destroy Association Report
+#### Destroy Association Report by report's id
 
-`DELETE /api/v1/reports/associations/:id`
+`DELETE /api/v1/reports/:id/associations`
 
 Authentication required, returns a [association-report](#association-report)
 

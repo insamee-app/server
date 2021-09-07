@@ -1,5 +1,5 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, computed, manyToMany, ManyToMany } from '@ioc:Adonis/Lucid/Orm'
 import Subject from './Subject'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
@@ -30,6 +30,15 @@ export default class TutoratProfile extends compose(BaseModel, SoftDeletes) {
     serializeAs: 'difficulties_subjects',
   })
   public difficultiesSubjects: ManyToMany<typeof Subject>
+
+  @computed({ serializeAs: 'short_text' })
+  public get shortText(): string | null {
+    if (!this.text) return null
+
+    if (this.text.length <= 120) return this.text
+
+    return this.text.substring(0, 120) + '...'
+  }
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

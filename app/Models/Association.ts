@@ -70,7 +70,9 @@ export default class Association extends compose(BaseModel, SoftDeletes) {
   public get shortText(): string | null {
     if (!this.text) return null
 
-    return this.text.slice(0, 120) + '...'
+    if (this.text.length <= 120) return this.text
+
+    return this.text.substring(0, 120) + '...'
   }
 
   @column.dateTime({ autoCreate: true })

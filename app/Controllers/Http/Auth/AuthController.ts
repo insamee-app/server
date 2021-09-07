@@ -1,5 +1,6 @@
 import User from 'App/Models/User'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { string } from '@ioc:Adonis/Core/Helpers'
 import BadRequestException from 'App/Exceptions/BadRequestException'
 import School from 'App/Models/School'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
@@ -12,6 +13,7 @@ import LoginValidator from 'App/Validators/LoginValidator'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import InsameeProfile from 'App/Models/InsameeProfile'
 import TutoratProfile from 'App/Models/TutoratProfile'
+import Profile from 'App/Models/Profile'
 
 export default class AuthController {
   public async register({ request }: HttpContextContract) {
@@ -43,7 +45,20 @@ export default class AuthController {
       throw new BadRequestException(`L'utilisateur existe déjà`)
     }
 
-    await user.related('profile').create({ schoolId: school.id, userId: user.id })
+    const profile: Partial<Profile> = {
+      schoolId: school.id,
+      userId: user.id,
+    }
+
+    // Fill profile using the data in the email
+    const extractName = new RegExp(/^(?<firstName>.*)\.(?<lastName>.*)@/, 'i')
+    if (extractName.test(userDetails.email)) {
+      const { firstName, lastName } = extractName.exec(userDetails.email)?.groups!
+      profile.firstName = string.titleCase(firstName.split('_').join(' ')) // remove all _ and capitalize
+      profile.lastName = lastName.split('_').join(' ').toUpperCase() // remove all _ and uppercase
+    }
+
+    await user.related('profile').create(profile)
     await InsameeProfile.create({ userId: user.id })
     await TutoratProfile.create({ userId: user.id })
 

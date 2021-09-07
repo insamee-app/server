@@ -26,6 +26,7 @@ import { Resource } from 'App/Services/ReportService'
  * All params named ":id" should be valid numbers
  */
 Route.where('id', Route.matchers.number())
+Route.where('resource', new RegExp(Object.values(Resource).join('|')))
 
 Route.get('/', async () => {
   return { message: 'API from INSAMEE' }
@@ -124,14 +125,20 @@ Route.group(() => {
   /**
    * Reports management routes
    */
-  Route.resource('reports/:resource', 'ReportsController')
-    .where('resource', new RegExp(Object.values(Resource).join('|')))
-    .only(['index', 'show', 'destroy'])
-    .middleware({
-      index: ['admin'],
-      show: ['admin'],
-      destroy: ['admin'],
-    })
+  // Get all reports for specific resource
+  Route.get('reports/:resource', 'ReportsController.index')
+    .middleware('admin')
+    .as('reports.resources.index')
+  // Get one report by the resource id
+  Route.get('reports/:resource/:id', 'ReportsResourcesController.show').as('reports.resources.show')
+  // Get one specific report for specific resource
+  Route.get('reports/:id/:resource', 'ReportsController.show')
+    .middleware('admin')
+    .as('reports.show')
+  // Delete one specific report for specific resource
+  Route.delete('reports/:id/:resource', 'ReportsController.destroy')
+    .middleware('admin')
+    .as('reports.destroy')
   Route.post('profiles/:id/reports', 'ProfilesReportsController.create').as(
     'profiles.reports.create'
   )

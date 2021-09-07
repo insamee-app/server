@@ -15,6 +15,7 @@ import Thematic from './Thematic'
 import Tag from './Tag'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+import { string } from '@ioc:Adonis/Core/Helpers'
 
 export default class Association extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
@@ -70,9 +71,7 @@ export default class Association extends compose(BaseModel, SoftDeletes) {
   public get shortText(): string | null {
     if (!this.text) return null
 
-    if (this.text.length <= 120) return this.text
-
-    return this.text.substring(0, 120) + '...'
+    return string.truncate(this.text, 120, { completeWords: true })
   }
 
   @column.dateTime({ autoCreate: true })

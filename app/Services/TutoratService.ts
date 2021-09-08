@@ -10,7 +10,7 @@ import Tutorat, { TutoratType } from 'App/Models/Tutorat'
 export async function getTutorat(id: number, isAdmin: boolean = false): Promise<Tutorat> {
   let tutorat: Tutorat
   try {
-    const tutoratQuery = Tutorat.query().where('id', '=', id)
+    const tutoratQuery = Tutorat.query().where('id', '=', id).withCount('usersInterested')
     // Admins can get a trashed tutorat
     if (isAdmin) tutoratQuery.withTrashed()
     // Non-admins can only get a verified tutorat
@@ -99,7 +99,7 @@ export async function loadTutorat(tutorat: Tutorat): Promise<void> {
 }
 
 export const tutoratSerialize: CherryPick = {
-  fields: ['type', 'text', 'time', 'siting', 'id'],
+  fields: ['type', 'text', 'time', 'siting', 'id', 'users_interested_count', 'user_id'],
   relations: {
     school: {
       fields: ['name'],
@@ -108,7 +108,16 @@ export const tutoratSerialize: CherryPick = {
       fields: ['name'],
     },
     profile: {
-      fields: ['url_picture', 'last_name', 'first_name', 'current_role'],
+      fields: [
+        'url_picture',
+        'last_name',
+        'first_name',
+        'current_role',
+        'url_facebook',
+        'url_instagram',
+        'url_twitter',
+        'mobile',
+      ],
       relations: {
         user: {
           fields: ['email'],

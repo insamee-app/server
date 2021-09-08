@@ -297,6 +297,18 @@ export const insameeProfileSerialize: CherryPick = {
   },
 }
 
+export const tutoratProfileSerialize: CherryPick = {
+  fields: ['text'],
+  relations: {
+    preferred_subjects: {
+      fields: ['id', 'name'],
+    },
+    difficulties_subjects: {
+      fields: ['id', 'name'],
+    },
+  },
+}
+
 export const insameeProfileCardSerialize: CherryPick = {
   fields: ['short_text'],
   relations: {

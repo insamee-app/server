@@ -7,6 +7,7 @@ import {
   getTutoratProfile,
   insameeProfileCardSerialize,
   insameeProfileSerialize,
+  tutoratProfileSerialize,
   populateProfile,
   preloadTutoratProfile,
   profileCardSerialize,
@@ -133,6 +134,15 @@ export default class ProfilesController {
     ) {
       const serialization: CherryPick = profileSerialize
       serialization.relations!.insamee_profile = insameeProfileSerialize
+
+      return profile.serialize(serialization)
+    } else if (
+      platform === Platform.TUTORAT &&
+      serialize === Serialization.FULL &&
+      populate === Populate.TUTORAT
+    ) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.tutorat_profile = tutoratProfileSerialize
 
       return profile.serialize(serialization)
     } else if (platform === Platform.ADMIN) {

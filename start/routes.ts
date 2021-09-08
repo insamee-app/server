@@ -19,7 +19,6 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import Application from '@ioc:Adonis/Core/Application'
 import { Resource } from 'App/Services/ReportService'
 
 /**
@@ -97,8 +96,10 @@ Route.group(() => {
 
   // Used to manage the interest of tutorials
   Route.group(() => {
+    // Used to get the list of users that are interested in a tutorial
+    Route.get('/interested/profiles', 'TutoratsInterestsController.index').as('interested.index')
     // Used to manage the user's interest in a tutorat
-    Route.get('/interested', 'TutoratsInterestsController.index').as('interested.index')
+    Route.get('/interested', 'TutoratsInterestsController.show').as('interested.show')
     Route.post('/interested', 'TutoratsInterestsController.store').as('interested.store')
     Route.delete('/interested', 'TutoratsInterestsController.destroy').as('interested.destroy')
 

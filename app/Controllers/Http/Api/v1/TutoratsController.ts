@@ -24,7 +24,7 @@ export default class TutoratsController {
     const { serialize } = await request.validate(SerializationQueryValidator)
     const { platform } = await request.validate(PlatformQueryValidator)
     const { page } = await request.validate(PaginateQueryValidator)
-    const { subjects, currentRole, schools, type, time } = await request.validate(
+    const { subjects, currentRole, schools, type, time, siting } = await request.validate(
       TutoratQueryValidator
     )
 
@@ -42,7 +42,8 @@ export default class TutoratsController {
       type,
       subjects,
       schools,
-      time
+      time,
+      siting
     )
 
     if (serialize === Serialization.CARD && platform === Platform.TUTORAT) {

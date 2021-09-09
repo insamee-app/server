@@ -1,6 +1,6 @@
 import { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
 import User from 'App/Models/User'
-import Tutorat from 'App/Models/Tutorat'
+import Tutorat, { TutoratType } from 'App/Models/Tutorat'
 
 export default class TutoratPolicy extends BasePolicy {
   public before(user: User | null) {
@@ -14,7 +14,7 @@ export default class TutoratPolicy extends BasePolicy {
   }
 
   public viewProfilesList(user: User, tutorat: Tutorat) {
-    return user.id === tutorat.userId
+    return user.id === tutorat.userId && tutorat.type === TutoratType.OFFER
   }
 
   public showAdmin() {

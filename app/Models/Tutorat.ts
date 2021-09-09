@@ -16,6 +16,7 @@ import School from 'App/Models/School'
 import User from './User'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+import { string } from '@ioc:Adonis/Core/Helpers'
 
 export enum TutoratType {
   OFFER = 'offre',
@@ -81,7 +82,7 @@ export default class Tutorat extends compose(BaseModel, SoftDeletes) {
   public get shortText(): string | null {
     if (!this.text) return null
 
-    return this.text.slice(0, 120) + '...'
+    return string.truncate(this.text, 120, { completeWords: true })
   }
 
   @column.dateTime({ autoCreate: true })

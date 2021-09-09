@@ -46,6 +46,10 @@ export default class ProfilesController {
       const serialization: CherryPick = profileSerialize
       serialization.relations!.insamee_profile = insameeProfileSerialize
       return profile.serialize(serialization)
+    } else if (populate === Populate.TUTORAT) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.tutorat_profile = tutoratProfileSerialize
+      return profile.serialize(serialization)
     }
     return {}
   }

@@ -25,9 +25,9 @@ export default class TutoratsInterestsController {
         'user_id',
         Database.from('interest_tutorat').select('user_id').where('tutorat_id', '=', id)
       )
-      .preload('insameeProfile', (insameeProfile) => {
-        insameeProfile.preload('associations')
-        insameeProfile.preload('skills')
+      .preload('insameeProfile', (profile) => {
+        profile.preload('associations')
+        profile.preload('skills')
       })
 
     const result = await queryProfiles.paginate(page, 6)
@@ -81,10 +81,17 @@ export default class TutoratsInterestsController {
     }
   }
 
-  public async contact({ params }: HttpContextContract) {
+  public async contact({ params, bouncer }: HttpContextContract) {
     const { id } = params
 
     const tutorat = await getTutorat(id)
+
+    try {
+      await bouncer.with('TutoratPolicy').authorize('viewProfilesList', tutorat)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
     const users = await tutorat.related('usersInterested').query().select('email')
 
     return {

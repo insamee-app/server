@@ -1,7 +1,7 @@
 import { CherryPick, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import { CurrentRole } from 'App/Models/Profile'
-import Tutorat, { TutoratType } from 'App/Models/Tutorat'
+import Tutorat, { TutoratSiting, TutoratType } from 'App/Models/Tutorat'
 
 /**
  * Get a tutorat by id
@@ -39,7 +39,8 @@ export function filterTutorats(
   type: TutoratType | undefined,
   subjects: Array<number> | undefined,
   schools: Array<number> | undefined,
-  time: number | undefined
+  time: number | undefined,
+  siting: TutoratSiting | undefined
 ): ModelQueryBuilderContract<typeof Tutorat, Tutorat> {
   // Get only tutorats where user is verified (but a tutorat can't be created by an unverified user, except in dev)
   tutorats.whereExists((query) => {
@@ -66,6 +67,9 @@ export function filterTutorats(
     })
     .if(schools, (query) => {
       query.whereIn('school_id', schools!)
+    })
+    .if(siting, (query) => {
+      query.where('siting', '=', siting!)
     })
 
   return tutorats
@@ -109,6 +113,7 @@ export const tutoratSerialize: CherryPick = {
     },
     profile: {
       fields: [
+        'user_id',
         'url_picture',
         'last_name',
         'first_name',

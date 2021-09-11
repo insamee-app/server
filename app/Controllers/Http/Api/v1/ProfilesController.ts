@@ -255,13 +255,11 @@ export default class ProfilesController {
       .preload('subject')
       .preload('school')
       .preload('profile')
-
-    if (type) {
-      tutorats.where('type', '=', type)
-    }
+      .if(type, (query) => query.where('type', '=', type!))
 
     const result = await tutorats.paginate(page, LIMIT)
 
+    // TODO: Need serialization
     return result
   }
 

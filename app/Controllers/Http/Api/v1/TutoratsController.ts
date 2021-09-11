@@ -105,6 +105,10 @@ export default class TutoratsController {
 
     const tutorat = await Tutorat.create(rawTutorat)
 
+    if (tutorat.type === TutoratType.DEMAND) {
+      await tutorat.related('usersInterested').attach([user!.id])
+    }
+
     await loadTutorat(tutorat)
 
     return tutorat.serialize(tutoratSerialize)

@@ -16,6 +16,8 @@ import SerializationQueryValidator, {
 } from 'App/Validators/SerializationQueryValidator'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
+import Database from '@ioc:Adonis/Lucid/Database'
+import InterestedInOfferEmail from 'App/Mailers/InterestedInOfferEmail'
 
 export default class TutoratsController {
   private LIMIT = 20
@@ -110,6 +112,38 @@ export default class TutoratsController {
     }
 
     await loadTutorat(tutorat)
+
+    // Send email to users who are interested in an demand when an offer is created
+    if (data.type === TutoratType.OFFER) {
+      // Used to get all users that are interested in a demand using subject and school from request
+      const users = await Database.from('users')
+        .whereIn(
+          'id',
+          // Get all users ids
+          Database.from('interest_tutorat')
+            .whereIn(
+              'interest_tutorat.tutorat_id',
+              // Get all tutorats ids that are related to the request (demands only)
+              Database.from('tutorats')
+                .where('tutorats.subject_id', '=', data.subject)
+                .where('tutorats.school_id', '=', data.school)
+                .where('tutorats.type', '=', TutoratType.DEMAND)
+                .select('id')
+            )
+            .distinct('user_id')
+        )
+        // Only users that wants to receive an email
+        .where('email_interested_tutorat', true)
+        .innerJoin('profiles', 'profiles.user_id', '=', 'users.id')
+        .select('users.email', 'profiles.first_name')
+
+      if (users.length > 0) {
+        // Send email to all users
+        users.forEach(async (user) => {
+          await new InterestedInOfferEmail(tutorat, user).sendLater()
+        })
+      }
+    }
 
     return tutorat.serialize(tutoratSerialize)
   }

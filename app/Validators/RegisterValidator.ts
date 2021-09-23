@@ -38,6 +38,7 @@ export default class RegisterValidator {
       rules.school(),
     ]),
     password: schema.string({ trim: true }, [rules.confirmed(), rules.isPasswordValid()]),
+    receiveEmail: schema.boolean(),
   })
 
   public cacheKey = this.ctx.routeKey

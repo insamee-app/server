@@ -40,6 +40,9 @@ export default class User extends compose(BaseModel, SoftDeletes) {
   @column()
   public isBlocked: boolean
 
+  @column()
+  public emailInterestedTutorat: boolean
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

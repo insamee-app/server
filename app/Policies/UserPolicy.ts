@@ -12,9 +12,14 @@ export default class UserPolicy extends BasePolicy {
     return false
   }
 
-  public async update() {
+  public async update(user: User, toCheckUser: User) {
+    return user.id === toCheckUser.id
+  }
+
+  public async updateAdmin() {
     return false
   }
+
   public async destroy(user: User, toCheckUser: User) {
     return user.id === toCheckUser.id
   }

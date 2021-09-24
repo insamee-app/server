@@ -68,7 +68,7 @@ Route.group(() => {
    */
   Route.resource('users', 'UsersController')
     .only(['index', 'show', 'update', 'destroy'])
-    .middleware({ index: ['admin'], show: ['admin'], update: ['admin'] })
+    .middleware({ index: ['admin'], show: ['admin'] })
 
   /**
    * Profiles routes

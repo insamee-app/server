@@ -40,20 +40,27 @@ export default class UsersController {
   }
 
   public async update({ auth, params, request, bouncer }: HttpContextContract) {
+    const { user: authenticatedUser } = auth
+
+    const { id } = params
+    const user = await getUser(id, authenticatedUser?.isAdmin)
+
     try {
-      await bouncer.with('UserPolicy').authorize('update')
+      await bouncer.with('UserPolicy').authorize('update', user)
     } catch (error) {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
-    const { user: authenticatedUser } = auth
-    const { id } = params
+    const { isVerified, isBlocked, isAdmin, emailInterestedTutorat } = await request.validate(
+      UserValidator
+    )
 
-    const user = await getUser(id, authenticatedUser?.isAdmin)
+    if (await bouncer.with('UserPolicy').allows('updateAdmin')) {
+      user.merge({ isVerified, isBlocked, isAdmin })
+    }
 
-    const { isVerified, isBlocked, isAdmin } = await request.validate(UserValidator)
+    user.merge({ emailInterestedTutorat })
 
-    user.merge({ isVerified, isBlocked, isAdmin })
     await user.save()
 
     return user

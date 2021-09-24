@@ -264,7 +264,7 @@ export const profileSerialize: CherryPick = {
   ],
   relations: {
     user: {
-      fields: ['email'],
+      fields: ['email', 'email_interested_tutorat'],
     },
     school: {
       fields: ['id', 'name'],

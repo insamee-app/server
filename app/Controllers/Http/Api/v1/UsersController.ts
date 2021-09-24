@@ -6,6 +6,7 @@ import Tutorat from 'App/Models/Tutorat'
 import User from 'App/Models/User'
 import UserValidator from 'App/Validators/UserValidator'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
+import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 
 export default class UsersController {
   private LIMITE = 20
@@ -51,6 +52,7 @@ export default class UsersController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
+    const { platform } = await request.validate(PlatformQueryValidator)
     const { isVerified, isBlocked, isAdmin, emailInterestedTutorat } = await request.validate(
       UserValidator
     )
@@ -63,7 +65,13 @@ export default class UsersController {
 
     await user.save()
 
-    return user
+    if (platform === Platform.ADMIN && (await bouncer.with('UserPolicy').allows('updateAdmin'))) {
+      return user
+    }
+
+    return user.serialize({
+      fields: ['email', 'email_interested_tutorat'],
+    })
   }
 
   public async destroy({ auth, params, bouncer }: HttpContextContract) {

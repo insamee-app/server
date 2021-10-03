@@ -52,14 +52,12 @@ export default class TutoratsController {
       const result = await filteredTutorats.paginate(page, this.LIMIT)
 
       return result.serialize(tutoratCardSerialize)
-    } else if (platform === Platform.ADMIN) {
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('TutoratPolicy').allows('viewListAdmin'))
+    ) {
       const result = await filteredTutorats.withTrashed().paginate(page, this.LIMIT)
 
-      try {
-        await bouncer.with('TutoratPolicy').authorize('viewListAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
       return result
     } else return []
   }
@@ -77,13 +75,10 @@ export default class TutoratsController {
 
     if (platform === Platform.TUTORAT && serialize === Serialization.FULL) {
       return tutorat.serialize(tutoratSerialize)
-    } else if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('TutoratPolicy').authorize('showAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('TutoratPolicy').allows('showAdmin'))
+    ) {
       return tutorat
     } else {
       return {}
@@ -182,14 +177,13 @@ export default class TutoratsController {
 
     if (platform === Platform.TUTORAT) {
       return tutorat.serialize(tutoratSerialize)
-    } else if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('TutoratPolicy').authorize('showAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('TutoratPolicy').allows('showAdmin'))
+    ) {
       return tutorat
+    } else {
+      return {}
     }
   }
 
@@ -212,14 +206,13 @@ export default class TutoratsController {
 
     if (platform === Platform.TUTORAT) {
       return tutorat.serialize(tutoratSerialize)
-    } else if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('TutoratPolicy').authorize('showAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('TutoratPolicy').allows('showAdmin'))
+    ) {
       return tutorat
+    } else {
+      return {}
     }
   }
 

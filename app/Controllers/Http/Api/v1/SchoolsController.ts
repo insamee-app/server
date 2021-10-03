@@ -11,25 +11,19 @@ export default class SchoolsController {
 
     const schools = School.query().orderBy('name')
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('SchoolPolicy').authorize('viewAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    if (platform === Platform.ADMIN && (await bouncer.with('SchoolPolicy').allows('viewAdmin'))) {
       return await schools.withTrashed()
+    } else {
+      const schoolsJSON = (await schools).map((school) =>
+        school.serialize({
+          fields: {
+            pick: ['id', 'name'],
+          },
+        })
+      )
+
+      return schoolsJSON
     }
-
-    const schoolsJSON = (await schools).map((school) =>
-      school.serialize({
-        fields: {
-          pick: ['id', 'name'],
-        },
-      })
-    )
-
-    return schoolsJSON
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

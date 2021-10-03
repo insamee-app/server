@@ -11,25 +11,19 @@ export default class ThematicsController {
 
     const thematics = Thematic.query().orderBy('name')
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('ThematicPolicy').authorize('viewAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    if (platform === Platform.ADMIN && (await bouncer.with('ThematicPolicy').allows('viewAdmin'))) {
       return await thematics.withTrashed()
+    } else {
+      const thematicsJSON = (await thematics).map((thematic) =>
+        thematic.serialize({
+          fields: {
+            pick: ['id', 'name'],
+          },
+        })
+      )
+
+      return thematicsJSON
     }
-
-    const thematicsJSON = (await thematics).map((thematic) =>
-      thematic.serialize({
-        fields: {
-          pick: ['id', 'name'],
-        },
-      })
-    )
-
-    return thematicsJSON
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

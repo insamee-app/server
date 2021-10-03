@@ -11,25 +11,19 @@ export default class SubjectsController {
 
     const subjects = Subject.query().orderBy('name')
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('SubjectPolicy').authorize('viewAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    if (platform === Platform.ADMIN && (await bouncer.with('SubjectPolicy').allows('viewAdmin'))) {
       return await subjects.withTrashed()
+    } else {
+      const subjectsJSON = (await subjects).map((subject) =>
+        subject.serialize({
+          fields: {
+            pick: ['id', 'name'],
+          },
+        })
+      )
+
+      return subjectsJSON
     }
-
-    const subjectsJSON = (await subjects).map((subject) =>
-      subject.serialize({
-        fields: {
-          pick: ['id', 'name'],
-        },
-      })
-    )
-
-    return subjectsJSON
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

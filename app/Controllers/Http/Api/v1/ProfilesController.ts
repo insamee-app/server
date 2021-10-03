@@ -102,12 +102,10 @@ export default class ProfilesController {
       const serialization: CherryPick = profileCardSerialize
       serialization.relations!.insamee_profile = insameeProfileCardSerialize
       return result.serialize(serialization)
-    } else if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('ProfilePolicy').authorize('viewListAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('ProfilePolicy').allows('viewListAdmin'))
+    ) {
       const result = await profiles.withTrashed().paginate(page, LIMIT)
       return result.serialize({
         fields: {
@@ -149,13 +147,10 @@ export default class ProfilesController {
       serialization.relations!.tutorat_profile = tutoratProfileSerialize
 
       return profile.serialize(serialization)
-    } else if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('ProfilePolicy').authorize('showAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('ProfilePolicy').allows('showAdmin'))
+    ) {
       return profile
     } else {
       return {}

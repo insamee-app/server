@@ -11,25 +11,19 @@ export default class SkillsController {
 
     const skills = Skill.query().orderBy('name')
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('SkillPolicy').authorize('viewAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    if (platform === Platform.ADMIN && (await bouncer.with('SkillPolicy').allows('viewAdmin'))) {
       return await skills.withTrashed()
+    } else {
+      const skillsJSON = (await skills).map((skill) =>
+        skill.serialize({
+          fields: {
+            pick: ['id', 'name'],
+          },
+        })
+      )
+
+      return skillsJSON
     }
-
-    const skillsJSON = (await skills).map((skill) =>
-      skill.serialize({
-        fields: {
-          pick: ['id', 'name'],
-        },
-      })
-    )
-
-    return skillsJSON
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

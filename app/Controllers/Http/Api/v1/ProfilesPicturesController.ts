@@ -47,17 +47,12 @@ export default class ProfilesPicturesController {
 
     await populateProfile(profile, Populate.INSAMEE)
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('ProfilePolicy').authorize('showAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
+    if (platform === Platform.ADMIN && (await bouncer.with('ProfilePolicy').allows('showAdmin'))) {
       return profile
+    } else {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.insamee_profile = insameeProfileSerialize
+      return profile.serialize(serialization)
     }
-
-    const serialization: CherryPick = profileSerialize
-    serialization.relations!.insamee_profile = insameeProfileSerialize
-    return profile.serialize(serialization)
   }
 }

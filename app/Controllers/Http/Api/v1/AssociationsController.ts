@@ -1,7 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-
 import Association from 'App/Models/Association'
 import Profile from 'App/Models/Profile'
 import {
@@ -22,7 +21,7 @@ import SerializationQueryValidator, {
 export default class AssociationsController {
   private LIMITE = 20
 
-  public async index({ request }: HttpContextContract) {
+  public async index({ request, bouncer }: HttpContextContract) {
     const { serialize } = await request.validate(SerializationQueryValidator)
     const { platform } = await request.validate(PlatformQueryValidator)
 
@@ -73,7 +72,10 @@ export default class AssociationsController {
       )
 
       return associationsJSON
-    } else if (platform === Platform.ADMIN) {
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('AssociationPolicy').allows('viewAdmin'))
+    ) {
       const { page } = await request.validate(PaginateQueryValidator)
 
       const associations = await Association.withTrashed()
@@ -116,30 +118,27 @@ export default class AssociationsController {
 
     await loadAssociation(association)
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('AssociationPolicy').authorize('showAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('AssociationPolicy').allows('showAdmin'))
+    ) {
       return association
+    } else {
+      return association.serialize({
+        fields: ['id', 'name', 'url_picture', 'text', 'email'],
+        relations: {
+          school: {
+            fields: ['name'],
+          },
+          thematic: {
+            fields: ['name'],
+          },
+          tags: {
+            fields: ['name'],
+          },
+        },
+      })
     }
-
-    return association.serialize({
-      fields: ['id', 'name', 'url_picture', 'text', 'email'],
-      relations: {
-        school: {
-          fields: ['name'],
-        },
-        thematic: {
-          fields: ['name'],
-        },
-        tags: {
-          fields: ['name'],
-        },
-      },
-    })
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

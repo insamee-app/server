@@ -39,5 +39,8 @@ export default class ResourceQueryValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'resource.required': 'Cette ressource est requise',
+    'resource.enum': "Cette ressource n'est pas valide",
+  }
 }

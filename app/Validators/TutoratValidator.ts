@@ -53,16 +53,18 @@ export default class TutoratValidator {
    *
    */
   public messages = {
-    //  TODO: required fields
+    'text.required': tutorat.text.required,
     'text.string': tutorat.text.string,
     'text.maxLength': tutorat.text.maxLength,
     'subject.array': tutorat.subject.array,
     'subject.*.number': tutorat.subject.number,
     'subject.*.exists': tutorat.subject.exists,
+    'school.required': tutorat.school.required,
     'school.number': tutorat.school.number,
     'school.exists': tutorat.school.exists,
     'time.number': tutorat.time.number,
     'time.range': tutorat.time.range,
+    'type.required': tutorat.type.required,
     'type.enum': tutorat.type.enum,
   }
 }

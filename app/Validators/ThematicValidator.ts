@@ -1,5 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { thematic } from './messages'
 
 export default class ThematicValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -38,5 +39,9 @@ export default class ThematicValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'name.required': thematic.name.required,
+    'name.string': thematic.name.string,
+    'name.unique': thematic.name.unique,
+  }
 }

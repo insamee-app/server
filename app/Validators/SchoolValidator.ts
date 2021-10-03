@@ -39,5 +39,11 @@ export default class SchoolValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'name.required': 'Un nom est est requis',
+    'name.string': 'Le nom doit être une chaîne de caractères.',
+    'host.required': "Un nom d'hôte est requis",
+    'host.string': "Le nom d'hôte doit être une chaîne de caractères.",
+    'host.unique': "Ce nom d'hôte existe déjà",
+  }
 }

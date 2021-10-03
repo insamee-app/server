@@ -1,5 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { tag } from './messages'
 
 export default class TagValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -38,5 +39,9 @@ export default class TagValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'name.required': tag.name.required,
+    'name.string': tag.name.string,
+    'name.unique': tag.name.unique,
+  }
 }

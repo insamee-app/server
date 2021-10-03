@@ -1,7 +1,7 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
-import { email } from './messages'
+import { auth } from './messages'
 
 export default class SendVerifyEmailValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -45,10 +45,10 @@ export default class SendVerifyEmailValidator {
    *
    */
   public messages = {
-    'email.required': email.required,
-    'email.string': email.string,
-    'email.email': email.email,
-    'email.exists': email.exists,
-    'email.isUserVerified': email.isUserVerified.unverified,
+    'email.required': auth.email.required,
+    'email.string': auth.email.string,
+    'email.email': auth.email.email,
+    'email.exists': auth.email.exists,
+    'email.isUserVerified': auth.email.isUserVerified.unverified,
   }
 }

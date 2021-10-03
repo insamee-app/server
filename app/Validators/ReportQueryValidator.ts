@@ -1,5 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { reportQuery } from './messages'
 
 export default class ReportValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -40,5 +41,10 @@ export default class ReportValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'withTrashed.boolean': reportQuery.withTrashed.boolean,
+    'sortBy.string': reportQuery.sortBy.string,
+    'orderBy.required': reportQuery.orderBy.required,
+    'orderBy.enum': reportQuery.orderBy.enum,
+  }
 }

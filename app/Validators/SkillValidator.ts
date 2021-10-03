@@ -1,5 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { skill } from './messages'
 
 export default class SkillValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -38,5 +39,9 @@ export default class SkillValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'name.required': skill.name.required,
+    'name.string': skill.name.string,
+    'name.unique': skill.name.unique,
+  }
 }

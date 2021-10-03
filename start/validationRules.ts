@@ -8,9 +8,7 @@
 |
 */
 import { ValidationRuntimeOptions, validator } from '@ioc:Adonis/Core/Validator'
-import isUrl from 'validator/lib/isUrl'
-import isMobilePhone from 'validator/lib/isMobilePhone'
-import isEmail from 'validator/lib/isEmail'
+import validatorjs from 'validator'
 import School from 'App/Models/School'
 import User from 'App/Models/User'
 
@@ -145,7 +143,7 @@ async function validateNullableUrl(
   /**
    * Invalid url
    */
-  if (!isUrl(value)) {
+  if (!validatorjs.isURL(value)) {
     errorReporter.report(
       pointer,
       'nullableUrl',
@@ -181,7 +179,7 @@ async function validateNullableMobile(
   /**
    * Invalid mobile
    */
-  if (!isMobilePhone(value, 'fr-FR')) {
+  if (!validatorjs.isMobilePhone(value, 'fr-FR')) {
     errorReporter.report(
       pointer,
       'nullableMobile',
@@ -217,7 +215,7 @@ async function validateNullableEmail(
   /**
    * Invalid email
    */
-  if (!isEmail(value)) {
+  if (!validatorjs.isEmail(value)) {
     errorReporter.report(
       pointer,
       'nullableEmail',

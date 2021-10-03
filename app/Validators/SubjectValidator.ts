@@ -1,5 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { subject } from './messages'
 
 export default class SubjectValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -38,5 +39,9 @@ export default class SubjectValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'name.required': subject.name.required,
+    'name.string': subject.name.string,
+    'name.unique': subject.name.unique,
+  }
 }

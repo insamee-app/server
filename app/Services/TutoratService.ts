@@ -1,26 +1,33 @@
 import { CherryPick, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
 import { CurrentRole } from 'App/Models/Profile'
-import Tutorat, { TutoratType } from 'App/Models/Tutorat'
+import Tutorat, { TutoratSiting, TutoratType } from 'App/Models/Tutorat'
 
 /**
  * Get a tutorat by id
- * @throws {NotFoundException} Will thow an error if profil is not found
+ * @throws {NotFoundException} Will throw an error if a tutorat is not found
  */
-export async function getTutorat(id: number): Promise<Tutorat> {
-  const tutorat = await Tutorat.query()
-    .whereExists((query) => {
-      query
-        .from('users')
-        .whereColumn('users.id', 'tutorats.user_id')
-        .where('users.is_verified', true)
-    })
-    .where('id', '=', id)
-    .limit(1)
+export async function getTutorat(id: number, isAdmin: boolean = false): Promise<Tutorat> {
+  let tutorat: Tutorat
+  try {
+    const tutoratQuery = Tutorat.query().where('id', '=', id).withCount('usersInterested')
+    // Admins can get a trashed tutorat
+    if (isAdmin) tutoratQuery.withTrashed()
+    // Non-admins can only get a verified tutorat
+    else
+      tutoratQuery.whereExists((query) => {
+        query
+          .from('users')
+          .whereColumn('users.id', 'tutorats.user_id')
+          .where('users.is_verified', true)
+      })
 
-  if (!tutorat[0]) throw new NotFoundException('Tutorat introuvable')
+    tutorat = await tutoratQuery.firstOrFail()
+  } catch (error) {
+    throw new NotFoundException('Tutorat introuvable')
+  }
 
-  return tutorat[0]
+  return tutorat
 }
 
 /**
@@ -32,7 +39,8 @@ export function filterTutorats(
   type: TutoratType | undefined,
   subjects: Array<number> | undefined,
   schools: Array<number> | undefined,
-  time: number | undefined
+  time: number | undefined,
+  siting: TutoratSiting | undefined
 ): ModelQueryBuilderContract<typeof Tutorat, Tutorat> {
   // Get only tutorats where user is verified (but a tutorat can't be created by an unverified user, except in dev)
   tutorats.whereExists((query) => {
@@ -59,6 +67,9 @@ export function filterTutorats(
     })
     .if(schools, (query) => {
       query.whereIn('school_id', schools!)
+    })
+    .if(siting, (query) => {
+      query.where('siting', '=', siting!)
     })
 
   return tutorats
@@ -91,8 +102,38 @@ export async function loadTutorat(tutorat: Tutorat): Promise<void> {
   await tutorat.load('subject')
 }
 
+export const tutoratSerialize: CherryPick = {
+  fields: ['type', 'text', 'time', 'siting', 'id', 'users_interested_count', 'user_id'],
+  relations: {
+    school: {
+      fields: ['id', 'name'],
+    },
+    subject: {
+      fields: ['id', 'name'],
+    },
+    profile: {
+      fields: [
+        'user_id',
+        'url_picture',
+        'last_name',
+        'first_name',
+        'current_role',
+        'url_facebook',
+        'url_instagram',
+        'url_twitter',
+        'mobile',
+      ],
+      relations: {
+        user: {
+          fields: ['email'],
+        },
+      },
+    },
+  },
+}
+
 export const tutoratCardSerialize: CherryPick = {
-  fields: ['type', 'short_text', 'time', 'id'],
+  fields: ['type', 'short_text', 'time', 'id', 'siting', 'users_interested_count'],
   relations: {
     school: {
       fields: ['name'],
@@ -101,7 +142,7 @@ export const tutoratCardSerialize: CherryPick = {
       fields: ['name'],
     },
     profile: {
-      fields: ['avatar_url', 'last_name', 'first_name', 'current_role'],
+      fields: ['url_picture', 'last_name', 'first_name', 'current_role'],
     },
   },
 }

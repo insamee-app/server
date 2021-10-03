@@ -1,5 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { focusInterest } from './messages'
 
 export default class FocusInterestValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -40,5 +41,9 @@ export default class FocusInterestValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'name.required': focusInterest.name.required,
+    'name.string': focusInterest.name.string,
+    'name.unique': focusInterest.name.unique,
+  }
 }

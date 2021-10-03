@@ -7,6 +7,7 @@ import {
   getTutoratProfile,
   insameeProfileCardSerialize,
   insameeProfileSerialize,
+  tutoratProfileSerialize,
   populateProfile,
   preloadTutoratProfile,
   profileCardSerialize,
@@ -23,7 +24,7 @@ import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
 import SerializationQueryValidator, {
   Serialization,
 } from 'App/Validators/SerializationQueryValidator'
-import { tutoratCardSerialize } from 'App/Services/TutoratService'
+import { filterTutorats, tutoratCardSerialize } from 'App/Services/TutoratService'
 import Database from '@ioc:Adonis/Lucid/Database'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 import PopulateQueryValidator from 'App/Validators/PopulateQueryValidator'
@@ -44,6 +45,10 @@ export default class ProfilesController {
     if (populate === Populate.INSAMEE) {
       const serialization: CherryPick = profileSerialize
       serialization.relations!.insamee_profile = insameeProfileSerialize
+      return profile.serialize(serialization)
+    } else if (populate === Populate.TUTORAT) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.tutorat_profile = tutoratProfileSerialize
       return profile.serialize(serialization)
     }
     return {}
@@ -97,12 +102,10 @@ export default class ProfilesController {
       const serialization: CherryPick = profileCardSerialize
       serialization.relations!.insamee_profile = insameeProfileCardSerialize
       return result.serialize(serialization)
-    } else if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('ProfilePolicy').authorize('viewListAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('ProfilePolicy').allows('viewListAdmin'))
+    ) {
       const result = await profiles.withTrashed().paginate(page, LIMIT)
       return result.serialize({
         fields: {
@@ -135,13 +138,19 @@ export default class ProfilesController {
       serialization.relations!.insamee_profile = insameeProfileSerialize
 
       return profile.serialize(serialization)
-    } else if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('ProfilePolicy').authorize('showAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
+    } else if (
+      platform === Platform.TUTORAT &&
+      serialize === Serialization.FULL &&
+      populate === Populate.TUTORAT
+    ) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.tutorat_profile = tutoratProfileSerialize
 
+      return profile.serialize(serialization)
+    } else if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('ProfilePolicy').allows('showAdmin'))
+    ) {
       return profile
     } else {
       return {}
@@ -225,8 +234,17 @@ export default class ProfilesController {
 
     await populateProfile(updatedProfile, populate)
 
-    // TODO: Need serialization
-    return updatedProfile
+    if (populate === Populate.INSAMEE) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.insamee_profile = insameeProfileSerialize
+
+      return profile.serialize(serialization)
+    } else if (populate === Populate.TUTORAT) {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.tutorat_profile = tutoratProfileSerialize
+
+      return profile.serialize(serialization)
+    }
   }
 
   public async tutorats({ params, request }: HttpContextContract) {
@@ -234,21 +252,29 @@ export default class ProfilesController {
 
     const { page } = await request.validate(PaginateQueryValidator)
 
-    const { type } = await request.validate(TutoratQueryValidator)
+    const { subjects, currentRole, schools, type, time, siting } = await request.validate(
+      TutoratQueryValidator
+    )
 
-    const tutorats = Tutorat.query()
+    const queryTutorats = Tutorat.query()
       .where('user_id', '=', id)
       .preload('subject')
       .preload('school')
       .preload('profile')
 
-    if (type) {
-      tutorats.where('type', '=', type)
-    }
+    const filteredTutorats = filterTutorats(
+      queryTutorats,
+      currentRole,
+      type,
+      subjects,
+      schools,
+      time,
+      siting
+    )
 
-    const result = await tutorats.paginate(page, LIMIT)
+    const result = await filteredTutorats.paginate(page, LIMIT)
 
-    return result
+    return result.serialize(tutoratCardSerialize)
   }
 
   public async tutoratsRegistrations({ auth, request }: HttpContextContract) {

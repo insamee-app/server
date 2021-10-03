@@ -1,7 +1,7 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { CurrentRole } from 'App/Models/Profile'
-import { insameeQuery } from './messages'
+import { insameeProfileQuery } from './messages'
 
 export default class InsameeProfileQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -45,12 +45,12 @@ export default class InsameeProfileQueryValidator {
    *
    */
   public messages = {
-    'currentRole.enum': insameeQuery.currentRole.enum,
-    'skills.*.number': insameeQuery.skills.number,
-    'skills.array': insameeQuery.skills.array,
-    'focusInterests.*.number': insameeQuery.focusInterests.number,
-    'focusInterests.array': insameeQuery.focusInterests.array,
-    'associations.*.number': insameeQuery.associations.number,
-    'associations.array': insameeQuery.associations.array,
+    'currentRole.enum': insameeProfileQuery.currentRole.enum,
+    'skills.*.number': insameeProfileQuery.skills.number,
+    'skills.array': insameeProfileQuery.skills.array,
+    'focusInterests.*.number': insameeProfileQuery.focusInterests.number,
+    'focusInterests.array': insameeProfileQuery.focusInterests.array,
+    'associations.*.number': insameeProfileQuery.associations.number,
+    'associations.array': insameeProfileQuery.associations.array,
   }
 }

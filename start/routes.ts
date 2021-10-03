@@ -19,7 +19,6 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import Application from '@ioc:Adonis/Core/Application'
 import { Resource } from 'App/Services/ReportService'
 
 /**
@@ -69,7 +68,7 @@ Route.group(() => {
    */
   Route.resource('users', 'UsersController')
     .only(['index', 'show', 'update', 'destroy'])
-    .middleware({ index: ['admin'], show: ['admin'], update: ['admin'] })
+    .middleware({ index: ['admin'], show: ['admin'] })
 
   /**
    * Profiles routes
@@ -87,21 +86,32 @@ Route.group(() => {
   /**
    * Tutorats routes
    */
+
+  // CRUD operations for tutorats
   Route.resource('tutorats', 'TutoratsController').apiOnly()
+  // Used to restore a tutorat
+  Route.patch('tutorats/:id/restore', 'TutoratsController.restore')
+    .middleware('admin')
+    .as('tutorats.restore')
+
+  // Used to manage the interest of tutorials
   Route.group(() => {
-    Route.get('/registrations', 'TutoratsRegistrationsController.index').as('registrations.index')
-    Route.post('/registrations', 'TutoratsRegistrationsController.store').as('registrations.store')
-    Route.delete('/registrations', 'TutoratsRegistrationsController.destroy').as(
-      'registrations.destroy'
-    )
-    Route.get('/registrations/contacts', 'TutoratsRegistrationsController.contact').as(
-      'registrations.contact'
+    // Used to get the list of users that are interested in a tutorial
+    Route.get('/interested/profiles', 'TutoratsInterestsController.index').as('interested.index')
+    // Used to manage the user's interest in a tutorat
+    Route.get('/interested', 'TutoratsInterestsController.show').as('interested.show')
+    Route.post('/interested', 'TutoratsInterestsController.store').as('interested.store')
+    Route.delete('/interested', 'TutoratsInterestsController.destroy').as('interested.destroy')
+
+    // Used to get all emails of users who are interested in a tutorat
+    Route.get('/interested/contacts', 'TutoratsInterestsController.contact').as(
+      'interested.contact'
     )
   })
     .prefix('tutorats/:id')
     .as('tutorats.id')
 
-  Route.get('/registrations/:id', 'RegistrationsController.show').as('registrations.show')
+  // Route.get('/registrations/:id', 'RegistrationsController.show').as('registrations.show')
 
   /**
    * Associations routes

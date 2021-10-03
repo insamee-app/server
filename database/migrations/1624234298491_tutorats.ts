@@ -1,5 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
-import { TutoratType } from 'App/Models/Tutorat'
+import { TutoratSiting, TutoratType } from 'App/Models/Tutorat'
 
 export default class Tutorats extends BaseSchema {
   protected tableName = 'tutorats'
@@ -21,6 +21,7 @@ export default class Tutorats extends BaseSchema {
       table.string('text', 2048).nullable()
       table.integer('time').unsigned().nullable()
       table.enum('type', Object.values(TutoratType))
+      table.enum('siting', Object.values(TutoratSiting))
 
       table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })

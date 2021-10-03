@@ -38,6 +38,8 @@ export default class AuthController {
     const user = new User()
     user.email = userDetails.email
     user.password = userDetails.password
+    // Setup email for user to extend the experience
+    user.emailInterestedTutorat = userDetails.receiveEmail
 
     try {
       await user.save()

@@ -1,6 +1,7 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ProfilesReason from 'App/Models/ProfilesReason'
+import { report } from './messages'
 
 export default class ProfileReportValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -41,8 +42,8 @@ export default class ProfileReportValidator {
    *
    */
   public messages = {
-    'reason.required': 'Vous devez fournir une raison',
-    'reason.exists': 'Vous devez fournir une raison existante',
-    'description.maxLength': 'La description doit être inférieure à 255 caractères',
+    'reason.required': report.required,
+    'reason.exists': report.exists,
+    'description.maxLength': report.maxLength,
   }
 }

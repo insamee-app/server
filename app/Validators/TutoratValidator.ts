@@ -2,7 +2,7 @@ import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Subject from 'App/Models/Subject'
 import { tutorat } from './messages'
-import { TutoratType } from 'App/Models/Tutorat'
+import { TutoratSiting, TutoratType } from 'App/Models/Tutorat'
 import School from 'App/Models/School'
 
 export default class TutoratValidator {
@@ -35,7 +35,10 @@ export default class TutoratValidator {
       rules.requiredWhen('type', '=', TutoratType.OFFER),
       rules.range(30, 180),
     ]),
-    type: schema.enum.optional(Object.values(TutoratType)),
+    siting: schema.enum.optional(Object.values(TutoratSiting), [
+      rules.requiredWhen('type', '=', TutoratType.OFFER),
+    ]),
+    type: schema.enum(Object.values(TutoratType)),
   })
 
   /**
@@ -50,16 +53,18 @@ export default class TutoratValidator {
    *
    */
   public messages = {
-    //  TODO: required fields
+    'text.required': tutorat.text.required,
     'text.string': tutorat.text.string,
     'text.maxLength': tutorat.text.maxLength,
     'subject.array': tutorat.subject.array,
     'subject.*.number': tutorat.subject.number,
     'subject.*.exists': tutorat.subject.exists,
+    'school.required': tutorat.school.required,
     'school.number': tutorat.school.number,
     'school.exists': tutorat.school.exists,
     'time.number': tutorat.time.number,
     'time.range': tutorat.time.range,
+    'type.required': tutorat.type.required,
     'type.enum': tutorat.type.enum,
   }
 }

@@ -12,8 +12,8 @@ export default class AssociationPolicy extends BasePolicy {
     return true
   }
 
-  public async viewAdmin(user: User) {
-    return user.isAdmin
+  public async viewAdmin() {
+    return false
   }
 
   public async show() {

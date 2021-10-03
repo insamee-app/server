@@ -1,5 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { association } from './messages'
 
 export default class AssociationValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -45,5 +46,17 @@ export default class AssociationValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'name.required': association.name.required,
+    'name.maxLength': association.name.maxLength,
+    'text.required': association.text.required,
+    'text.maxLength': association.text.maxLength,
+    'email.nullableEmail': association.email.email,
+    'thematicId.required': association.thematic.required,
+    'thematicId.number': association.thematic.number,
+    'thematicId.exists': association.thematic.exists,
+    'tags.array': association.tags.array,
+    'tags.*.number': association.tags.number,
+    'tags.*.exists': association.tags.exists,
+  }
 }

@@ -1,6 +1,6 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { password } from './messages'
+import { auth } from './messages'
 
 export default class ResetPasswordValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -44,10 +44,10 @@ export default class ResetPasswordValidator {
    *
    */
   public messages = {
-    'password.required': password.required,
-    'password.string': password.string,
-    'password.maxLength': password.maxLength,
-    'password.isPasswordValid': password.isPasswordValid,
-    'password_confirmation.confirmed': password.confirmation,
+    'password.required': auth.password.required,
+    'password.string': auth.password.string,
+    'password.maxLength': auth.password.maxLength,
+    'password.isPasswordValid': auth.password.isPasswordValid,
+    'password_confirmation.confirmed': auth.password.confirmation,
   }
 }

@@ -11,25 +11,19 @@ export default class TagsController {
 
     const tags = Tag.query().orderBy('name')
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('TagPolicy').authorize('viewAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    if (platform === Platform.ADMIN && (await bouncer.with('TagPolicy').allows('viewAdmin'))) {
       return await tags.withTrashed()
+    } else {
+      const tagsJSON = (await tags).map((tag) =>
+        tag.serialize({
+          fields: {
+            pick: ['id', 'name'],
+          },
+        })
+      )
+
+      return tagsJSON
     }
-
-    const tagsJSON = (await tags).map((tag) =>
-      tag.serialize({
-        fields: {
-          pick: ['id', 'name'],
-        },
-      })
-    )
-
-    return tagsJSON
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

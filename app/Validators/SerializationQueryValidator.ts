@@ -45,5 +45,8 @@ export default class SerializationQueryValidator {
    * }
    *
    */
-  public messages = {}
+  public messages = {
+    'serialize.required': 'La sérialisation est requise',
+    'serialize.enum': "Cette valeur pour la sérialisation n'est pas valide",
+  }
 }

@@ -11,25 +11,21 @@ export default class FocusInterestsController {
 
     const focusInterests = FocusInterest.query().orderBy('name')
 
-    if (platform === Platform.ADMIN) {
-      try {
-        await bouncer.with('FocusInterestPolicy').authorize('viewAdmin')
-      } catch (error) {
-        throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
-      }
-
+    if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('FocusInterestPolicy').allows('viewAdmin'))
+    ) {
       return await focusInterests.withTrashed()
+    } else {
+      const focusInterestsJSON = (await focusInterests).map((focusInterest) =>
+        focusInterest.serialize({
+          fields: {
+            pick: ['id', 'name'],
+          },
+        })
+      )
+      return focusInterestsJSON
     }
-
-    const focusInterestsJSON = (await focusInterests).map((focusInterest) =>
-      focusInterest.serialize({
-        fields: {
-          pick: ['id', 'name'],
-        },
-      })
-    )
-
-    return focusInterestsJSON
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

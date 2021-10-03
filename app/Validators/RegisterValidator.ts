@@ -1,7 +1,7 @@
 import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
-import { email, password } from './messages'
+import { auth } from './messages'
 
 export default class RegisterValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -38,6 +38,7 @@ export default class RegisterValidator {
       rules.school(),
     ]),
     password: schema.string({ trim: true }, [rules.confirmed(), rules.isPasswordValid()]),
+    receiveEmail: schema.boolean(),
   })
 
   public cacheKey = this.ctx.routeKey
@@ -54,14 +55,14 @@ export default class RegisterValidator {
    *
    */
   public messages = {
-    'email.required': email.required,
-    'email.string': email.string,
-    'email.email': email.email,
-    'email.school': email.school,
-    'email.unique': email.unique,
-    'password.required': password.required,
-    'password.string': password.string,
-    'password.isPasswordValid': password.isPasswordValid,
-    'password_confirmation.confirmed': password.confirmation,
+    'email.required': auth.email.required,
+    'email.string': auth.email.string,
+    'email.email': auth.email.email,
+    'email.school': auth.email.school,
+    'email.unique': auth.email.unique,
+    'password.required': auth.password.required,
+    'password.string': auth.password.string,
+    'password.isPasswordValid': auth.password.isPasswordValid,
+    'password_confirmation.confirmed': auth.password.confirmation,
   }
 }

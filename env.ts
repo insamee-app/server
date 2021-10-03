@@ -22,4 +22,5 @@ export default Env.rules({
   NODE_ENV: Env.schema.enum(['development', 'production', 'testing'] as const),
   SMTP_USERNAME: Env.schema.string({ format: 'email' }),
   DRIVE_DISK: Env.schema.enum(['local'] as const),
+  TUTORAT_HOST: Env.schema.string(),
 })

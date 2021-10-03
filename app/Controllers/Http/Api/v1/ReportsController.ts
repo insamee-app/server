@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import ReportValidator from 'App/Validators/ReportValidator'
+import ReportValidator from 'App/Validators/ReportQueryValidator'
 import { ModelObject } from '@ioc:Adonis/Lucid/Orm'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 import {

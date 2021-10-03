@@ -2,7 +2,7 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { tutoratQuery } from './messages'
 import { CurrentRole } from 'App/Models/Profile'
-import { TutoratType } from 'App/Models/Tutorat'
+import { TutoratType, TutoratSiting } from 'App/Models/Tutorat'
 
 export default class TutoratQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -29,6 +29,7 @@ export default class TutoratQueryValidator {
   public schema = schema.create({
     currentRole: schema.enum.optional(Object.values(CurrentRole)),
     type: schema.enum.optional(Object.values(TutoratType)),
+    siting: schema.enum.optional(Object.values(TutoratSiting)),
     subjects: schema.array.optional().members(schema.number()),
     schools: schema.array.optional().members(schema.number()),
     time: schema.number.optional(),

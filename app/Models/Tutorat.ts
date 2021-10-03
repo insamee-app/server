@@ -16,12 +16,17 @@ import School from 'App/Models/School'
 import User from './User'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+import { string } from '@ioc:Adonis/Core/Helpers'
 
 export enum TutoratType {
   OFFER = 'offre',
   DEMAND = 'demande',
 }
 
+export enum TutoratSiting {
+  ONLINE = 'à distance',
+  IN_PERSON = 'en présence',
+}
 export default class Tutorat extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
@@ -59,21 +64,25 @@ export default class Tutorat extends compose(BaseModel, SoftDeletes) {
   @column()
   public type: TutoratType
 
+  @column()
+  public siting: TutoratSiting
+
   @manyToMany(() => User, {
     localKey: 'id',
     pivotForeignKey: 'tutorat_id',
     pivotRelatedForeignKey: 'user_id',
     relatedKey: 'id',
-    pivotTable: 'registration_tutorat',
-    serializeAs: 'users_registrations',
+    pivotTable: 'interest_tutorat',
+    serializeAs: 'users_interested',
+    pivotTimestamps: true,
   })
-  public usersRegistrations: ManyToMany<typeof User>
+  public usersInterested: ManyToMany<typeof User>
 
   @computed({ serializeAs: 'short_text' })
   public get shortText(): string | null {
     if (!this.text) return null
 
-    return this.text.slice(0, 120) + '...'
+    return string.truncate(this.text, 120, { completeWords: true })
   }
 
   @column.dateTime({ autoCreate: true })
@@ -81,4 +90,10 @@ export default class Tutorat extends compose(BaseModel, SoftDeletes) {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  public serializeExtras() {
+    return {
+      users_interested_count: Number(this.$extras.usersInterested_count),
+    }
+  }
 }

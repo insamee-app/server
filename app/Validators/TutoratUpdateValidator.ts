@@ -1,6 +1,7 @@
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { tutorat } from './messages'
+import { TutoratSiting } from 'App/Models/Tutorat'
 
 export default class TutoratUpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -27,6 +28,7 @@ export default class TutoratUpdateValidator {
   public schema = schema.create({
     text: schema.string.optional({ trim: true }, [rules.maxLength(2048)]),
     time: schema.number.optional([rules.range(30, 180)]),
+    siting: schema.enum.optional(Object.values(TutoratSiting)),
   })
 
   /**

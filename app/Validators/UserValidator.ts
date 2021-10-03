@@ -27,9 +27,10 @@ export default class UserValidator {
   public existsStrict = true
 
   public schema = schema.create({
-    isVerified: schema.boolean(),
-    isBlocked: schema.boolean(),
-    isAdmin: schema.boolean(),
+    isVerified: schema.boolean.optional(),
+    isBlocked: schema.boolean.optional(),
+    isAdmin: schema.boolean.optional(),
+    emailInterestedTutorat: schema.boolean.optional(),
   })
 
   /**

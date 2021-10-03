@@ -1,6 +1,6 @@
 import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { associationsQuery } from './messages'
+import { associationQuery } from './messages'
 
 export default class AssociationQueryValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -43,12 +43,12 @@ export default class AssociationQueryValidator {
    *
    */
   public messages = {
-    'name.string': associationsQuery.name,
-    'thematics.array': associationsQuery.thematics.array,
-    'thematics.*.number': associationsQuery.thematics.number,
-    'tags.array': associationsQuery.tags.array,
-    'tags.*.number': associationsQuery.tags.number,
-    'schools.array': associationsQuery.schools.array,
-    'schools.*.number': associationsQuery.schools.number,
+    'name.string': associationQuery.name,
+    'thematics.array': associationQuery.thematics.array,
+    'thematics.*.number': associationQuery.thematics.number,
+    'tags.array': associationQuery.tags.array,
+    'tags.*.number': associationQuery.tags.number,
+    'schools.array': associationQuery.schools.array,
+    'schools.*.number': associationQuery.schools.number,
   }
 }

@@ -13,6 +13,8 @@ export default class UsersSchema extends BaseSchema {
       table.boolean('is_admin').defaultTo(false)
       table.boolean('is_blocked').defaultTo(false)
 
+      table.boolean('email_interested_tutorat').defaultTo(false)
+
       table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })

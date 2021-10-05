@@ -12,6 +12,7 @@ import {
   preloadTutoratProfile,
   profileCardSerialize,
   profileSerialize,
+  profileMeSerialize,
 } from 'App/Services/ProfileService'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Profile, { Populate } from 'App/Models/Profile'
@@ -43,11 +44,11 @@ export default class ProfilesController {
     await populateProfile(profile, populate)
 
     if (populate === Populate.INSAMEE) {
-      const serialization: CherryPick = profileSerialize
+      const serialization: CherryPick = profileMeSerialize
       serialization.relations!.insamee_profile = insameeProfileSerialize
       return profile.serialize(serialization)
     } else if (populate === Populate.TUTORAT) {
-      const serialization: CherryPick = profileSerialize
+      const serialization: CherryPick = profileMeSerialize
       serialization.relations!.tutorat_profile = tutoratProfileSerialize
       return profile.serialize(serialization)
     }

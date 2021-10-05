@@ -264,6 +264,29 @@ export const profileSerialize: CherryPick = {
   ],
   relations: {
     user: {
+      fields: ['email'],
+    },
+    school: {
+      fields: ['id', 'name'],
+    },
+  },
+}
+
+export const profileMeSerialize: CherryPick = {
+  fields: [
+    'user_id',
+    'url_picture',
+    'last_name',
+    'first_name',
+    'graduation_year',
+    'current_role',
+    'mobile',
+    'url_facebook',
+    'url_instagram',
+    'url_twitter',
+  ],
+  relations: {
+    user: {
       fields: ['email', 'email_interested_tutorat'],
     },
     school: {

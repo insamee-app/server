@@ -11,6 +11,8 @@ export default class UsersSchema extends BaseSchema {
       table.string('remember_me_token').nullable()
       table.boolean('is_verified').defaultTo(false)
       table.boolean('is_admin').defaultTo(false)
+      table.boolean('is_moderator').defaultTo(false)
+      table.boolean('is_event_creator').defaultTo(false)
       table.boolean('is_blocked').defaultTo(false)
 
       table.boolean('email_interested_tutorat').defaultTo(false)

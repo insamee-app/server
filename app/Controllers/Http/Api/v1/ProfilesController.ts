@@ -170,6 +170,7 @@ export default class ProfilesController {
     }
 
     const { populate } = await request.validate(PopulateQueryValidator)
+    const { platform } = await request.validate(PlatformQueryValidator)
     const { ...data } = await request.validate(ProfileValidator)
 
     if (populate === Populate.INSAMEE) {
@@ -234,6 +235,13 @@ export default class ProfilesController {
     const updatedProfile = await profile.save()
 
     await populateProfile(updatedProfile, populate)
+
+    if (
+      platform === Platform.ADMIN &&
+      (await bouncer.with('ProfilePolicy').allows('updateAdmin'))
+    ) {
+      return updatedProfile
+    }
 
     if (populate === Populate.INSAMEE) {
       const serialization: CherryPick = profileMeSerialize

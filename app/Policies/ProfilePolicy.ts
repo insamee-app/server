@@ -20,4 +20,8 @@ export default class ProfilePolicy extends BasePolicy {
   public async update(user: User, profile: Profile) {
     return user.id === profile.userId
   }
+
+  public updateAdmin() {
+    return false
+  }
 }

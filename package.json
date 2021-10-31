@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "preinstall": "npx only-allow pnpm",
     "test": "node -r @adonisjs/assembler/build/register japaFile.ts",
     "build": "node ace build --production",
     "start": "node server.js",

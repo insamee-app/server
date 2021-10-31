@@ -30,6 +30,8 @@ export default class UserValidator {
     isVerified: schema.boolean.optional(),
     isBlocked: schema.boolean.optional(),
     isAdmin: schema.boolean.optional(),
+    isModerator: schema.boolean.optional(),
+    isEventCreator: schema.boolean.optional(),
     emailInterestedTutorat: schema.boolean.optional(),
   })
 

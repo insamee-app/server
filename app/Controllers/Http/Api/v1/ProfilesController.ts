@@ -51,6 +51,11 @@ export default class ProfilesController {
       const serialization: CherryPick = profileMeSerialize
       serialization.relations!.tutorat_profile = tutoratProfileSerialize
       return profile.serialize(serialization)
+    } else if (populate === Populate.ADMIN) {
+      return {
+        isAdmin: user!.isAdmin,
+        isModerator: user!.isModerator,
+      }
     }
     return {}
   }

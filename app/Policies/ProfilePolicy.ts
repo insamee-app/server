@@ -9,6 +9,11 @@ export default class ProfilePolicy extends BasePolicy {
     }
   }
 
+  public viewMeAdmin(user: User) {
+    console.log(user)
+    return user.isAdmin || user.isModerator
+  }
+
   public async viewListAdmin() {
     return false
   }

@@ -34,7 +34,7 @@ import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 const LIMIT = 20
 
 export default class ProfilesController {
-  public async me({ auth, request }: HttpContextContract) {
+  public async me({ auth, request, bouncer }: HttpContextContract) {
     const { user } = auth
 
     const profile = await getProfile(user!.id)
@@ -51,11 +51,18 @@ export default class ProfilesController {
       const serialization: CherryPick = profileMeSerialize
       serialization.relations!.tutorat_profile = tutoratProfileSerialize
       return profile.serialize(serialization)
-    } else if (populate === Populate.ADMIN) {
-      return {
-        isAdmin: user!.isAdmin,
-        isModerator: user!.isModerator,
-      }
+    } else if (
+      populate === Populate.ADMIN &&
+      (await bouncer.with('ProfilePolicy').allows('viewMeAdmin'))
+    ) {
+      return profile.serialize({
+        fields: [],
+        relations: {
+          user: {
+            fields: ['is_admin', 'is_moderator'],
+          },
+        },
+      })
     }
     return {}
   }

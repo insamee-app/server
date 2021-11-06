@@ -2,33 +2,33 @@ import { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
 import User from 'App/Models/User'
 
 export default class SchoolPolicy extends BasePolicy {
-  public async before(user: User | null) {
+  public before(user: User | null) {
     if (user?.isAdmin) {
       return true
     }
   }
 
-  public async view() {
+  public view() {
     return true
   }
 
-  public async viewAdmin(user: User) {
-    return user.isAdmin
+  public viewAdmin(user: User) {
+    return user.isModerator
   }
 
-  public async store() {
+  public store() {
     return false
   }
 
-  public async update() {
+  public update() {
     return false
   }
 
-  public async destroy() {
+  public destroy() {
     return false
   }
 
-  public async restore() {
+  public restore() {
     return false
   }
 }

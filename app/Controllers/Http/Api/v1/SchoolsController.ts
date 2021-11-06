@@ -1,6 +1,8 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Database from '@ioc:Adonis/Lucid/Database'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import School from 'App/Models/School'
+import User from 'App/Models/User'
 import { getSchool } from 'App/Services/SchoolService'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 import SchoolValidator from 'App/Validators/SchoolValidator'
@@ -71,7 +73,12 @@ export default class SchoolsController {
 
     const school = await getSchool(id)
 
-    school.delete()
+    await school.delete()
+
+    // Revoke all tokens from users of this school
+    await Database.from('users')
+      .whereIn('id', Database.from('profiles').where('school_id', id).select('user_id'))
+      .update({ remember_me_token: null })
 
     return school
   }

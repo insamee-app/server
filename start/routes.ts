@@ -66,9 +66,7 @@ Route.group(() => {
   /**
    * Users routes
    */
-  Route.resource('users', 'UsersController')
-    .only(['index', 'show', 'update', 'destroy'])
-    .middleware({ index: ['admin'], show: ['admin'] })
+  Route.resource('users', 'UsersController').only(['index', 'show', 'update', 'destroy'])
 
   /**
    * Profiles routes
@@ -124,9 +122,9 @@ Route.group(() => {
     .middleware('admin')
     .as('associations.restore')
   // Used to add a picture to an association
-  Route.patch('associations/:id/picture', 'AssociationsPicturesController.update')
-    .middleware('admin')
-    .as('associationsPicture.update')
+  Route.patch('associations/:id/picture', 'AssociationsPicturesController.update').as(
+    'associationsPicture.update'
+  )
 
   Route.get('associations/:id/profiles', 'AssociationsController.profiles').as(
     'associations.profiles'
@@ -136,19 +134,13 @@ Route.group(() => {
    * Reports management routes
    */
   // Get all reports for specific resource
-  Route.get('reports/:resource', 'ReportsController.index')
-    .middleware('admin')
-    .as('reports.resources.index')
+  Route.get('reports/:resource', 'ReportsController.index').as('reports.resources.index')
   // Get one report by the resource id
   Route.get('reports/:resource/:id', 'ReportsResourcesController.show').as('reports.resources.show')
   // Get one specific report for specific resource
-  Route.get('reports/:id/:resource', 'ReportsController.show')
-    .middleware('admin')
-    .as('reports.show')
+  Route.get('reports/:id/:resource', 'ReportsController.show').as('reports.show')
   // Delete one specific report for specific resource
-  Route.delete('reports/:id/:resource', 'ReportsController.destroy')
-    .middleware('admin')
-    .as('reports.destroy')
+  Route.delete('reports/:id/:resource', 'ReportsController.destroy').as('reports.destroy')
   Route.post('profiles/:id/reports', 'ProfilesReportsController.create').as(
     'profiles.reports.create'
   )

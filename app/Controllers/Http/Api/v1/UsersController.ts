@@ -53,12 +53,11 @@ export default class UsersController {
     }
 
     const { platform } = await request.validate(PlatformQueryValidator)
-    const { isVerified, isBlocked, isAdmin, emailInterestedTutorat } = await request.validate(
-      UserValidator
-    )
+    const { isVerified, isBlocked, isAdmin, isModerator, isEventCreator, emailInterestedTutorat } =
+      await request.validate(UserValidator)
 
     if (await bouncer.with('UserPolicy').allows('updateAdmin')) {
-      user.merge({ isVerified, isBlocked, isAdmin })
+      user.merge({ isVerified, isBlocked, isAdmin, isModerator, isEventCreator })
     }
 
     user.merge({ emailInterestedTutorat })

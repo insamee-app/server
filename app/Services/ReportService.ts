@@ -96,7 +96,12 @@ export async function load(report: Report, resource: Resource): Promise<void> {
       await (report as unknown as TutoratsReport).load((loader) => {
         loader
           .load('tutorat', (query) =>
-            query.withTrashed().preload('user').preload('school').preload('subject')
+            query
+              .withTrashed()
+              .preload('user')
+              .preload('school')
+              .preload('subject')
+              .preload('profile')
           )
           .load('user', (query) => query.withTrashed())
           .load('reason')
@@ -105,7 +110,9 @@ export async function load(report: Report, resource: Resource): Promise<void> {
     case Resource.ASSOCIATIONS:
       await (report as unknown as AssociationsReport).load((loader) => {
         loader
-          .load('association', (query) => query.withTrashed())
+          .load('association', (query) =>
+            query.withTrashed().preload('school').preload('tags').preload('thematic')
+          )
           .load('user', (query) => query.withTrashed())
           .load('reason')
       })
@@ -128,13 +135,19 @@ export function serializeReport(report: Report, resource: Resource) {
             relations: {
               profile: {
                 fields: [
-                  'id',
+                  'user_id',
                   'first_name',
                   'last_name',
                   'url_facebook',
                   'url_instagram',
                   'url_twitter',
                   'mobile',
+                  'url_picture',
+                  'current_role',
+                  'graduation_year',
+                  'created_at',
+                  'updated_at',
+                  'deleted_at',
                 ],
                 relations: {
                   insamee_profile: {
@@ -181,16 +194,25 @@ export function serializeReport(report: Report, resource: Resource) {
         fields: ['id', 'description', 'created_at', 'updated_at', 'deleted_at'],
         relations: {
           tutorat: {
-            fields: ['text', 'type', 'created_at', 'updated_at', 'deleted_at'],
+            fields: [
+              'id',
+              'text',
+              'type',
+              'time',
+              'siting',
+              'created_at',
+              'updated_at',
+              'deleted_at',
+            ],
             relations: {
-              user: {
-                fields: ['email'],
-              },
               school: {
                 fields: ['name'],
               },
               subject: {
                 fields: ['name'],
+              },
+              profile: {
+                fields: ['first_name', 'last_name'],
               },
             },
           },
@@ -208,7 +230,27 @@ export function serializeReport(report: Report, resource: Resource) {
         fields: ['id', 'description', 'created_at', 'updated_at', 'deleted_at'],
         relations: {
           association: {
-            fields: ['id', 'name', 'text', 'email', 'created_at', 'updated_at', 'deleted_at'],
+            fields: [
+              'id',
+              'url_picture',
+              'name',
+              'text',
+              'email',
+              'created_at',
+              'updated_at',
+              'deleted_at',
+            ],
+            relations: {
+              school: {
+                fields: ['name'],
+              },
+              tags: {
+                fields: ['id', 'name'],
+              },
+              thematic: {
+                fields: ['id', 'name'],
+              },
+            },
           },
           user: {
             fields: ['email', 'created_at', 'updated_at', 'deleted_at'],

@@ -13,7 +13,7 @@ export default class SchoolPolicy extends BasePolicy {
   }
 
   public viewAdmin(user: User) {
-    return user.isAdmin
+    return user.isModerator
   }
 
   public store() {

@@ -28,7 +28,7 @@ Route.where('id', Route.matchers.number())
 Route.where('resource', new RegExp(Object.values(Resource).join('|')))
 
 Route.get('/', async () => {
-  return { message: 'API from INSAMEE' }
+  return { message: 'API for TEAM from InsameeApp' }
 })
 
 /**

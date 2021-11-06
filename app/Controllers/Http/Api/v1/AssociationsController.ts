@@ -173,7 +173,6 @@ export default class AssociationsController {
 
     const association = await getAssociation(id, user!.isAdmin)
 
-    console.log(data)
     for (const key in data) {
       if (Object.prototype.hasOwnProperty.call(data, key)) {
         const element = data[key]

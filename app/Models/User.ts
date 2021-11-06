@@ -38,6 +38,12 @@ export default class User extends compose(BaseModel, SoftDeletes) {
   public isAdmin: boolean
 
   @column()
+  public isModerator: boolean
+
+  @column()
+  public isEventCreator: boolean
+
+  @column()
   public isBlocked: boolean
 
   @column()

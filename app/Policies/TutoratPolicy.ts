@@ -9,24 +9,24 @@ export default class TutoratPolicy extends BasePolicy {
     }
   }
 
-  public viewListAdmin() {
-    return false
+  public viewListAdmin(user: User) {
+    return user.isModerator
   }
 
   public viewProfilesList(user: User, tutorat: Tutorat) {
     return user.id === tutorat.userId && tutorat.type === TutoratType.OFFER
   }
 
-  public showAdmin() {
-    return false
+  public showAdmin(user: User) {
+    return user.isModerator
   }
 
   public update(user: User, tutorat: Tutorat) {
-    return user.id === tutorat.userId
+    return user.id === tutorat.userId || user.isModerator
   }
 
   public delete(user: User, tutorat: Tutorat) {
-    return user.id === tutorat.userId
+    return user.id === tutorat.userId || user.isModerator
   }
 
   public restore() {

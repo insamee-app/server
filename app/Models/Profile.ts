@@ -26,6 +26,7 @@ export enum CurrentRole {
 export enum Populate {
   INSAMEE = 'insamee',
   TUTORAT = 'tutorat',
+  ADMIN = 'admin',
   FULL = 'full',
   NONE = 'none',
 }

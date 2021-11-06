@@ -244,6 +244,9 @@ export async function populateProfile(
           })
       })
       break
+    case Populate.ADMIN:
+      await profile.load('user')
+      break
     default:
       break
   }

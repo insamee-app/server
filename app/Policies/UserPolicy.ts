@@ -8,8 +8,8 @@ export default class UserPolicy extends BasePolicy {
     }
   }
 
-  public async view() {
-    return false
+  public async view(user: User) {
+    return user.isModerator
   }
 
   public async update(user: User, toCheckUser: User) {

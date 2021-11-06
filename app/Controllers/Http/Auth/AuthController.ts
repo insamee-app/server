@@ -159,8 +159,8 @@ export default class AuthController {
   }
 
   public async sendVerifyEmail({ request }: HttpContextContract) {
+    // Validator check if email is already verify
     const { email } = await request.validate(SendVerifyEmailValidator)
-    // TODO: il faut mettre en place le silent auth et on ne fait rien si le user est check et envoyer une error si c'est le cas (un forbidden)
     await new VerifyEmail(email).sendLater()
 
     return {

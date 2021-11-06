@@ -2,7 +2,7 @@ import User from 'App/Models/User'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import BadRequestException from 'App/Exceptions/BadRequestException'
-import School from 'App/Models/School'
+import NotFoundException from 'App/Exceptions/NotFoundException'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
 import SendVerifyEmailValidator from 'App/Validators/SendVerifyEmailValidator'
 import SendResetPasswordValidator from 'App/Validators/SendResetPasswordValidator'
@@ -76,6 +76,12 @@ export default class AuthController {
      * Get email and password
      */
     const { email, password, rememberMe } = await request.validate(LoginValidator)
+
+    const school = await getSchoolByEmail(email)
+    if (!school)
+      throw new NotFoundException(
+        `Impossible de trouver l'école correspondante à votre adresse électronique`
+      )
 
     /*
      * Try to login the user

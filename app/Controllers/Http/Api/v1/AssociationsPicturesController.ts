@@ -37,17 +37,28 @@ export default class AssociationsPicturesController {
 
     await association.save()
 
+    await association.load((loader) => loader.load('school').load('thematic').load('tags'))
+
     return association.serialize({
-      fields: ['id', 'name', 'url_picture', 'text', 'email'],
+      fields: [
+        'id',
+        'url_picture',
+        'name',
+        'text',
+        'email',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+      ],
       relations: {
         school: {
           fields: ['name'],
         },
-        thematic: {
-          fields: ['name'],
-        },
         tags: {
-          fields: ['name'],
+          fields: ['id', 'name'],
+        },
+        thematic: {
+          fields: ['id', 'name'],
         },
       },
     })

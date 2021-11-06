@@ -5,6 +5,7 @@ import Tutorat from './Tutorat'
 import User from './User'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+import Profile from './Profile'
 
 export default class TutoratsReport extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
@@ -30,6 +31,9 @@ export default class TutoratsReport extends compose(BaseModel, SoftDeletes) {
 
   @belongsTo(() => User, { foreignKey: 'userId', localKey: 'id' })
   public user: BelongsTo<typeof User>
+
+  @belongsTo(() => Profile, { foreignKey: 'userId', localKey: 'userId' })
+  public profile: BelongsTo<typeof Profile>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -14,6 +14,7 @@ import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import InsameeProfile from 'App/Models/InsameeProfile'
 import TutoratProfile from 'App/Models/TutoratProfile'
 import Profile from 'App/Models/Profile'
+import { getSchoolByEmail } from 'App/Services/AuthService'
 
 export default class AuthController {
   public async register({ request }: HttpContextContract) {
@@ -25,12 +26,11 @@ export default class AuthController {
     /*
      * Get the corresponding school
      */
-    const hostRegExp = new RegExp(/@(?<host>.*)$/, 'i')
-    const host = hostRegExp.exec(userDetails.email)!.groups!.host
-
-    const school = await School.findBy('host', host)
+    const school = await getSchoolByEmail(userDetails.email)
     if (!school)
-      throw new BadRequestException(`Impossible de trouver l'école correspondante à ${host}`)
+      throw new BadRequestException(
+        `Impossible de trouver l'école correspondante à votre adresse électronique`
+      )
 
     /**
      * Create a new user

@@ -2,7 +2,7 @@ import User from 'App/Models/User'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import BadRequestException from 'App/Exceptions/BadRequestException'
-import School from 'App/Models/School'
+import NotFoundException from 'App/Exceptions/NotFoundException'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
 import SendVerifyEmailValidator from 'App/Validators/SendVerifyEmailValidator'
 import SendResetPasswordValidator from 'App/Validators/SendResetPasswordValidator'
@@ -14,6 +14,7 @@ import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import InsameeProfile from 'App/Models/InsameeProfile'
 import TutoratProfile from 'App/Models/TutoratProfile'
 import Profile from 'App/Models/Profile'
+import { getSchoolByEmail } from 'App/Services/AuthService'
 
 export default class AuthController {
   public async register({ request }: HttpContextContract) {
@@ -25,12 +26,11 @@ export default class AuthController {
     /*
      * Get the corresponding school
      */
-    const hostRegExp = new RegExp(/@(?<host>.*)$/, 'i')
-    const host = hostRegExp.exec(userDetails.email)!.groups!.host
-
-    const school = await School.findBy('host', host)
+    const school = await getSchoolByEmail(userDetails.email)
     if (!school)
-      throw new BadRequestException(`Impossible de trouver l'école correspondante à ${host}`)
+      throw new BadRequestException(
+        `Impossible de trouver l'école correspondante à votre adresse électronique`
+      )
 
     /**
      * Create a new user
@@ -76,6 +76,12 @@ export default class AuthController {
      * Get email and password
      */
     const { email, password, rememberMe } = await request.validate(LoginValidator)
+
+    const school = await getSchoolByEmail(email)
+    if (!school)
+      throw new NotFoundException(
+        `Impossible de trouver l'école correspondante à votre adresse électronique`
+      )
 
     /*
      * Try to login the user
@@ -153,8 +159,8 @@ export default class AuthController {
   }
 
   public async sendVerifyEmail({ request }: HttpContextContract) {
+    // Validator check if email is already verify
     const { email } = await request.validate(SendVerifyEmailValidator)
-    // TODO: il faut mettre en place le silent auth et on ne fait rien si le user est check et envoyer une error si c'est le cas (un forbidden)
     await new VerifyEmail(email).sendLater()
 
     return {

@@ -8,11 +8,16 @@ import {
   HasOne,
   manyToMany,
   ManyToMany,
+  hasMany,
+  HasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import Profile from 'App/Models/Profile'
 import Tutorat from './Tutorat'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+import ProfilesReport from './ProfilesReport'
+import AssociationsReport from './AssociationsReport'
+import TutoratsReport from './TutoratsReport'
 export default class User extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public id: number
@@ -65,6 +70,34 @@ export default class User extends compose(BaseModel, SoftDeletes) {
     pivotTimestamps: true,
   })
   public tutoratsInterested: ManyToMany<typeof Tutorat>
+
+  @hasMany(() => Tutorat, {
+    localKey: 'id',
+    foreignKey: 'userId',
+    serializeAs: 'tutorats_created',
+  })
+  public tutoratsCreated: HasMany<typeof Tutorat>
+
+  @hasMany(() => ProfilesReport, {
+    localKey: 'id',
+    foreignKey: 'userId',
+    serializeAs: 'reported_profiles',
+  })
+  public reportedProfiles: HasMany<typeof ProfilesReport>
+
+  @hasMany(() => AssociationsReport, {
+    localKey: 'id',
+    foreignKey: 'userId',
+    serializeAs: 'reported_associations',
+  })
+  public reportedAssociations: HasMany<typeof AssociationsReport>
+
+  @hasMany(() => TutoratsReport, {
+    localKey: 'id',
+    foreignKey: 'userId',
+    serializeAs: 'reported_tutorats',
+  })
+  public reportedTutorats: HasMany<typeof TutoratsReport>
 
   @beforeSave()
   public static async hashPassword(user: User) {

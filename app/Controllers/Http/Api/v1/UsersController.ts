@@ -110,4 +110,14 @@ export default class UsersController {
       destroy: 'ok',
     }
   }
+
+  public async data({ bouncer }: HttpContextContract) {
+    try {
+      await bouncer.with('UserPolicy').authorize('data')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    return 'hello'
+  }
 }

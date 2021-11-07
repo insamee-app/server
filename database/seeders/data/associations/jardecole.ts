@@ -3,10 +3,10 @@ import { Tags } from '../TagsData'
 import { Thematics } from '../ThematicsData'
 
 export default {
-  thematic: Thematics.CULTUREL,
-  name: "ins'agora",
+  thematic: Thematics.SOLIDARITIES,
+  name: "jard'ecole",
   text: '',
   email: '',
-  school: Schools.INSA_CENTRE_VAL_LOIRE,
+  school: Schools.ECOLE_CENTRE_VAL_LOIRE,
   tags: [Tags.MUSIQUE, Tags.CUISINE, Tags.MECANIQUE],
 }

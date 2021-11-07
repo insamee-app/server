@@ -11,7 +11,7 @@ export const SchoolFactory = Factory.define(School, ({ faker }) => {
 
 export const UserFactory = Factory.define(User, ({ faker }) => {
   return {
-    email: `${faker.name.firstName()}_${faker.name.lastName()}@insa-cvl.fr`,
+    email: `${faker.name.firstName()}_${faker.name.lastName()}@ecole.fr`,
     password: faker.internet.password(),
     isVerified: false,
   }

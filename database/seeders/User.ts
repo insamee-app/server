@@ -13,50 +13,50 @@ export default class UserSeeder extends BaseSeeder {
 
     await User.updateOrCreateMany(uniqueKey, [
       {
-        email: 'VirginiaBMarker@insa-cvl.fr'.toLowerCase(),
+        email: 'VirginiaBMarker@ecole.fr'.toLowerCase(),
         isVerified: true,
         password,
       },
       {
-        email: 'EdwardMTaber@insa-cvl.fr'.toLowerCase(),
+        email: 'EdwardMTaber@ecole.fr'.toLowerCase(),
         isVerified: true,
         password,
       },
       {
-        email: 'MyrtleDGlover@insa-cvl.fr'.toLowerCase(),
+        email: 'MyrtleDGlover@ecole.fr'.toLowerCase(),
         isVerified: true,
         password,
       },
       {
-        email: 'BillyRRogers@insa-cvl.fr'.toLowerCase(),
+        email: 'BillyRRogers@ecole.fr'.toLowerCase(),
         isVerified: true,
         password,
       },
       {
-        email: 'ShawnJMartin@insa-cvl.fr'.toLowerCase(),
+        email: 'ShawnJMartin@ecole.fr'.toLowerCase(),
         password,
         isVerified: true,
       },
       {
-        email: 'PaulDSullivan@insa-cvl.fr'.toLowerCase(),
+        email: 'PaulDSullivan@ecole.fr'.toLowerCase(),
         isVerified: true,
         deletedAt: datetime,
         password,
       },
       {
-        email: 'AnnaKSanchez@insa-cvl.fr'.toLowerCase(),
+        email: 'AnnaKSanchez@ecole.fr'.toLowerCase(),
         password,
       },
       {
-        email: 'TeresaDClark@insa-cvl.fr'.toLowerCase(),
+        email: 'TeresaDClark@ecole.fr'.toLowerCase(),
         password,
       },
       {
-        email: 'PaulLCook@insa-cvl.fr'.toLowerCase(),
+        email: 'PaulLCook@ecole.fr'.toLowerCase(),
         password,
       },
       {
-        email: 'CarrollCButler@insa-cvl.fr'.toLowerCase(),
+        email: 'CarrollCButler@ecole.fr'.toLowerCase(),
         password,
       },
     ])

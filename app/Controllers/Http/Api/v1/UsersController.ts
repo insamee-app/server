@@ -1,6 +1,6 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { getUser } from 'App/Services/UserService'
-import { getProfile, getInsameeProfile, getTutoratProfile } from 'App/Services/ProfileService'
+import { getProfile, getMeeProfile, getTutoratProfile } from 'App/Services/ProfileService'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat from 'App/Models/Tutorat'
 import User from 'App/Models/User'
@@ -87,7 +87,7 @@ export default class UsersController {
     }
 
     const profile = await getProfile(id, authenticatedUser!.isAdmin)
-    const insameeProfile = await getInsameeProfile(id, authenticatedUser!.isAdmin)
+    const meeProfile = await getMeeProfile(id, authenticatedUser!.isAdmin)
     const tutoratProfile = await getTutoratProfile(id, authenticatedUser!.isAdmin)
     // const associationsReports = await AssociationsReport.query().where('user_id', id).exec()
     // const tutoratsReports = await TutoratsReport.query().where('user_id', id).exec()
@@ -102,7 +102,7 @@ export default class UsersController {
     // for (const report of tutoratsReports) {
     //   await report.delete()
     // }
-    await insameeProfile.delete()
+    await meeProfile.delete()
     await tutoratProfile.delete()
     await profile.delete()
     await user.delete()
@@ -125,8 +125,8 @@ export default class UsersController {
       .where('email', '=', email)
       .preload('profile', (profileQuery) => {
         profileQuery
-          .preload('insameeProfile', (insameeProfileQuery) => {
-            insameeProfileQuery.preload('skills').preload('focusInterests').preload('associations')
+          .preload('meeProfile', (meeProfileQuery) => {
+            meeProfileQuery.preload('skills').preload('focusInterests').preload('associations')
           })
           .preload('tutoratProfile', (tutoratProfileQuery) => {
             tutoratProfileQuery.preload('preferredSubjects').preload('difficultiesSubjects')
@@ -155,7 +155,7 @@ export default class UsersController {
         relations: {
           profile: {
             relations: {
-              insamee_profile: {
+              mee_profile: {
                 relations: {
                   associations: { fields: ['name'] },
                   skills: { fields: ['name'] },

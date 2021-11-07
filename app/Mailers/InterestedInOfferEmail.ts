@@ -28,7 +28,7 @@ export default class InterestedInOfferEmail extends BaseMailer {
    * also be async.
    */
   public prepare(message: MessageContract) {
-    const appName = 'InsameeApp'
+    const appName = Env.get('APP_NAME')
     const platform = 'Tutorat'
 
     message

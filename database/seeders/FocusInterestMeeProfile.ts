@@ -1,12 +1,12 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import FocusInterest from 'App/Models/FocusInterest'
-import ProfileInsamee from 'App/Models/InsameeProfile'
+import ProfileMee from 'App/Models/MeeProfile'
 
-export default class FocusInterestInsameeProfileSeeder extends BaseSeeder {
+export default class FocusInterestMeeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const profiles = await ProfileInsamee.withTrashed().exec()
+    const profiles = await ProfileMee.withTrashed().exec()
     const focusInterests = await FocusInterest.all()
 
     for (const [index, profile] of profiles.entries()) {

@@ -1,7 +1,7 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Profile from 'App/Models/Profile'
 import { texts } from './utils'
-export default class InsameeProfileSeeder extends BaseSeeder {
+export default class MeeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
@@ -10,7 +10,7 @@ export default class InsameeProfileSeeder extends BaseSeeder {
     for (const [index, profile] of profiles.entries()) {
       const value = index % texts.length
       await profile
-        .related('insameeProfile')
+        .related('meeProfile')
         .updateOrCreate(
           { userId: profile.userId },
           { text: texts[value], userId: profile.userId, deletedAt: profile.deletedAt }

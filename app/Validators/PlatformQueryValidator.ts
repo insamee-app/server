@@ -2,7 +2,7 @@ import { schema } from '@ioc:Adonis/Core/Validator'
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export enum Platform {
-  INSAMEE = 'insamee',
+  MEE = 'mee',
   TUTORAT = 'tutorat',
   ASSOCIATIONS = 'associations',
   ADMIN = 'admin',

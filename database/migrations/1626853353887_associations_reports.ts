@@ -27,7 +27,7 @@ export default class AssociationsReports extends BaseSchema {
         .unsigned()
         .notNullable()
         .references('user_id')
-        .inTable('insamee_profiles')
+        .inTable('mee_profiles')
 
       table.timestamp('deleted_at', { useTz: true })
       table.timestamp('created_at', { useTz: true })

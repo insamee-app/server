@@ -7,7 +7,7 @@ import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 import { string } from '@ioc:Adonis/Core/Helpers'
 
-export default class InsameeProfile extends compose(BaseModel, SoftDeletes) {
+export default class MeeProfile extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
   public userId: number
 
@@ -19,7 +19,7 @@ export default class InsameeProfile extends compose(BaseModel, SoftDeletes) {
     pivotForeignKey: 'user_id',
     relatedKey: 'id',
     pivotRelatedForeignKey: 'association_id',
-    pivotTable: 'association_insamee_profile',
+    pivotTable: 'association_mee_profile',
   })
   public associations: ManyToMany<typeof Association>
 
@@ -28,7 +28,7 @@ export default class InsameeProfile extends compose(BaseModel, SoftDeletes) {
     pivotForeignKey: 'user_id',
     relatedKey: 'id',
     pivotRelatedForeignKey: 'skill_id',
-    pivotTable: 'skill_insamee_profile',
+    pivotTable: 'skill_mee_profile',
   })
   public skills: ManyToMany<typeof Skill>
 
@@ -37,7 +37,7 @@ export default class InsameeProfile extends compose(BaseModel, SoftDeletes) {
     pivotForeignKey: 'user_id',
     relatedKey: 'id',
     pivotRelatedForeignKey: 'focus_interest_id',
-    pivotTable: 'focus_interest_insamee_profile',
+    pivotTable: 'focus_interest_mee_profile',
     serializeAs: 'focus_interests',
   })
   public focusInterests: ManyToMany<typeof FocusInterest>

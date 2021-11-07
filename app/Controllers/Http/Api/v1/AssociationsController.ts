@@ -8,7 +8,7 @@ import {
   getAssociation,
   loadAssociation,
 } from 'App/Services/AssociationService'
-import { insameeProfileCardSerialize, profileCardSerialize } from 'App/Services/ProfileService'
+import { meeProfileCardSerialize, profileCardSerialize } from 'App/Services/ProfileService'
 import AssociationQueryValidator from 'App/Validators/AssociationQueryValidator'
 import AssociationUpdateValidator from 'App/Validators/AssociationUpdateValidator'
 import AssociationValidator from 'App/Validators/AssociationValidator'
@@ -232,22 +232,17 @@ export default class AssociationsController {
     const { page } = await request.validate(PaginateQueryValidator)
 
     const profiles = await Profile.query()
-      .join(
-        'association_insamee_profile',
-        'profiles.user_id',
-        '=',
-        'association_insamee_profile.user_id'
-      )
+      .join('association_mee_profile', 'profiles.user_id', '=', 'association_mee_profile.user_id')
       .whereIn('profiles.user_id', Database.from('users').select('id').where('is_verified', true))
-      .where('association_insamee_profile.association_id', '=', id)
-      .preload('insameeProfile', (insameeProfile) => {
-        insameeProfile.preload('associations')
-        insameeProfile.preload('focusInterests')
+      .where('association_mee_profile.association_id', '=', id)
+      .preload('meeProfile', (meeProfile) => {
+        meeProfile.preload('associations')
+        meeProfile.preload('focusInterests')
       })
       .paginate(page, 6)
 
     const serialize = profileCardSerialize
-    serialize.relations = { insamee_profile: insameeProfileCardSerialize }
+    serialize.relations = { mee_profile: meeProfileCardSerialize }
     return profiles.serialize(serialize)
   }
 }

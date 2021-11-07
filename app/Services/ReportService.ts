@@ -80,8 +80,8 @@ export async function load(report: Report, resource: Resource): Promise<void> {
           .load('profileUser', (query) =>
             query.withTrashed().preload('profile', (profile) =>
               profile
-                .preload('insameeProfile', (insameeProfile) => {
-                  insameeProfile.preload('associations').preload('skills').preload('focusInterests')
+                .preload('meeProfile', (meeProfile) => {
+                  meeProfile.preload('associations').preload('skills').preload('focusInterests')
                 })
                 .preload('tutoratProfile', (tutoratProfile) => {
                   tutoratProfile.preload('difficultiesSubjects').preload('preferredSubjects')
@@ -150,7 +150,7 @@ export function serializeReport(report: Report, resource: Resource) {
                   'deleted_at',
                 ],
                 relations: {
-                  insamee_profile: {
+                  mee_profile: {
                     fields: ['text'],
                     relations: {
                       associations: {

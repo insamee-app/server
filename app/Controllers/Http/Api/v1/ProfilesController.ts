@@ -1,12 +1,12 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import InsameeProfilesQueryValidator from 'App/Validators/InsameeProfileQueryValidator'
+import MeeProfilesQueryValidator from 'App/Validators/MeeProfileQueryValidator'
 import {
   filterProfiles,
-  getInsameeProfile,
+  getMeeProfile,
   getProfile,
   getTutoratProfile,
-  insameeProfileCardSerialize,
-  insameeProfileSerialize,
+  meeProfileCardSerialize,
+  meeProfileSerialize,
   tutoratProfileSerialize,
   populateProfile,
   preloadTutoratProfile,
@@ -16,7 +16,7 @@ import {
 } from 'App/Services/ProfileService'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Profile, { Populate } from 'App/Models/Profile'
-import InsameeProfileValidator from 'App/Validators/InsameeProfileValidator'
+import MeeProfileValidator from 'App/Validators/MeeProfileValidator'
 import ProfileValidator from 'App/Validators/ProfileValidator'
 import TutoratProfileValidator from 'App/Validators/TutoratProfileValidator'
 import Tutorat from 'App/Models/Tutorat'
@@ -43,9 +43,9 @@ export default class ProfilesController {
 
     await populateProfile(profile, populate)
 
-    if (populate === Populate.INSAMEE) {
+    if (populate === Populate.MEE) {
       const serialization: CherryPick = profileMeSerialize
-      serialization.relations!.insamee_profile = insameeProfileSerialize
+      serialization.relations!.mee_profile = meeProfileSerialize
       return profile.serialize(serialization)
     } else if (populate === Populate.TUTORAT) {
       const serialization: CherryPick = profileMeSerialize
@@ -74,7 +74,7 @@ export default class ProfilesController {
     const { serialize } = await request.validate(SerializationQueryValidator)
 
     const { currentRole, skills, focusInterests, associations } = await request.validate(
-      InsameeProfilesQueryValidator
+      MeeProfilesQueryValidator
     )
 
     const queryProfiles = Profile.query()
@@ -90,30 +90,30 @@ export default class ProfilesController {
     )
 
     switch (populate) {
-      case Populate.INSAMEE:
-        profiles.preload('insameeProfile', (insameeProfilesQuery) => {
-          insameeProfilesQuery.preload('skills')
-          insameeProfilesQuery.preload('associations')
+      case Populate.MEE:
+        profiles.preload('meeProfile', (meeProfilesQuery) => {
+          meeProfilesQuery.preload('skills')
+          meeProfilesQuery.preload('associations')
         })
         break
       case Populate.TUTORAT:
         preloadTutoratProfile(profiles)
         break
       case Populate.FULL:
-        profiles.preload('insameeProfile').preload('tutoratProfile')
+        profiles.preload('meeProfile').preload('tutoratProfile')
         break
       default:
         break
     }
 
     if (
-      platform === Platform.INSAMEE &&
-      populate === Populate.INSAMEE &&
+      platform === Platform.MEE &&
+      populate === Populate.MEE &&
       serialize === Serialization.CARD
     ) {
       const result = await profiles.paginate(page, LIMIT)
       const serialization: CherryPick = profileCardSerialize
-      serialization.relations!.insamee_profile = insameeProfileCardSerialize
+      serialization.relations!.mee_profile = meeProfileCardSerialize
       return result.serialize(serialization)
     } else if (
       platform === Platform.ADMIN &&
@@ -143,12 +143,12 @@ export default class ProfilesController {
     await populateProfile(profile, populate)
 
     if (
-      (platform === Platform.INSAMEE || platform === Platform.ASSOCIATIONS) &&
+      (platform === Platform.MEE || platform === Platform.ASSOCIATIONS) &&
       serialize === Serialization.FULL &&
-      populate === Populate.INSAMEE
+      populate === Populate.MEE
     ) {
       const serialization: CherryPick = profileSerialize
-      serialization.relations!.insamee_profile = insameeProfileSerialize
+      serialization.relations!.mee_profile = meeProfileSerialize
 
       return profile.serialize(serialization)
     } else if (
@@ -185,31 +185,31 @@ export default class ProfilesController {
     const { platform } = await request.validate(PlatformQueryValidator)
     const { ...data } = await request.validate(ProfileValidator)
 
-    if (populate === Populate.INSAMEE) {
+    if (populate === Populate.MEE) {
       /**
-       * Update insamee profile
+       * Update mee profile
        */
       const {
-        text: insameeText,
+        text: meeText,
         skills,
         focusInterests,
         associations,
-      } = await request.validate(InsameeProfileValidator)
+      } = await request.validate(MeeProfileValidator)
 
-      const insameeProfile = await getInsameeProfile(id, user!.isAdmin)
+      const meeProfile = await getMeeProfile(id, user!.isAdmin)
 
       try {
-        await bouncer.with('InsameeProfilePolicy').authorize('update', insameeProfile)
+        await bouncer.with('MeeProfilePolicy').authorize('update', meeProfile)
       } catch (error) {
         throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
       }
 
-      insameeProfile.text = insameeText || (null as unknown as undefined)
-      await insameeProfile.save()
+      meeProfile.text = meeText || (null as unknown as undefined)
+      await meeProfile.save()
 
-      if (associations) await insameeProfile.related('associations').sync(associations)
-      if (skills) await insameeProfile.related('skills').sync(skills)
-      if (focusInterests) await insameeProfile.related('focusInterests').sync(focusInterests)
+      if (associations) await meeProfile.related('associations').sync(associations)
+      if (skills) await meeProfile.related('skills').sync(skills)
+      if (focusInterests) await meeProfile.related('focusInterests').sync(focusInterests)
     } else if (populate === Populate.TUTORAT) {
       /**
        * Update tutorat profile
@@ -250,9 +250,9 @@ export default class ProfilesController {
 
     if (platform === Platform.ADMIN && (await bouncer.with('ProfilePolicy').allows('showAdmin'))) {
       return updatedProfile
-    } else if (populate === Populate.INSAMEE) {
+    } else if (populate === Populate.MEE) {
       const serialization: CherryPick = profileMeSerialize
-      serialization.relations!.insamee_profile = insameeProfileSerialize
+      serialization.relations!.mee_profile = meeProfileSerialize
 
       return profile.serialize(serialization)
     } else if (populate === Populate.TUTORAT) {

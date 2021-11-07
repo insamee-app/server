@@ -1,6 +1,6 @@
 # Server
 
-This projet is the server for all websites of **insamee-app**.
+This projet is the server for all websites of **InsameeApp**.
 
 ## Tech Stack
 
@@ -24,7 +24,7 @@ npm run build
 npm run start
 ```
 
-Before to start, you must create a database called 'insamee' and tables in your database using
+Before to start, you must create a database called 'team' and tables in your database using
 
 ```bash
 node ace migration:run
@@ -179,7 +179,7 @@ In order to be used this server with any of the front-end, you must create a `.e
       "last_name": "string",
       "first_name": "string",
       "current_role": "string",
-      "insamee_profile": {
+      "mee_profile": {
         "short_text": "string",
         "associations": [
           {
@@ -214,7 +214,7 @@ In order to be used this server with any of the front-end, you must create a `.e
   },
   "graduation_year": "number",
   "current_role": "string",
-  "insamee_profile": {
+  "mee_profile": {
     "text": "string",
     "skills": [
       {
@@ -672,9 +672,9 @@ Optional fields
 - `urlInstagram` as string
 - `urlTwitter` as string
 
-##### Insamee profile
+##### mee profile
 
-`?populate=insamee`
+`?populate=mee`
 
 Optional fields
 

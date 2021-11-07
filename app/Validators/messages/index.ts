@@ -20,9 +20,9 @@ export { default as thematic } from './thematic'
 export { default as profileQuery } from './profile/query'
 export { default as profile } from './profile'
 
-// insamee
-export { default as insameeProfileQuery } from './insameeProfile/query'
-export { default as insameeProfile } from './insameeProfile'
+// mee
+export { default as meeProfileQuery } from './meeProfile/query'
+export { default as meeProfile } from './meeProfile'
 
 //tutorat
 export { default as tutoratQuery } from './tutorat/query'

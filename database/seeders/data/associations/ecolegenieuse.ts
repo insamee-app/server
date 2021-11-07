@@ -4,9 +4,9 @@ import { Thematics } from '../ThematicsData'
 
 export default {
   thematic: Thematics.SOLIDARITIES,
-  name: "jard'insa",
+  name: 'ecoleegénieuse',
   text: '',
   email: '',
-  school: Schools.INSA_CENTRE_VAL_LOIRE,
-  tags: [Tags.MUSIQUE, Tags.CUISINE, Tags.MECANIQUE],
+  school: Schools.ECOLE_CENTRE_VAL_LOIRE,
+  tags: [Tags.MUSIQUE, Tags.CUISINE, Tags.ROBOTIQUE],
 }

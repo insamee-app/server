@@ -3,10 +3,10 @@ import { Tags } from '../TagsData'
 import { Thematics } from '../ThematicsData'
 
 export default {
-  thematic: Thematics.SOLIDARITIES,
-  name: "ins'brasse",
+  thematic: Thematics.CULTUREL,
+  name: "comed'ecole blois",
   text: '',
   email: '',
-  school: Schools.INSA_CENTRE_VAL_LOIRE,
+  school: Schools.ECOLE_CENTRE_VAL_LOIRE,
   tags: [Tags.MUSIQUE, Tags.CUISINE, Tags.MECANIQUE],
 }

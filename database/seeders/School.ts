@@ -8,16 +8,16 @@ export default class SchoolSeeder extends BaseSeeder {
 
     await School.updateOrCreateMany(uniqueKey, [
       {
-        host: 'insa-cvl.fr',
-        name: Schools.INSA_CENTRE_VAL_LOIRE,
+        host: 'ecole.fr',
+        name: Schools.ECOLE_CENTRE_VAL_LOIRE,
       },
       {
-        host: 'insa-lyon.fr',
-        name: Schools.INSA_LYON,
+        host: 'ecole-lyon.fr',
+        name: Schools.ECOLE_LYON,
       },
       {
-        host: 'insa-strasbourg.fr',
-        name: Schools.INSA_STRASBOURG,
+        host: 'ecole-strasbourg.fr',
+        name: Schools.ECOLE_STRASBOURG,
       },
     ])
   }

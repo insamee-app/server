@@ -1,5 +1,5 @@
 export enum Schools {
-  INSA_CENTRE_VAL_LOIRE = 'INSA Centre Val de Loire',
-  INSA_LYON = 'INSA Lyon',
-  INSA_STRASBOURG = 'INSA Strasbourg',
+  ECOLE_CENTRE_VAL_LOIRE = 'ECOLE Centre Val de Loire',
+  ECOLE_LYON = 'ECOLE Lyon',
+  ECOLE_STRASBOURG = 'ECOLE Strasbourg',
 }

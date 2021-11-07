@@ -9,7 +9,7 @@ export default class TutoratSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const school = await School.findByOrFail('host', 'insa-cvl.fr')
+    const school = await School.findByOrFail('host', 'ecole.fr')
     const users = await User.withTrashed().exec()
     const subjects = await Subject.all()
 

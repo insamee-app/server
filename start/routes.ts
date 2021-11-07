@@ -67,7 +67,7 @@ Route.group(() => {
    * Users routes
    */
   Route.resource('users', 'UsersController').only(['index', 'show', 'update', 'destroy'])
-  Route.get('users/:id/data', 'UsersController.data').middleware('admin').as('users.data')
+  Route.get('users/data', 'UsersController.data').middleware('admin').as('users.data')
 
   /**
    * Profiles routes

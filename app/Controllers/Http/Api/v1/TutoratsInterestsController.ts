@@ -2,7 +2,7 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Profile from 'App/Models/Profile'
-import { insameeProfileCardSerialize, profileCardSerialize } from 'App/Services/ProfileService'
+import { meeProfileCardSerialize, profileCardSerialize } from 'App/Services/ProfileService'
 import { getTutorat } from 'App/Services/TutoratService'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 
@@ -25,7 +25,7 @@ export default class TutoratsInterestsController {
         'user_id',
         Database.from('interest_tutorat').select('user_id').where('tutorat_id', '=', id)
       )
-      .preload('insameeProfile', (profile) => {
+      .preload('meeProfile', (profile) => {
         profile.preload('associations')
         profile.preload('skills')
       })
@@ -33,7 +33,7 @@ export default class TutoratsInterestsController {
     const result = await queryProfiles.paginate(page, 6)
 
     const serialize = profileCardSerialize
-    serialize.relations!.insamee_profile = insameeProfileCardSerialize
+    serialize.relations!.mee_profile = meeProfileCardSerialize
     return result.serialize(serialize)
   }
 

@@ -1,12 +1,12 @@
 import BaseSeeder from '@ioc:Adonis/Lucid/Seeder'
 import Association from 'App/Models/Association'
-import ProfileInsamee from 'App/Models/InsameeProfile'
+import ProfileMee from 'App/Models/MeeProfile'
 
-export default class AssociationInsameeProfileSeeder extends BaseSeeder {
+export default class AssociationMeeProfileSeeder extends BaseSeeder {
   public static developmentOnly = true
 
   public async run() {
-    const profiles = await ProfileInsamee.withTrashed().exec()
+    const profiles = await ProfileMee.withTrashed().exec()
     const associations = await Association.all()
 
     for (const [index, profile] of profiles.entries()) {

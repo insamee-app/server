@@ -4,7 +4,7 @@ import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import { Populate } from 'App/Models/Profile'
 import {
   getProfile,
-  insameeProfileSerialize,
+  meeProfileSerialize,
   populateProfile,
   profileSerialize,
 } from 'App/Services/ProfileService'
@@ -45,13 +45,13 @@ export default class ProfilesPicturesController {
 
     await profile.save()
 
-    await populateProfile(profile, Populate.INSAMEE)
+    await populateProfile(profile, Populate.MEE)
 
     if (platform === Platform.ADMIN && (await bouncer.with('ProfilePolicy').allows('showAdmin'))) {
       return profile
     } else {
       const serialization: CherryPick = profileSerialize
-      serialization.relations!.insamee_profile = insameeProfileSerialize
+      serialization.relations!.mee_profile = meeProfileSerialize
       return profile.serialize(serialization)
     }
   }

@@ -1,6 +1,6 @@
 <h1> Bonjour {{user.first_name}},</h1>
 <p>
-  Tu as marqué ton intérêt pour une demande sur la plateforme Tutorat d'InsameeApp.
+  Tu as marqué ton intérêt pour une demande sur la plateforme Tutorat d'{{ env('APP_NAME') }}.
 </p>
 <p>
    Une <a href="{{env('TUTORAT_HOST')}}/tutorats/{{tutorat.id}}"> offre similaire </a> vient de paraître, alors n'hésite pas à la consulter et à t'inscrire si elle te convient !

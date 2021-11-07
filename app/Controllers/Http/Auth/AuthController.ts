@@ -11,7 +11,7 @@ import ResetPasswordValidator from 'App/Validators/ResetPasswordValidator'
 import RegisterValidator from 'App/Validators/RegisterValidator'
 import LoginValidator from 'App/Validators/LoginValidator'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
-import InsameeProfile from 'App/Models/InsameeProfile'
+import MeeProfile from 'App/Models/MeeProfile'
 import TutoratProfile from 'App/Models/TutoratProfile'
 import Profile from 'App/Models/Profile'
 import { getSchoolByEmail } from 'App/Services/AuthService'
@@ -61,7 +61,7 @@ export default class AuthController {
     }
 
     await user.related('profile').create(profile)
-    await InsameeProfile.create({ userId: user.id })
+    await MeeProfile.create({ userId: user.id })
     await TutoratProfile.create({ userId: user.id })
 
     await new VerifyEmail(user.email).sendLater()

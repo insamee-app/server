@@ -3,9 +3,9 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Association from 'App/Models/Association'
 import Skill from 'App/Models/Skill'
 import FocusInterest from 'App/Models/FocusInterest'
-import { insameeProfile } from './messages'
+import { meeProfile } from './messages'
 
-export default class InsameeProfileValidator {
+export default class MeeProfileValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -52,16 +52,16 @@ export default class InsameeProfileValidator {
    *
    */
   public messages = {
-    'text.string': insameeProfile.text.string,
-    'text.maxLength': insameeProfile.text.maxLength,
-    'skills.array': insameeProfile.skills.array,
-    'skills.*.number': insameeProfile.skills.number,
-    'skills.*.exists': insameeProfile.skills.exists,
-    'focusInterests.array': insameeProfile.focusInterests.array,
-    'focusInterests.*.number': insameeProfile.focusInterests.number,
-    'focusInterests.*.exists': insameeProfile.focusInterests.exists,
-    'associations.array': insameeProfile.associations.array,
-    'associations.*.number': insameeProfile.associations.number,
-    'associations.*.exists': insameeProfile.associations.exists,
+    'text.string': meeProfile.text.string,
+    'text.maxLength': meeProfile.text.maxLength,
+    'skills.array': meeProfile.skills.array,
+    'skills.*.number': meeProfile.skills.number,
+    'skills.*.exists': meeProfile.skills.exists,
+    'focusInterests.array': meeProfile.focusInterests.array,
+    'focusInterests.*.number': meeProfile.focusInterests.number,
+    'focusInterests.*.exists': meeProfile.focusInterests.exists,
+    'associations.array': meeProfile.associations.array,
+    'associations.*.number': meeProfile.associations.number,
+    'associations.*.exists': meeProfile.associations.exists,
   }
 }

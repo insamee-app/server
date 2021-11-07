@@ -1,7 +1,7 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
-export default class InsameeProfiles extends BaseSchema {
-  protected tableName = 'insamee_profiles'
+export default class MeeProfiles extends BaseSchema {
+  protected tableName = 'mee_profiles'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {

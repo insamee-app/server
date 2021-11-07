@@ -2,7 +2,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import { DatabaseQueryBuilderContract } from '@ioc:Adonis/Lucid/Database'
 import { CherryPick, ModelQueryBuilderContract } from '@ioc:Adonis/Lucid/Orm'
 import NotFoundException from 'App/Exceptions/NotFoundException'
-import InsameeProfile from 'App/Models/InsameeProfile'
+import MeeProfile from 'App/Models/MeeProfile'
 import Skill from 'App/Models/Skill'
 import FocusInterest from 'App/Models/FocusInterest'
 import Association from 'App/Models/Association'
@@ -38,32 +38,29 @@ export async function getProfile(id: number, isAdmin: boolean = false): Promise<
 }
 
 /**
- * Get an insamee profile by id
+ * Get an mee profile by id
  * @throws {NotFoundException} Will throw an error if a profile is not found
  */
-export async function getInsameeProfile(
-  id: number,
-  isAdmin: boolean = false
-): Promise<InsameeProfile> {
-  let insameeProfile: InsameeProfile
+export async function getMeeProfile(id: number, isAdmin: boolean = false): Promise<MeeProfile> {
+  let meeProfile: MeeProfile
   try {
-    const insameeProfileQuery = InsameeProfile.query().where('user_id', '=', id)
+    const meeProfileQuery = MeeProfile.query().where('user_id', '=', id)
     // Admins can get a trashed profile
-    if (isAdmin) insameeProfileQuery.withTrashed()
+    if (isAdmin) meeProfileQuery.withTrashed()
     // Non-admins can only get a verified profile
     else
-      insameeProfileQuery.whereExists((query) => {
+      meeProfileQuery.whereExists((query) => {
         query
           .from('users')
-          .whereColumn('users.id', 'insamee_profiles.user_id')
+          .whereColumn('users.id', 'mee_profiles.user_id')
           .where('users.is_verified', true)
       })
 
-    insameeProfile = await insameeProfileQuery.firstOrFail()
+    meeProfile = await meeProfileQuery.firstOrFail()
   } catch (error) {
     throw new NotFoundException('Utilisateur introuvable')
   }
-  return insameeProfile
+  return meeProfile
 }
 
 /**
@@ -97,10 +94,10 @@ export async function getTutoratProfile(
 }
 
 /**
- * Used to create a query in a pivot table with a relation with insamee_profile and using the *user_id*
+ * Used to create a query in a pivot table with a relation with mee_profile and using the *user_id*
  */
 function queryInPivot<T>(name: string, param: number[]): DatabaseQueryBuilderContract<T> {
-  return Database.from(`${name}_insamee_profile`).select('user_id').whereIn(`${name}_id`, param)
+  return Database.from(`${name}_mee_profile`).select('user_id').whereIn(`${name}_id`, param)
 }
 
 export function filterProfiles(
@@ -145,16 +142,14 @@ export function filterProfiles(
 }
 
 /**
- * Preload data on insamee profile model
+ * Preload data on mee profile model
  */
-export function preloadInsameeProfile(
-  profiles: ModelQueryBuilderContract<typeof Profile, Profile>
-) {
+export function preloadMeeProfile(profiles: ModelQueryBuilderContract<typeof Profile, Profile>) {
   profiles
-    .preload('insameeProfile', (insameeProfilesQuery) => {
-      insameeProfilesQuery.preload('skills')
-      insameeProfilesQuery.preload('focusInterests')
-      insameeProfilesQuery.preload('associations', (association) => {
+    .preload('meeProfile', (meeProfilesQuery) => {
+      meeProfilesQuery.preload('skills')
+      meeProfilesQuery.preload('focusInterests')
+      meeProfilesQuery.preload('associations', (association) => {
         association.preload('school')
       })
     })
@@ -178,18 +173,18 @@ export function preloadTutoratProfile(
 }
 
 /**
- *  Load data for insamee on a profile instance
+ *  Load data for mee on a profile instance
  */
-export async function loadInsameeProfile(profile: Profile): Promise<void> {
+export async function loadMeeProfile(profile: Profile): Promise<void> {
   await profile.load((loader) => {
     loader
-      .load('insameeProfile', (insameeProfile) => {
-        insameeProfile.preload('skills')
-        insameeProfile.preload('focusInterests')
-        insameeProfile.preload('associations', (association) => {
+      .load('meeProfile', (meeProfile) => {
+        meeProfile.preload('skills')
+        meeProfile.preload('focusInterests')
+        meeProfile.preload('associations', (association) => {
           association.preload('school')
         })
-        insameeProfile.withTrashed() // TODO: check for an issue (set admin platform with full)
+        meeProfile.withTrashed() // TODO: check for an issue (set admin platform with full)
       })
       .load('school')
       .load('user')
@@ -220,8 +215,8 @@ export async function populateProfile(
   populate: Populate | undefined
 ): Promise<void> {
   switch (populate) {
-    case Populate.INSAMEE:
-      await loadInsameeProfile(profile)
+    case Populate.MEE:
+      await loadMeeProfile(profile)
       break
     case Populate.TUTORAT:
       await loadTutoratProfile(profile)
@@ -235,7 +230,7 @@ export async function populateProfile(
             // Possible to use withTrashed because full is only for admin
             query.withTrashed()
           })
-          .load('insameeProfile', (query) => {
+          .load('meeProfile', (query) => {
             query.preload('skills')
             query.preload('focusInterests')
             query.preload('associations')
@@ -305,7 +300,7 @@ export const profileCardSerialize: CherryPick = {
   relations: {},
 }
 
-export const insameeProfileSerialize: CherryPick = {
+export const meeProfileSerialize: CherryPick = {
   fields: ['text'],
   relations: {
     skills: {
@@ -337,7 +332,7 @@ export const tutoratProfileSerialize: CherryPick = {
   },
 }
 
-export const insameeProfileCardSerialize: CherryPick = {
+export const meeProfileCardSerialize: CherryPick = {
   fields: ['short_text'],
   relations: {
     skills: {

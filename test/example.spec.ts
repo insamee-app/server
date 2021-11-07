@@ -11,7 +11,7 @@ test.group('Welcome', () => {
      */
     const { body } = await supertest(BASE_URL).get('/').expect(200)
 
-    assert.deepEqual(body, { message: 'API from INSAMEE' })
+    assert.deepEqual(body, { message: 'API for TEAM from InsameeApp' })
   })
 
   test('ensure user password gets hashed during save', async (assert) => {

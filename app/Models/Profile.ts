@@ -11,7 +11,7 @@ import {
   ManyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import User from 'App/Models/User'
-import InsameeProfile from './InsameeProfile'
+import MeeProfile from './MeeProfile'
 import School from './School'
 import TutoratProfile from './TutoratProfile'
 import Tutorat from './Tutorat'
@@ -24,7 +24,7 @@ export enum CurrentRole {
 }
 
 export enum Populate {
-  INSAMEE = 'insamee',
+  MEE = 'mee',
   TUTORAT = 'tutorat',
   ADMIN = 'admin',
   FULL = 'full',
@@ -40,12 +40,12 @@ export default class Profile extends compose(BaseModel, SoftDeletes) {
   })
   public user: BelongsTo<typeof User>
 
-  @hasOne(() => InsameeProfile, {
+  @hasOne(() => MeeProfile, {
     localKey: 'userId',
     foreignKey: 'userId',
-    serializeAs: 'insamee_profile',
+    serializeAs: 'mee_profile',
   })
-  public insameeProfile: HasOne<typeof InsameeProfile>
+  public meeProfile: HasOne<typeof MeeProfile>
 
   @hasOne(() => TutoratProfile, {
     localKey: 'userId',

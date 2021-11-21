@@ -121,7 +121,7 @@ export default class UsersController {
 
     const { email } = await request.validate(UserDataValidator)
 
-    const users = await User.query()
+    const user = await User.query()
       .where('email', '=', email)
       .preload('profile', (profileQuery) => {
         profileQuery
@@ -149,82 +149,81 @@ export default class UsersController {
         reportedTutoratsQuery.withTrashed().preload('reason')
       })
       .withTrashed()
+      .first()
 
-    return users.map((user) =>
-      user.serialize({
-        relations: {
-          profile: {
-            relations: {
-              mee_profile: {
-                relations: {
-                  associations: { fields: ['name'] },
-                  skills: { fields: ['name'] },
-                  focus_interests: { fields: ['name'] },
-                },
-              },
-              tutorat_profile: {
-                relations: {
-                  difficulties_subjects: { fields: ['name'] },
-                  preferred_subjects: { fields: ['name'] },
-                },
-              },
-              school: {
-                fields: ['name'],
+    return user!.serialize({
+      relations: {
+        profile: {
+          relations: {
+            mee_profile: {
+              relations: {
+                associations: { fields: ['name'] },
+                skills: { fields: ['name'] },
+                focus_interests: { fields: ['name'] },
               },
             },
-          },
-          tutorat_interested: {
-            fields: {
-              omit: ['id', 'subject_id', 'school_id'],
-            },
-            relations: {
-              school: {
-                fields: ['name'],
-              },
-              subject: {
-                fields: ['name'],
+            tutorat_profile: {
+              relations: {
+                difficulties_subjects: { fields: ['name'] },
+                preferred_subjects: { fields: ['name'] },
               },
             },
-          },
-          tutorats_created: {
-            fields: {
-              omit: ['id', 'subject_id', 'school_id'],
-            },
-            relations: {
-              school: {
-                fields: ['name'],
-              },
-              subject: {
-                fields: ['name'],
-              },
-            },
-          },
-          reported_profiles: {
-            fields: ['reason', 'description'],
-            relations: {
-              reason: {
-                fields: ['name'],
-              },
-            },
-          },
-          reported_associations: {
-            fields: ['reason', 'description'],
-            relations: {
-              reason: {
-                fields: ['name'],
-              },
-            },
-          },
-          reported_tutorats: {
-            fields: ['reason', 'description'],
-            relations: {
-              reason: {
-                fields: ['name'],
-              },
+            school: {
+              fields: ['name'],
             },
           },
         },
-      })
-    )
+        tutorat_interested: {
+          fields: {
+            omit: ['id', 'subject_id', 'school_id'],
+          },
+          relations: {
+            school: {
+              fields: ['name'],
+            },
+            subject: {
+              fields: ['name'],
+            },
+          },
+        },
+        tutorats_created: {
+          fields: {
+            omit: ['id', 'subject_id', 'school_id'],
+          },
+          relations: {
+            school: {
+              fields: ['name'],
+            },
+            subject: {
+              fields: ['name'],
+            },
+          },
+        },
+        reported_profiles: {
+          fields: ['reason', 'description'],
+          relations: {
+            reason: {
+              fields: ['name'],
+            },
+          },
+        },
+        reported_associations: {
+          fields: ['reason', 'description'],
+          relations: {
+            reason: {
+              fields: ['name'],
+            },
+          },
+        },
+        reported_tutorats: {
+          fields: ['reason', 'description'],
+          relations: {
+            reason: {
+              fields: ['name'],
+            },
+          },
+        },
+      },
+    })
   }
 }

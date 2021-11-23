@@ -55,14 +55,19 @@ export default class ProfilesPicturesController {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
+    const { platform } = await request.validate(PlatformQueryValidator)
     profile.picture = null as unknown as undefined
     // Remove the picture from disk using attachement lite
     await profile.save()
 
     await populateProfile(profile, Populate.MEE)
 
-    const serialization: CherryPick = profileSerialize
-    serialization.relations!.mee_profile = meeProfileSerialize
-    return profile.serialize(serialization)
+    if (platform === Platform.ADMIN && (await bouncer.with('ProfilePolicy').allows('showAdmin'))) {
+      return profile
+    } else {
+      const serialization: CherryPick = profileSerialize
+      serialization.relations!.mee_profile = meeProfileSerialize
+      return profile.serialize(serialization)
+    }
   }
 }

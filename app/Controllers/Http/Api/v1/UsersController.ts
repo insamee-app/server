@@ -141,6 +141,7 @@ export default class UsersController {
 
     // TODO: user, anonymiser l'email, mettre l'ensemble des informations autres à false
     // TODO: profile, supprimer le nom, le prénom, l'image, l'année de graduation, les urls, le rôle et le mobile
+
     meeProfile.text = null as unknown as undefined
     await meeProfile.save()
     await meeProfile.related('associations').detach()
@@ -152,7 +153,7 @@ export default class UsersController {
     await tutoratProfile.related('difficultiesSubjects').detach()
     await tutoratProfile.related('preferredSubjects').detach()
     // TODO: supprimer le texte des tutorats
-    // TODO: il faut ajouter une procédure pour modifier les controllers destroy et anonymize et savoir tout ce qu'il y a à faire
+    // TODO: il faut ajouter une procédure pour modifier les controllers destroy et anonymize et savoir tout ce qu'il y a à faire, comme pour les events
 
     return {
       anonymized: 'ok',

@@ -16,6 +16,7 @@ import Tag from './Tag'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
 import { string } from '@ioc:Adonis/Core/Helpers'
+import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class Association extends compose(BaseModel, SoftDeletes) {
   @column({ isPrimary: true })
@@ -33,8 +34,8 @@ export default class Association extends compose(BaseModel, SoftDeletes) {
   })
   public thematic: HasOne<typeof Thematic>
 
-  @column()
-  public picture?: string
+  @attachment({ folder: 'associations' })
+  public picture?: AttachmentContract | null
 
   @column()
   public text?: string
@@ -64,7 +65,7 @@ export default class Association extends compose(BaseModel, SoftDeletes) {
   public get urlPicture(): string | null {
     if (!this.picture) return null
 
-    return `${process.env.BACK_HOST}/uploads/associations/${this.picture}`
+    return `${process.env.BACK_HOST}/uploads/${this.picture.name}`
   }
 
   @computed({ serializeAs: 'short_text' })

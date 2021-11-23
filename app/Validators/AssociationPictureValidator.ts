@@ -25,9 +25,9 @@ export default class AssociationPictureValidator {
    *    ```
    */
   public schema = schema.create({
-    picture: schema.file.optional({
+    picture: schema.file({
       size: '60kb',
-      extnames: ['jpg', 'png', 'jpeg'],
+      extnames: ['jpg', 'png', 'jpeg', 'gif'],
     }),
   })
 

@@ -24,12 +24,10 @@ export default class ProfilePictureValidator {
    *     ])
    *    ```
    */
-  public existsStrict = true
-
   public schema = schema.create({
-    picture: schema.file.optional({
+    picture: schema.file({
       size: '60kb',
-      extnames: ['jpg', 'png', 'jpeg'],
+      extnames: ['jpg', 'png', 'jpeg', 'gif'],
     }),
   })
 

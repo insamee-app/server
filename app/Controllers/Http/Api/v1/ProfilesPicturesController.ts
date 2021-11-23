@@ -12,6 +12,7 @@ import ProfilePictureValidator from 'App/Validators/ProfilePictureValidator'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
 import Drive from '@ioc:Adonis/Core/Drive'
 import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class ProfilesPicturesController {
   private FOLDER = 'profiles'
@@ -21,7 +22,7 @@ export default class ProfilesPicturesController {
     const profile = await getProfile(id)
 
     try {
-      await bouncer.with('ProfilePolicy').authorize('update', profile)
+      await bouncer.with('ProfilePicturePolicy').authorize('update', profile)
     } catch (error) {
       throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
@@ -29,20 +30,8 @@ export default class ProfilesPicturesController {
     const { picture } = await request.validate(ProfilePictureValidator)
     const { platform } = await request.validate(PlatformQueryValidator)
 
-    const filename = profile.picture
-    if (filename) await Drive.delete(`${this.FOLDER}/${filename}`)
-
-    profile.picture = null as unknown as undefined
-
-    if (picture) {
-      const newFilename = `${cuid()}.${picture.extname}`
-      await picture.moveToDisk(this.FOLDER, {
-        name: newFilename,
-      })
-
-      profile.picture = newFilename
-    }
-
+    profile.picture = Attachment.fromFile(picture)
+    // Save to disk using attachement lite
     await profile.save()
 
     await populateProfile(profile, Populate.MEE)
@@ -54,5 +43,26 @@ export default class ProfilesPicturesController {
       serialization.relations!.mee_profile = meeProfileSerialize
       return profile.serialize(serialization)
     }
+  }
+
+  public async destroy({ bouncer, params }: HttpContextContract) {
+    const { id } = params
+    const profile = await getProfile(id)
+
+    try {
+      await bouncer.with('ProfilePicturePolicy').authorize('destroy', profile)
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    profile.picture = null as unknown as undefined
+    // Remove the picture from disk using attachement lite
+    await profile.save()
+
+    await populateProfile(profile, Populate.MEE)
+
+    const serialization: CherryPick = profileSerialize
+    serialization.relations!.mee_profile = meeProfileSerialize
+    return profile.serialize(serialization)
   }
 }

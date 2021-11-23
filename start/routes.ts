@@ -80,6 +80,9 @@ Route.group(() => {
   Route.patch('profiles/:id/picture', 'ProfilesPicturesController.update').as(
     'profilesPicture.update'
   )
+  Route.delete('profiles/:id/picture', 'ProfilesPicturesController.destroy').as(
+    'profilesPicture.destroy'
+  )
   Route.get('profiles/:id/tutorats', 'ProfilesController.tutorats').as('profiles.tutorats')
 
   /**

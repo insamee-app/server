@@ -17,6 +17,7 @@ import TutoratProfile from './TutoratProfile'
 import Tutorat from './Tutorat'
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { SoftDeletes } from '@ioc:Adonis/Addons/LucidSoftDeletes'
+import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export enum CurrentRole {
   STUDENT = 'étudiant',
@@ -60,8 +61,8 @@ export default class Profile extends compose(BaseModel, SoftDeletes) {
   @column()
   public firstName?: string
 
-  @column()
-  public picture?: string
+  @attachment({ folder: 'profiles' })
+  public picture?: AttachmentContract | null
 
   @column()
   public graduationYear?: number
@@ -103,7 +104,7 @@ export default class Profile extends compose(BaseModel, SoftDeletes) {
   public get urlPicture(): string | null {
     if (!this.picture) return null
 
-    return `${process.env.BACK_HOST}/uploads/profiles/${this.picture}`
+    return `${process.env.BACK_HOST}/uploads/${this.picture.name}`
   }
 
   @column.dateTime({ autoCreate: true })

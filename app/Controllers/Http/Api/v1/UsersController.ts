@@ -4,10 +4,14 @@ import { getProfile, getMeeProfile, getTutoratProfile } from 'App/Services/Profi
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat from 'App/Models/Tutorat'
 import User from 'App/Models/User'
+import Profile from 'App/Models/Profile'
+import MeeProfile from 'App/Models/MeeProfile'
+import TutoratProfile from 'App/Models/TutoratProfile'
 import UserValidator from 'App/Validators/UserValidator'
 import UserDataValidator from 'App/Validators/UserDataValidator'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
+import UserAnonymiseValidator from 'App/Validators/UserAnonymiseValidator'
 
 export default class UsersController {
   private LIMITE = 20
@@ -109,6 +113,49 @@ export default class UsersController {
 
     return {
       destroy: 'ok',
+    }
+  }
+
+  // To anonymise, the user must be soft deleted
+  public async anonymise({ bouncer, request }: HttpContextContract) {
+    try {
+      await bouncer.with('UserPolicy').authorize('anonymize')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { email } = await request.validate(UserAnonymiseValidator)
+
+    const user = await User.query().where('email', email).withTrashed().firstOrFail()
+    const profile = await Profile.query().where('user_id', user!.id).withTrashed().firstOrFail()
+    const meeProfile = await MeeProfile.query()
+      .where('user_id', user!.id)
+      .withTrashed()
+      .firstOrFail()
+    const tutoratProfile = await TutoratProfile.query()
+      .where('user_id', user!.id)
+      .withTrashed()
+      .firstOrFail()
+
+    const anonymizedWord = `anonymized_${user.id}`
+
+    // TODO: user, anonymiser l'email, mettre l'ensemble des informations autres à false
+    // TODO: profile, supprimer le nom, le prénom, l'image, l'année de graduation, les urls, le rôle et le mobile
+    meeProfile.text = null as unknown as undefined
+    await meeProfile.save()
+    await meeProfile.related('associations').detach()
+    await meeProfile.related('skills').detach()
+    await meeProfile.related('focusInterests').detach()
+
+    tutoratProfile.text = null as unknown as undefined
+    await tutoratProfile.save()
+    await tutoratProfile.related('difficultiesSubjects').detach()
+    await tutoratProfile.related('preferredSubjects').detach()
+    // TODO: supprimer le texte des tutorats
+    // TODO: il faut ajouter une procédure pour modifier les controllers destroy et anonymize et savoir tout ce qu'il y a à faire
+
+    return {
+      anonymized: 'ok',
     }
   }
 

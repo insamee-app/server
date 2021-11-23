@@ -68,6 +68,9 @@ Route.group(() => {
    */
   Route.resource('users', 'UsersController').only(['index', 'show', 'update', 'destroy'])
   Route.get('users/data', 'UsersController.data').middleware('admin').as('users.data')
+  Route.delete('users/anonymise', 'UsersController.anonymise')
+    .middleware('admin')
+    .as('users.anonymise')
 
   /**
    * Profiles routes

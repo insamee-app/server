@@ -24,6 +24,10 @@ export default class UserPolicy extends BasePolicy {
     return user.id === toCheckUser.id
   }
 
+  public anonymize() {
+    return false
+  }
+
   public data() {
     return false
   }

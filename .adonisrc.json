@@ -20,11 +20,15 @@
     "./start/kernel",
     {
       "file": "./start/validationRules",
-      "environment": ["web"]
+      "environment": [
+        "web"
+      ]
     },
     {
       "file": "./start/events",
-      "environment": ["web"]
+      "environment": [
+        "web"
+      ]
     },
     "./start/bouncer"
   ],
@@ -37,9 +41,12 @@
     "@adonisjs/mail",
     "@adonisjs/view",
     "@adonisjs/bouncer",
-    "adonis-lucid-soft-deletes"
+    "adonis-lucid-soft-deletes",
+    "@adonisjs/attachment-lite"
   ],
-  "aceProviders": ["@adonisjs/repl"],
+  "aceProviders": [
+    "@adonisjs/repl"
+  ],
   "metaFiles": [
     {
       "pattern": "resources/views/**/*.edge",

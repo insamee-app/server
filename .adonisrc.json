@@ -20,15 +20,11 @@
     "./start/kernel",
     {
       "file": "./start/validationRules",
-      "environment": [
-        "web"
-      ]
+      "environment": ["web"]
     },
     {
       "file": "./start/events",
-      "environment": [
-        "web"
-      ]
+      "environment": ["web"]
     },
     "./start/bouncer"
   ],
@@ -44,9 +40,7 @@
     "adonis-lucid-soft-deletes",
     "@adonisjs/attachment-lite"
   ],
-  "aceProviders": [
-    "@adonisjs/repl"
-  ],
+  "aceProviders": ["@adonisjs/repl"],
   "metaFiles": [
     {
       "pattern": "resources/views/**/*.edge",

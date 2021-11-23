@@ -1,5 +1,4 @@
 import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { cuid } from '@ioc:Adonis/Core/Helpers'
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import { Populate } from 'App/Models/Profile'
 import {
@@ -10,13 +9,10 @@ import {
 } from 'App/Services/ProfileService'
 import ProfilePictureValidator from 'App/Validators/ProfilePictureValidator'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
-import Drive from '@ioc:Adonis/Core/Drive'
 import { CherryPick } from '@ioc:Adonis/Lucid/Orm'
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class ProfilesPicturesController {
-  private FOLDER = 'profiles'
-
   public async update({ request, params, bouncer }: HttpContextContract) {
     const { id } = params
     const profile = await getProfile(id)
@@ -45,7 +41,7 @@ export default class ProfilesPicturesController {
     }
   }
 
-  public async destroy({ bouncer, params }: HttpContextContract) {
+  public async destroy({ bouncer, params, request }: HttpContextContract) {
     const { id } = params
     const profile = await getProfile(id)
 

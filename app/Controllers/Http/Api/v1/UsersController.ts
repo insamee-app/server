@@ -4,10 +4,14 @@ import { getProfile, getMeeProfile, getTutoratProfile } from 'App/Services/Profi
 import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import Tutorat from 'App/Models/Tutorat'
 import User from 'App/Models/User'
+import Profile from 'App/Models/Profile'
+import MeeProfile from 'App/Models/MeeProfile'
+import TutoratProfile from 'App/Models/TutoratProfile'
 import UserValidator from 'App/Validators/UserValidator'
 import UserDataValidator from 'App/Validators/UserDataValidator'
 import PaginateQueryValidator from 'App/Validators/PaginateQueryValidator'
 import PlatformQueryValidator, { Platform } from 'App/Validators/PlatformQueryValidator'
+import UserAnonymiseValidator from 'App/Validators/UserAnonymiseValidator'
 
 export default class UsersController {
   private LIMITE = 20
@@ -109,6 +113,73 @@ export default class UsersController {
 
     return {
       destroy: 'ok',
+    }
+  }
+
+  // To anonymise, the user must be soft deleted
+  public async anonymise({ bouncer, request }: HttpContextContract) {
+    try {
+      await bouncer.with('UserPolicy').authorize('anonymize')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
+    }
+
+    const { email } = await request.validate(UserAnonymiseValidator)
+
+    const user = await User.query().where('email', email).withTrashed().firstOrFail()
+    const profile = await Profile.query().where('user_id', user!.id).withTrashed().firstOrFail()
+    const meeProfile = await MeeProfile.query()
+      .where('user_id', user!.id)
+      .withTrashed()
+      .firstOrFail()
+    const tutoratProfile = await TutoratProfile.query()
+      .where('user_id', user!.id)
+      .withTrashed()
+      .firstOrFail()
+    const tutorats = await Tutorat.query().where('user_id', user!.id).withTrashed()
+
+    user.merge({
+      email: '',
+      isAdmin: false,
+      isModerator: false,
+      isEventCreator: false,
+      emailInterestedTutorat: false,
+      rememberMeToken: '',
+      password: '',
+    })
+    await user.save()
+
+    profile.merge({
+      lastName: null as unknown as undefined,
+      firstName: null as unknown as undefined,
+      picture: null as unknown as undefined,
+      graduationYear: null as unknown as undefined,
+      urlFacebook: null as unknown as undefined,
+      urlInstagram: null as unknown as undefined,
+      urlTwitter: null as unknown as undefined,
+      mobile: null as unknown as undefined,
+      currentRole: null as unknown as undefined,
+    })
+    await profile.save()
+
+    meeProfile.text = null as unknown as undefined
+    await meeProfile.save()
+    await meeProfile.related('associations').detach()
+    await meeProfile.related('skills').detach()
+    await meeProfile.related('focusInterests').detach()
+
+    tutoratProfile.text = null as unknown as undefined
+    await tutoratProfile.save()
+    await tutoratProfile.related('difficultiesSubjects').detach()
+    await tutoratProfile.related('preferredSubjects').detach()
+
+    for (const tutorat of tutorats) {
+      tutorat.text = null as unknown as undefined
+      await tutorat.save()
+    }
+
+    return {
+      anonymized: 'ok',
     }
   }
 

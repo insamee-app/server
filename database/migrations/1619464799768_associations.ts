@@ -8,7 +8,7 @@ export default class Associations extends BaseSchema {
       table.increments('id')
 
       table.integer('thematic_id').unsigned().notNullable().references('id').inTable('thematics')
-      table.string('picture').nullable()
+      table.json('picture').nullable()
       table.string('name').notNullable()
       table.string('text', 2048).nullable()
       table.string('email').nullable()

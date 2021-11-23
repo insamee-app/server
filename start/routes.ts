@@ -125,9 +125,13 @@ Route.group(() => {
   Route.patch('associations/:id/restore', 'AssociationsController.restore')
     .middleware('admin')
     .as('associations.restore')
-  // Used to add a picture to an association
+  // Used to patch an association's picture
   Route.patch('associations/:id/picture', 'AssociationsPicturesController.update').as(
     'associationsPicture.update'
+  )
+  // Used to delete an association's picture
+  Route.delete('associations/:id/picture', 'AssociationsPicturesController.destroy').as(
+    'associationsPicture.destroy'
   )
 
   Route.get('associations/:id/profiles', 'AssociationsController.profiles').as(

@@ -4,6 +4,7 @@ import ForbiddenException from 'App/Exceptions/ForbiddenException'
 import { getAssociation } from 'App/Services/AssociationService'
 import AssociationPictureValidator from 'App/Validators/AssociationPictureValidator'
 import Drive from '@ioc:Adonis/Core/Drive'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class AssociationsPicturesController {
   private FOLDER = 'associations'
@@ -21,20 +22,50 @@ export default class AssociationsPicturesController {
 
     const association = await getAssociation(id, user!.isAdmin)
 
-    const filename = association.picture
-    if (filename) await Drive.delete(`${this.FOLDER}/${filename}`)
+    association.picture = Attachment.fromFile(picture)
+    // Save the picture to disk using attachement lite
+    await association.save()
 
-    association.picture = null as unknown as undefined
+    await association.load((loader) => loader.load('school').load('thematic').load('tags'))
 
-    if (picture) {
-      const newFilename = `${cuid()}.${picture.extname}`
-      await picture.moveToDisk(this.FOLDER, {
-        name: newFilename,
-      })
+    return association.serialize({
+      fields: [
+        'id',
+        'url_picture',
+        'name',
+        'text',
+        'email',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+      ],
+      relations: {
+        school: {
+          fields: ['name'],
+        },
+        tags: {
+          fields: ['id', 'name'],
+        },
+        thematic: {
+          fields: ['id', 'name'],
+        },
+      },
+    })
+  }
 
-      association.picture = newFilename
+  public async destroy({ params, bouncer, auth }: HttpContextContract) {
+    try {
+      await bouncer.with('AssociationPicturePolicy').authorize('destroy')
+    } catch (error) {
+      throw new ForbiddenException('Vous ne pouvez pas accéder à cette ressource')
     }
 
+    const { id } = params
+    const { user } = auth
+    const association = await getAssociation(id, user!.isAdmin)
+
+    association.picture = null as unknown as undefined
+    // Remove the picture from disk using attachement lite
     await association.save()
 
     await association.load((loader) => loader.load('school').load('thematic').load('tags'))

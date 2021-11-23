@@ -136,11 +136,31 @@ export default class UsersController {
       .where('user_id', user!.id)
       .withTrashed()
       .firstOrFail()
+    const tutorats = await Tutorat.query().where('user_id', user!.id).withTrashed()
 
-    const anonymizedWord = `anonymized_${user.id}`
+    user.merge({
+      email: '',
+      isAdmin: false,
+      isModerator: false,
+      isEventCreator: false,
+      emailInterestedTutorat: false,
+      rememberMeToken: '',
+      password: '',
+    })
+    await user.save()
 
-    // TODO: user, anonymiser l'email, mettre l'ensemble des informations autres à false
-    // TODO: profile, supprimer le nom, le prénom, l'image, l'année de graduation, les urls, le rôle et le mobile
+    profile.merge({
+      lastName: null as unknown as undefined,
+      firstName: null as unknown as undefined,
+      picture: null as unknown as undefined,
+      graduationYear: null as unknown as undefined,
+      urlFacebook: null as unknown as undefined,
+      urlInstagram: null as unknown as undefined,
+      urlTwitter: null as unknown as undefined,
+      mobile: null as unknown as undefined,
+      currentRole: null as unknown as undefined,
+    })
+    await profile.save()
 
     meeProfile.text = null as unknown as undefined
     await meeProfile.save()
@@ -152,8 +172,11 @@ export default class UsersController {
     await tutoratProfile.save()
     await tutoratProfile.related('difficultiesSubjects').detach()
     await tutoratProfile.related('preferredSubjects').detach()
-    // TODO: supprimer le texte des tutorats
-    // TODO: il faut ajouter une procédure pour modifier les controllers destroy et anonymize et savoir tout ce qu'il y a à faire, comme pour les events
+
+    for (const tutorat of tutorats) {
+      tutorat.text = null as unknown as undefined
+      await tutorat.save()
+    }
 
     return {
       anonymized: 'ok',
